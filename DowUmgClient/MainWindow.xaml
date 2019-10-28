@@ -5,8 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DowUmgClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Dawn of War: UMG" Height="768" Width="1366">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Dawn of War: Ultimate Matchup Generator" HorizontalAlignment="Center" FontSize="36"
+                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,20" FontWeight="SemiBold"/>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <StackPanel.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Cursor" Value="Hand" />
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Margin" Value="0,0,0,15"/>
+                    <Setter Property="Padding" Value="15"/>
+                    <Setter Property="FontSize" Value="24"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button x:Name="CampaignButton" Click="ContextMenu_Click">
+                Campaign
+                <Button.ContextMenu>
+                    <ContextMenu Name="cmCampaignButton" StaysOpen="true">
+                        <MenuItem Header="New" />
+                        <MenuItem Header="Load" />
+                        <MenuItem Header="Export" />
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button x:Name="MatchupButton" Click="ContextMenu_Click">
+                Matchup
+                <Button.ContextMenu>
+                    <ContextMenu Name="cmMatchupButton" StaysOpen="true">
+                        <MenuItem Header="New" />
+                        <MenuItem Header="Load" />
+                        <MenuItem Header="Export" />
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button x:Name="ImportButton" Click="ImportButton_Click" Content="Import"/>
+            <Button x:Name="SettingsButton" Click="SettingsButton_Click" Content="Settings"/>
+            <Button x:Name="QuitButton" Click="QuitButton_Click" Content="Quit" />
+        </StackPanel>
     </Grid>
 </Window>
+ 

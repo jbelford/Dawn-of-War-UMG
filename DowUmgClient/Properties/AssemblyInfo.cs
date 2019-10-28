@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DowUmgClient")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Dawn of War: Ultimate Matchup Generator client application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DowUmgClient")]

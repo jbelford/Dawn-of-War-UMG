@@ -24,5 +24,28 @@ namespace DowUmgClient
         {
             InitializeComponent();
         }
+
+        private void ContextMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement button)
+            {
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void QuitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
