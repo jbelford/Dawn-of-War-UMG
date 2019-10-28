@@ -4,5 +4,8 @@
              xmlns:local="clr-namespace:DowUmgClient"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
     </Application.Resources>
 </Application>
