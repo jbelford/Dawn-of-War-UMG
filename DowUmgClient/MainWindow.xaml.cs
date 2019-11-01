@@ -1,51 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Reactive.Disposables;
+using ReactiveUI;
+using DowUmgClient.ViewModels;
 
 namespace DowUmgClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
         public MainWindow()
         {
             InitializeComponent();
-        }
+            ViewModel = new MainViewModel();
 
-        private void ContextMenu_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is FrameworkElement button)
+            this.campaignButton.CommandParameter = this.campaignButton.Content;
+            this.matchupButton.CommandParameter = this.matchupButton.Content;
+
+            this.WhenActivated(disposables =>
             {
-                button.ContextMenu.IsOpen = true;
-            }
-        }
+                this.Bind(ViewModel, viewModel => viewModel.ContextMenuIsVisible, view => view.matchupButton.ContextMenu.IsOpen)
+                    .DisposeWith(disposables);
 
-        private void ImportButton_Click(object sender, RoutedEventArgs e)
-        {
+                this.BindCommand(ViewModel, viewModel => viewModel.OpenContextMenu, view => view.campaignButton)
+                    .DisposeWith(disposables);
 
-        }
+                this.BindCommand(ViewModel, viewModel => viewModel.OpenContextMenu, view => view.matchupButton)
+                    .DisposeWith(disposables);
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void QuitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
+                this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.quitButton)
+                    .DisposeWith(disposables);
+            });
         }
     }
 }

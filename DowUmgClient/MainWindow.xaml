@@ -1,9 +1,13 @@
-﻿<Window x:Class="DowUmgClient.MainWindow"
+﻿<reactiveui:ReactiveWindow
+        x:Class="DowUmgClient.MainWindow"
+        x:TypeArguments="viewmodels:MainViewModel"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DowUmgClient"
+        xmlns:viewmodels="clr-namespace:DowUmgClient.ViewModels"
+        xmlns:reactiveui="http://reactiveui.net"
         mc:Ignorable="d"
         Title="Dawn of War: UMG" Height="768" Width="1366">
     <Grid Margin="20">
@@ -33,18 +37,18 @@
                     <Setter Property="FontSize" Value="24" />
                     <Setter Property="ContextMenuService.Placement" Value="Right" />
                 </Style>
-                <ContextMenu Name="cm" x:Key="mainContextMenu" StaysOpen="True">
-                    <MenuItem Header="New" />
-                    <MenuItem Header="Load" />
-                    <MenuItem Header="Export" />
+                <ContextMenu x:Key="contextMenu" StaysOpen="True">
+                    <MenuItem x:Name="newButton" Header="New" />
+                    <MenuItem x:Name="loadButton" Header="Load" />
+                    <MenuItem x:Name="exportButton" Header="Export" />
                 </ContextMenu>
             </StackPanel.Resources>
 
-            <Button x:Name="campaignButton" Click="ContextMenu_Click" Content="Campaign" ContextMenu="{StaticResource mainContextMenu}" />
-            <Button x:Name="matchupButton" Click="ContextMenu_Click" Content="Matchup" ContextMenu="{StaticResource mainContextMenu}" />
-            <Button Click="ImportButton_Click" Content="Import" />
-            <Button Click="SettingsButton_Click" Content="Settings" />
-            <Button Click="QuitButton_Click" Content="Quit" />
+            <Button x:Name="campaignButton" Content="Campaign" ContextMenu="{StaticResource contextMenu}" />
+            <Button x:Name="matchupButton" Content="Matchup" ContextMenu="{StaticResource contextMenu}" />
+            <Button x:Name="importButton" Content="Import" />
+            <Button x:Name="settingsButton" Content="Settings" />
+            <Button x:Name="quitButton" Content="Quit" />
         </StackPanel>
     </Grid>
-</Window>
+</reactiveui:ReactiveWindow>
