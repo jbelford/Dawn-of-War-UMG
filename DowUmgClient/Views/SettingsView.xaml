@@ -7,8 +7,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:viewmodels="clr-namespace:DowUmgClient.ViewModels"
-      mc:Ignorable="d" Width="1366" Height="768"
-      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+      mc:Ignorable="d"
+      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" d:DesignWidth="729.038" d:DesignHeight="495.852">
 
     <UserControl.Resources>
         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -18,33 +18,29 @@
             <Setter Property="FontSize" Value="16" />
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="16" />
         </Style>
     </UserControl.Resources>
     <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Settings" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
-        <StackPanel Grid.Column="1" Grid.Row="1">
-            <Label Target="{Binding ElementName=Directory, Mode=OneWay}" Content="Soulstorm Directory" />
-            <Grid Name="Directory">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox Name="directoryTextBox" Grid.Column="0" IsEnabled="False" Background="#FF979797" BorderBrush="Black" />
-                <Button Name="selectDirectoryButton" Content="Select" HorizontalAlignment="Right" Padding="10,0" Grid.Column="1" />
-            </Grid>
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Settings" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
+            <StackPanel>
+                <Label Target="{Binding ElementName=Directory, Mode=OneWay}" Content="Soulstorm Directory" />
+                <Grid Name="Directory">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="directoryTextBox" Grid.Column="0" IsEnabled="False" Background="#FF979797" BorderBrush="Black" />
+                    <Button Name="selectDirectoryButton" Content="Select" HorizontalAlignment="Right" Padding="10,0" Grid.Column="1" />
+                </Grid>
+            </StackPanel>
         </StackPanel>
-        <Grid Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="50">
+        <Grid Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="50">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />

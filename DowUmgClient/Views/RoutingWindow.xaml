@@ -9,15 +9,8 @@
         xmlns:vm="clr-namespace:DowUmgClient.ViewModels"
         mc:Ignorable="d"
         Title="Dawn of War: UMG" Height="768" Width="1366">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <rxui:RoutedViewHost Grid.Row="0" Grid.Column="0" x:Name="RoutedViewHost"
+
+    <rxui:RoutedViewHost Grid.Row="0" Grid.Column="0" x:Name="RoutedViewHost"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch" />
-    </Grid>
 </rxui:ReactiveWindow>

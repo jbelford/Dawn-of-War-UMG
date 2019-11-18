@@ -8,23 +8,12 @@
         xmlns:viewmodels="clr-namespace:DowUmgClient.ViewModels"
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d"
-        Height="768" Width="1366"
         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-    <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
+    <StackPanel Margin="20">
         <TextBlock Text="Dawn of War: Ultimate Matchup Generator" HorizontalAlignment="Center" FontSize="36"
-                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,20" FontWeight="SemiBold" />
+            Margin="0,0,0,20" FontWeight="SemiBold" />
 
-        <StackPanel Grid.Column="1" Grid.Row="1">
+        <StackPanel Width="200">
             <StackPanel.Resources>
                 <Style TargetType="MenuItem">
                     <Setter Property="Cursor" Value="Hand" />
@@ -50,5 +39,5 @@
             <Button x:Name="settingsButton" Content="Settings" />
             <Button x:Name="quitButton" Content="Quit" />
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </rxui:ReactiveUserControl>
