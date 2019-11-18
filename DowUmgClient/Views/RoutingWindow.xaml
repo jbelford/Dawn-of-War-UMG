@@ -1,0 +1,23 @@
+﻿<rxui:ReactiveWindow
+        x:Class="DowUmgClient.Views.RoutingWindow"
+        x:TypeArguments="vm:RoutingViewModel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:rxui="http://reactiveui.net"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:DowUmgClient.ViewModels"
+        mc:Ignorable="d"
+        Title="Dawn of War: UMG" Height="768" Width="1366">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <rxui:RoutedViewHost Grid.Row="0" Grid.Column="0" x:Name="RoutedViewHost"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch" />
+    </Grid>
+</rxui:ReactiveWindow>

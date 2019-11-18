@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Reactive;
 using ReactiveUI;
+using Splat;
 
 namespace DowUmgClient.ViewModels
 {
-    public class MainViewModel : ReactiveObject
+    public class MainViewModel : ReactiveObject, IRoutableViewModel
     {
         private bool _contextMenuIsVisible;
-        private string menuSelected;
+        private MenuType menuSelected;
 
-        public MainViewModel()
+        public MainViewModel(RoutingViewModel routing)
         {
-            OpenContextMenu = ReactiveCommand.Create<string>(selected =>
+            HostScreen = routing;
+
+            OpenContextMenu = ReactiveCommand.Create<MenuType>(selected =>
             {
                 ContextMenuIsVisible = true;
                 this.menuSelected = selected;
@@ -20,10 +23,13 @@ namespace DowUmgClient.ViewModels
             NewAction = ReactiveCommand.Create(() => { /* todo */ });
             LoadAction = ReactiveCommand.Create(() => { /* todo */ });
             ExportAction = ReactiveCommand.Create(() => { /* todo */ });
+
+            SettingsAction = routing.GoToSettings;
+
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
 
             this.WhenAnyValue(x => x.ContextMenuIsVisible, (isVisible) => !isVisible)
-                .Subscribe(_ => this.menuSelected = null);
+                .Subscribe(_ => this.menuSelected = MenuType.None);
         }
 
         public enum MenuType { Campaign, Matchup, None };
@@ -37,8 +43,17 @@ namespace DowUmgClient.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> ExportAction { get; }
+
+        public IScreen HostScreen { get; }
+
         public ReactiveCommand<Unit, Unit> LoadAction { get; }
+
         public ReactiveCommand<Unit, Unit> NewAction { get; }
-        public ReactiveCommand<string, Unit> OpenContextMenu { get; }
+
+        public ReactiveCommand<MenuType, Unit> OpenContextMenu { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
+
+        public string UrlPathSegment => "main";
     }
 }

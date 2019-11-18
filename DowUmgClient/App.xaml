@@ -1,8 +1,8 @@
 ﻿<Application x:Class="DowUmgClient.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DowUmgClient"
-             StartupUri="MainWindow.xaml">
+             Startup="OnApplicationStartup"
+             x:Name="DowUmgApp">
     <Application.Resources>
         <Style TargetType="Button">
             <Setter Property="Cursor" Value="Hand" />
