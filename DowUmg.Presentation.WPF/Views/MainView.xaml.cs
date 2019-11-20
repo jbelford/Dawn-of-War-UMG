@@ -1,12 +1,12 @@
-﻿using System.Reactive.Disposables;
+﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
-using System.Windows;
-using System.Windows.Controls.Primitives;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Controls;
-using DowUmgClient.ViewModels;
+using System.Windows.Controls.Primitives;
 
-namespace DowUmgClient.Views
+namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
     /// Interaction logic for TilePage.xaml

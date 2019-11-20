@@ -1,10 +1,8 @@
-﻿using DowUmgClient.ViewModels;
+﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
-using Splat;
 using System.Reactive.Disposables;
-using System.Windows.Controls;
 
-namespace DowUmgClient.Views
+namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

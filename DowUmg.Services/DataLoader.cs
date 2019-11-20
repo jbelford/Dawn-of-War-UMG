@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace DowUmgClient.Models
+namespace DowUmg.Services
 {
     public class DataLoader
     {

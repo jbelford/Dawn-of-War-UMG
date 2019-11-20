@@ -1,9 +1,8 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Reactive;
-using ReactiveUI;
-using Splat;
 
-namespace DowUmgClient.ViewModels
+namespace DowUmg.Presentation.ViewModels
 {
     public class MainViewModel : ReactiveObject, IRoutableViewModel
     {
@@ -32,9 +31,16 @@ namespace DowUmgClient.ViewModels
                 .Subscribe(_ => this.menuSelected = MenuType.None);
         }
 
-        public enum MenuType { Campaign, Matchup, None };
+        #region Commands
 
         public ReactiveCommand<Unit, Unit> CloseApp { get; }
+        public ReactiveCommand<Unit, Unit> ExportAction { get; }
+        public ReactiveCommand<Unit, Unit> LoadAction { get; }
+        public ReactiveCommand<Unit, Unit> NewAction { get; }
+        public ReactiveCommand<MenuType, Unit> OpenContextMenu { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
+
+        #endregion Commands
 
         public bool ContextMenuIsVisible
         {
@@ -42,18 +48,10 @@ namespace DowUmgClient.ViewModels
             set => this.RaiseAndSetIfChanged(ref this._contextMenuIsVisible, value);
         }
 
-        public ReactiveCommand<Unit, Unit> ExportAction { get; }
-
         public IScreen HostScreen { get; }
 
-        public ReactiveCommand<Unit, Unit> LoadAction { get; }
-
-        public ReactiveCommand<Unit, Unit> NewAction { get; }
-
-        public ReactiveCommand<MenuType, Unit> OpenContextMenu { get; }
-
-        public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
-
         public string UrlPathSegment => "main";
+
+        public enum MenuType { Campaign, Matchup, None };
     }
 }

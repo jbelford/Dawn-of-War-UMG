@@ -1,12 +1,12 @@
-﻿using DowUmgClient.Models;
-using DowUmgClient.ViewModels;
-using DowUmgClient.Views;
+﻿using DowUmg.Presentation.WPF.Models;
+using DowUmg.Presentation.WPF.Views;
+using DowUmg.Services;
 using ReactiveUI;
 using Splat;
 using System.Reflection;
 using System.Windows;
 
-namespace DowUmgClient
+namespace DowUmg.Presentation.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

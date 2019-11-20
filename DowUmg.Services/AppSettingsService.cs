@@ -1,14 +1,11 @@
-﻿using Splat;
+﻿using DowUmg.Services.Interfaces;
+using DowUmg.Services.Models;
+using Splat;
 using System;
 using System.IO;
 
-namespace DowUmgClient.Models
+namespace DowUmg.Services
 {
-    public class AppSettings
-    {
-        public string InstallLocation { get; set; }
-    }
-
     public class AppSettingsService
     {
         private static readonly string DIRECTORY = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/DowUmg";
@@ -16,11 +13,11 @@ namespace DowUmgClient.Models
 
         private AppSettings _settings;
         private DataLoader loader;
-        private DowPathService pathService;
+        private IDowPathService pathService;
 
-        public AppSettingsService(DowPathService pathService = null, DataLoader loader = null)
+        public AppSettingsService(IDowPathService pathService = null, DataLoader loader = null)
         {
-            this.pathService = pathService ?? Locator.Current.GetService<DowPathService>();
+            this.pathService = pathService ?? Locator.Current.GetService<IDowPathService>();
             this.loader = loader ?? Locator.Current.GetService<DataLoader>();
         }
 
@@ -32,7 +29,10 @@ namespace DowUmgClient.Models
                 {
                     _settings = initSettings();
                 }
-                return _settings;
+                return new AppSettings
+                {
+                    InstallLocation = this._settings.InstallLocation
+                };
             }
             set
             {

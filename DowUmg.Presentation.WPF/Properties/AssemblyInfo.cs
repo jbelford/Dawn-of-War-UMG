@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DowUmgClient")]
-[assembly: AssemblyDescription("Dawn of War: Ultimate Matchup Generator client application.")]
+[assembly: AssemblyTitle("DowUmg.Presentation.WPF")]
+[assembly: AssemblyDescription("WPF client for Dawn of War: UMG")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DowUmgClient")]
+[assembly: AssemblyProduct("DowUmg")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

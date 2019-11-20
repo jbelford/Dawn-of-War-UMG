@@ -1,11 +1,11 @@
 ﻿<rxui:ReactiveUserControl
-        x:Class="DowUmgClient.Views.MainView"
+        x:Class="DowUmg.Presentation.WPF.Views.MainView"
         x:TypeArguments="viewmodels:MainViewModel"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:DowUmgClient.ViewModels"
+        xmlns:viewmodels="clr-namespace:DowUmg.Presentation.ViewModels"
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d"
         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">

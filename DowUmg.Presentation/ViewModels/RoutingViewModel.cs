@@ -1,12 +1,7 @@
 ﻿using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DowUmgClient.ViewModels
+namespace DowUmg.Presentation.ViewModels
 {
     public class RoutingViewModel : ReactiveObject, IScreen
     {
@@ -21,8 +16,13 @@ namespace DowUmgClient.ViewModels
             Router.NavigateAndReset.Execute(new MainViewModel(this));
         }
 
+        #region Commands
+
         public ReactiveCommand<Unit, Unit> GoBack { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
+        #endregion Commands
+
         public RoutingState Router { get; }
     }
 }
