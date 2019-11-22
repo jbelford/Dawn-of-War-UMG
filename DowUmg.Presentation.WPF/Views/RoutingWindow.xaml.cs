@@ -5,7 +5,7 @@ using System.Reactive.Disposables;
 namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for RoutingWindow.xaml
     /// </summary>
     public partial class RoutingWindow : ReactiveWindow<RoutingViewModel>
     {

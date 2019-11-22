@@ -2,9 +2,9 @@
 using Microsoft.Win32;
 using System;
 
-namespace DowUmg.Presentation.WPF.Models
+namespace DowUmg.Presentation.WPF.Services
 {
-    public class DowPathService : IDowPathService
+    internal class DowPathService : IDowPathService
     {
         // Possible locations:
         // HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\thq\dawn of war - soulstorm (64-bit machine)

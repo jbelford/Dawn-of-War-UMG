@@ -6,7 +6,7 @@ using System.Reactive.Disposables;
 namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for SettingsPage.xaml
+    /// Interaction logic for SettingsView.xaml
     /// </summary>
     public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
     {

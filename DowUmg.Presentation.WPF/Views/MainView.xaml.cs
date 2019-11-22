@@ -9,7 +9,7 @@ using System.Windows.Controls.Primitives;
 namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for TilePage.xaml
+    /// Interaction logic for MainView.xaml
     /// </summary>
     public partial class MainView : ReactiveUserControl<MainViewModel>
     {
