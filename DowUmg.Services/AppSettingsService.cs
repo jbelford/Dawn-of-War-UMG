@@ -1,22 +1,20 @@
 ﻿using DowUmg.Services.Interfaces;
 using DowUmg.Services.Models;
 using Splat;
-using System;
 using System.IO;
 
 namespace DowUmg.Services
 {
     public class AppSettingsService
     {
-        private static readonly string DIRECTORY = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/DowUmg";
-        private static readonly string SETTINGS_PATH = $"{DIRECTORY}/settings.json";
-
         private AppSettings _settings;
         private DataLoader loader;
+        private IAppDataProvider appDataProvider;
         private IDowPathService pathService;
 
-        public AppSettingsService(IDowPathService pathService = null, DataLoader loader = null)
+        public AppSettingsService(IAppDataProvider provider = null, IDowPathService pathService = null, DataLoader loader = null)
         {
+            this.appDataProvider = provider ?? Locator.Current.GetService<IAppDataProvider>();
             this.pathService = pathService ?? Locator.Current.GetService<IDowPathService>();
             this.loader = loader ?? Locator.Current.GetService<DataLoader>();
         }
@@ -37,19 +35,19 @@ namespace DowUmg.Services
             set
             {
                 _settings = value;
-                loader.Save(SETTINGS_PATH, _settings);
+                loader.SaveJson(this.appDataProvider.SettingsLocation, _settings);
             }
         }
 
         private AppSettings initSettings()
         {
-            Directory.CreateDirectory(DIRECTORY);
+            string settingsPath = this.appDataProvider.SettingsLocation;
 
             AppSettings settings;
 
-            if (File.Exists(SETTINGS_PATH))
+            if (File.Exists(settingsPath))
             {
-                settings = loader.Load<AppSettings>(SETTINGS_PATH);
+                settings = loader.LoadJson<AppSettings>(settingsPath);
             }
             else
             {
@@ -57,7 +55,7 @@ namespace DowUmg.Services
                 {
                     InstallLocation = pathService.GetSSPath()
                 };
-                loader.Save(SETTINGS_PATH, settings);
+                loader.SaveJson(settingsPath, settings);
             }
 
             return settings;

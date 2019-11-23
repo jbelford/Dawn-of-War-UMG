@@ -5,7 +5,7 @@ namespace DowUmg.Services
 {
     public class DataLoader
     {
-        public T Load<T>(string path)
+        public T LoadJson<T>(string path)
         {
             using (StreamReader r = new StreamReader(path))
             {
@@ -14,13 +14,20 @@ namespace DowUmg.Services
             }
         }
 
-        public void Save(string path, object obj)
+        public void SaveJson(string path, object obj)
         {
+            CreateDirectoryPath(path);
             string json = JsonConvert.SerializeObject(obj);
             using (StreamWriter w = new StreamWriter(path))
             {
                 w.Write(json);
             }
+        }
+
+        private void CreateDirectoryPath(string path)
+        {
+            var fileInfo = new FileInfo(path);
+            fileInfo.Directory.Create();
         }
     }
 }
