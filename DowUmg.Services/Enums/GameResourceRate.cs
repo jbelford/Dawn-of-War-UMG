@@ -1,4 +1,6 @@
-﻿namespace DowUmg.Services.Enums
+﻿using System;
+
+namespace DowUmg.Services.Enums
 {
     public enum GameResourceRate
     {
@@ -10,23 +12,13 @@
 
     public static class GameResourceRateEx
     {
-        public static string ToString(this GameResourceRate val)
+        public static string ToString(this GameResourceRate val) => val switch
         {
-            switch (val)
-            {
-                default:
-                case GameResourceRate.ANY:
-                    return "Any";
-
-                case GameResourceRate.LOW:
-                    return "Low";
-
-                case GameResourceRate.STANDARD:
-                    return "Standard";
-
-                case GameResourceRate.HIGH:
-                    return "High";
-            }
-        }
+            GameResourceRate.ANY => "Any",
+            GameResourceRate.LOW => "Low",
+            GameResourceRate.STANDARD => "Standard",
+            GameResourceRate.HIGH => "High",
+            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
+        };
     }
 }

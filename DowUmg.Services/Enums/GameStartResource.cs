@@ -1,4 +1,6 @@
-﻿namespace DowUmg.Services.Enums
+﻿using System;
+
+namespace DowUmg.Services.Enums
 {
     public enum GameStartResource
     {
@@ -9,20 +11,12 @@
 
     public static class GameStartResourceEx
     {
-        public static string ToString(this GameStartResource val)
+        public static string ToString(this GameStartResource val) => val switch
         {
-            switch (val)
-            {
-                default:
-                case GameStartResource.ANY:
-                    return "Any";
-
-                case GameStartResource.STANDARD:
-                    return "Standard";
-
-                case GameStartResource.QUICK:
-                    return "Quick";
-            }
-        }
+            GameStartResource.ANY => "Any",
+            GameStartResource.STANDARD => "Standard",
+            GameStartResource.QUICK => "Quick",
+            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
+        };
     }
 }

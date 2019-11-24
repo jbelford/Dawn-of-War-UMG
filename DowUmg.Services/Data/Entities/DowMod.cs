@@ -4,7 +4,10 @@ namespace DowUmg.Services.Models
 {
     public class DowMod
     {
-        public string Name { get; }
+        public int Id { get; set; }
+
+        public string Name { get; set; } = null!;
+        public string Details { get; set; } = null!;
         public List<DowMap> Maps { get; } = new List<DowMap>();
         public List<GameRule> Rules { get; } = new List<GameRule>();
     }

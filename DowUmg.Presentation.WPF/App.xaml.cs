@@ -1,6 +1,8 @@
 ﻿using DowUmg.Presentation.WPF.Services;
 using DowUmg.Presentation.WPF.Views;
 using DowUmg.Services;
+using DowUmg.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using Splat;
 using System.Reflection;
@@ -17,6 +19,7 @@ namespace DowUmg.Presentation.WPF
         {
             InitializeComponent();
             RegisterDependencies();
+            MigrateDatabase();
         }
 
         private void OnApplicationStartup(object sender, StartupEventArgs args)
@@ -29,9 +32,14 @@ namespace DowUmg.Presentation.WPF
         private void RegisterDependencies()
         {
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new DataLoader());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new DowPathService());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new AppSettingsService());
+            Locator.CurrentMutable.RegisterLazySingleton<IFilePathProvider>(() => new WindowsFilePathProvider());
+            ServiceBootstrapper.RegisterDefaults();
+        }
+
+        private void MigrateDatabase()
+        {
+            DbContext context = Locator.Current.GetService<DbContext>();
+            context.Database.Migrate();
         }
     }
 }

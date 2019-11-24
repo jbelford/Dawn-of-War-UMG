@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Presentation", "DowU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Services", "DowUmg.Services\DowUmg.Services.csproj", "{E0F56965-0519-41FD-9042-132B4806FBA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowUmg.Presentation.WPF", "DowUmg.Presentation.WPF\DowUmg.Presentation.WPF.csproj", "{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Presentation.WPF", "DowUmg.Presentation.WPF\DowUmg.Presentation.WPF.csproj", "{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,6 @@
-﻿namespace DowUmg.Services.Enums
+﻿using System;
+
+namespace DowUmg.Services.Enums
 {
     public enum GameSpeed
     {
@@ -11,26 +13,14 @@
 
     public static class GameSpeedEx
     {
-        public static string ToString(this GameSpeed val)
+        public static string ToString(this GameSpeed val) => val switch
         {
-            switch (val)
-            {
-                default:
-                case GameSpeed.ANY:
-                    return "Any";
-
-                case GameSpeed.VERY_SLOW:
-                    return "Very Slow";
-
-                case GameSpeed.SLOW:
-                    return "Slow";
-
-                case GameSpeed.NORMAL:
-                    return "Normal";
-
-                case GameSpeed.FAST:
-                    return "Fast";
-            }
-        }
+            GameSpeed.ANY => "Any",
+            GameSpeed.VERY_SLOW => "Very Slow",
+            GameSpeed.SLOW => "Slow",
+            GameSpeed.NORMAL => "Normal",
+            GameSpeed.FAST => "Fast",
+            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
+        };
     }
 }

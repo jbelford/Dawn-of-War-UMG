@@ -7,15 +7,13 @@ namespace DowUmg.Services
 {
     public class AppSettingsService
     {
-        private AppSettings _settings;
-        private DataLoader loader;
-        private IAppDataProvider appDataProvider;
-        private IDowPathService pathService;
+        private readonly DataLoader loader;
+        private readonly IFilePathProvider filePathProvider;
+        private AppSettings? _settings;
 
-        public AppSettingsService(IAppDataProvider provider = null, IDowPathService pathService = null, DataLoader loader = null)
+        public AppSettingsService(IFilePathProvider? provider = null, DataLoader? loader = null)
         {
-            this.appDataProvider = provider ?? Locator.Current.GetService<IAppDataProvider>();
-            this.pathService = pathService ?? Locator.Current.GetService<IDowPathService>();
+            this.filePathProvider = provider ?? Locator.Current.GetService<IFilePathProvider>();
             this.loader = loader ?? Locator.Current.GetService<DataLoader>();
         }
 
@@ -25,7 +23,7 @@ namespace DowUmg.Services
             {
                 if (_settings == null)
                 {
-                    _settings = initSettings();
+                    _settings = InitSettings();
                 }
                 return new AppSettings
                 {
@@ -35,13 +33,13 @@ namespace DowUmg.Services
             set
             {
                 _settings = value;
-                loader.SaveJson(this.appDataProvider.SettingsLocation, _settings);
+                loader.SaveJson(this.filePathProvider.SettingsLocation, _settings);
             }
         }
 
-        private AppSettings initSettings()
+        private AppSettings InitSettings()
         {
-            string settingsPath = this.appDataProvider.SettingsLocation;
+            string settingsPath = this.filePathProvider.SettingsLocation;
 
             AppSettings settings;
 
@@ -53,7 +51,7 @@ namespace DowUmg.Services
             {
                 settings = new AppSettings
                 {
-                    InstallLocation = pathService.GetSSPath()
+                    InstallLocation = this.filePathProvider.SoulstormLocation
                 };
                 loader.SaveJson(settingsPath, settings);
             }

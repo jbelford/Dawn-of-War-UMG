@@ -1,4 +1,6 @@
-﻿namespace DowUmg.Services.Enums
+﻿using System;
+
+namespace DowUmg.Services.Enums
 {
     public enum GameDifficulty
     {
@@ -12,29 +14,15 @@
 
     public static class GameDifficultyEx
     {
-        public static string ToString(this GameDifficulty val)
+        public static string ToString(this GameDifficulty val) => val switch
         {
-            switch (val)
-            {
-                default:
-                case GameDifficulty.ANY:
-                    return "Any";
-
-                case GameDifficulty.EASY:
-                    return "Easy";
-
-                case GameDifficulty.STANDARD:
-                    return "Standard";
-
-                case GameDifficulty.HARD:
-                    return "Hard";
-
-                case GameDifficulty.HARDER:
-                    return "Harder";
-
-                case GameDifficulty.INSANE:
-                    return "Insane";
-            }
-        }
+            GameDifficulty.ANY => "Any",
+            GameDifficulty.EASY => "Easy",
+            GameDifficulty.STANDARD => "Standard",
+            GameDifficulty.HARD => "Hard",
+            GameDifficulty.HARDER => "Harder",
+            GameDifficulty.INSANE => "Insane",
+            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
+        };
     }
 }

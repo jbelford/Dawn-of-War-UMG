@@ -2,6 +2,6 @@
 {
     public class AppSettings
     {
-        public string InstallLocation { get; set; }
+        public string? InstallLocation { get; set; }
     }
 }
