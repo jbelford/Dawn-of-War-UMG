@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Services", "DowUmg.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Presentation.WPF", "DowUmg.Presentation.WPF\DowUmg.Presentation.WPF.csproj", "{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGA", "SGA\SGA.csproj", "{0E467A19-7BB1-42C2-BBF3-D9E1D46150F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4DCC1EE-27CF-4A3A-A962-CBD4F663293C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E467A19-7BB1-42C2-BBF3-D9E1D46150F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E467A19-7BB1-42C2-BBF3-D9E1D46150F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E467A19-7BB1-42C2-BBF3-D9E1D46150F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E467A19-7BB1-42C2-BBF3-D9E1D46150F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
