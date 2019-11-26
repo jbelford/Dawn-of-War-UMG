@@ -14,11 +14,11 @@ namespace DowUmg.Data
             this.appDataProvider = appDataProvider ?? Locator.Current.GetService<IFilePathProvider>();
         }
 
-        public DbSet<ManyMatchupCampaign> Campaigns { get; set; } = null!;
-        public DbSet<SingleMatchupCampaign> Matchups { get; set; } = null!;
+        public DbSet<Campaign> Campaigns { get; set; } = null!;
         public DbSet<DowMap> Maps { get; set; } = null!;
         public DbSet<DowMod> Mods { get; set; } = null!;
         public DbSet<GameRule> GameRules { get; set; } = null!;
+        public DbSet<SaveGame> SaveGames { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,8 +28,10 @@ namespace DowUmg.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SingleMatchupCampaign>().HasBaseType<Campaign>();
-            modelBuilder.Entity<ManyMatchupCampaign>().HasBaseType<Campaign>();
+            modelBuilder.Entity<Scenario>()
+                .HasOne(s => s.Map)
+                .WithMany(m => m.Scenarios)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ScenarioPlayers>()
                 .HasKey(sp => new { sp.ArmyId, sp.ScenarioId });
@@ -42,6 +44,11 @@ namespace DowUmg.Data
                 .WithMany(a => a.Scenarios)
                 .HasForeignKey(sp => sp.ArmyId);
 
+            modelBuilder.Entity<Alliance>()
+                .HasMany(al => al.Armies)
+                .WithOne(a => a.Alliance!)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<GameInfoRule>()
                 .HasKey(ir => new { ir.InfoId, ir.RuleId });
             modelBuilder.Entity<GameInfoRule>()
@@ -52,6 +59,11 @@ namespace DowUmg.Data
                 .HasOne(ir => ir.Rule)
                 .WithMany(r => r.Infos)
                 .HasForeignKey(ir => ir.RuleId);
+
+            modelBuilder.Entity<SaveGame>()
+                .HasOne(sg => sg.Scenario)
+                .WithMany(s => s.SaveGames)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
