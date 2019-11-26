@@ -47,7 +47,8 @@ namespace DowUmg.Migrations.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
-                    Details = table.Column<string>(nullable: false)
+                    Details = table.Column<string>(nullable: false),
+                    Path = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,6 +128,7 @@ namespace DowUmg.Migrations.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false),
+                    Path = table.Column<string>(nullable: false),
                     ModId = table.Column<int>(nullable: false),
                     Players = table.Column<byte>(nullable: false),
                     Size = table.Column<byte>(nullable: false),

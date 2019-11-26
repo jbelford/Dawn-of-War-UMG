@@ -122,6 +122,10 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<byte>("Players")
                         .HasColumnType("INTEGER");
 
@@ -146,6 +150,10 @@ namespace DowUmg.Migrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

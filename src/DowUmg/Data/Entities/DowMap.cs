@@ -8,6 +8,7 @@ namespace DowUmg.Data.Entities
 
         public string Name { get; set; } = null!;
         public string Details { get; set; } = null!;
+        public string Path { get; set; } = null!;
         public DowMod Mod { get; set; } = null!;
         public byte Players { get; set; }
         public byte Size { get; set; }
