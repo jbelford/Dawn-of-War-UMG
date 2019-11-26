@@ -22,7 +22,8 @@ namespace DowUmg.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={this.appDataProvider.DataLocation}");
+            optionsBuilder.UseSqlite($"Data Source={this.appDataProvider.DataLocation}",
+                x => x.MigrationsAssembly("DowUmg.Migrations"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
