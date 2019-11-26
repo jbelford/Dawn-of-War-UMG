@@ -1,8 +1,7 @@
-﻿using DowUmg.Services.Data.Entities;
-using DowUmg.Services.Enums;
+﻿using DowUmg.Enums;
 using System.Collections.Generic;
 
-namespace DowUmg.Services.Models
+namespace DowUmg.Data.Entities
 {
     public class GameInfo
     {

@@ -1,5 +1,5 @@
-﻿using DowUmg.Services;
-using DowUmg.Services.Models;
+﻿using DowUmg.Models;
+using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;

@@ -1,4 +1,4 @@
-﻿namespace DowUmg.Services.Models
+﻿namespace DowUmg.Models
 {
     public class AppSettings
     {

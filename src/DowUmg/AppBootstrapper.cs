@@ -1,10 +1,11 @@
-﻿using DowUmg.Services.Data;
+﻿using DowUmg.Data;
+using DowUmg.Services;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 
-namespace DowUmg.Services
+namespace DowUmg
 {
-    public class ServiceBootstrapper
+    public class AppBootstrapper
     {
         public static void RegisterDefaults()
         {

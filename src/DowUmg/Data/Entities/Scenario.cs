@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DowUmg.Services.Models
+namespace DowUmg.Data.Entities
 {
     public class Scenario
     {

@@ -1,5 +1,5 @@
-﻿using DowUmg.Services.Interfaces;
-using DowUmg.Services.Models;
+﻿using DowUmg.Interfaces;
+using DowUmg.Models;
 using Splat;
 using System.IO;
 

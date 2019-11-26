@@ -1,5 +1,5 @@
-﻿using DowUmg.Presentation.WPF.Services;
-using DowUmg.Services.Data;
+﻿using DowUmg.Data;
+using DowUmg.Presentation.WPF.Services;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace DowUmg.Presentation.DesignTime

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DowUmg.Services.Enums
+namespace DowUmg.Enums
 {
     public enum GameDifficulty
     {

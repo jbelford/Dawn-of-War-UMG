@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DowUmg.Services.Data.Entities
+namespace DowUmg.Data.Entities
 {
     [Owned]
     public class CustomRule

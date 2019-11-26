@@ -46,7 +46,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SGA
+namespace DowUmg.FileFormats
 {
     /// <summary>
     /// Header for SGA file

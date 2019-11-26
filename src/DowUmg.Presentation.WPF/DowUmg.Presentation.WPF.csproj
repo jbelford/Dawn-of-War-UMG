@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="ReactiveUI.Events.WPF" Version="10.5.31" />
     <PackageReference Include="ReactiveUI.WPF" Version="10.5.31" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
@@ -19,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DowUmg\DowUmg.csproj" />
     <ProjectReference Include="..\DowUmg.Presentation\DowUmg.Presentation.csproj" />
-    <ProjectReference Include="..\DowUmg.Services\DowUmg.Services.csproj" />
   </ItemGroup>
 </Project>

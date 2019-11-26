@@ -1,9 +1,9 @@
-﻿using DowUmg.Services.Interfaces;
-using DowUmg.Services.Models;
+﻿using DowUmg.Data.Entities;
+using DowUmg.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 
-namespace DowUmg.Services.Data
+namespace DowUmg.Data
 {
     public class DataContext : DbContext
     {
