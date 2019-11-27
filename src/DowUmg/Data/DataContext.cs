@@ -30,7 +30,7 @@ namespace DowUmg.Data
         {
             modelBuilder.Entity<Scenario>()
                 .HasOne(s => s.Map)
-                .WithMany(m => m.Scenarios)
+                .WithMany()
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ScenarioPlayers>()
@@ -41,7 +41,7 @@ namespace DowUmg.Data
                 .HasForeignKey(sp => sp.ScenarioId);
             modelBuilder.Entity<ScenarioPlayers>()
                 .HasOne(sp => sp.Army)
-                .WithMany(a => a.Scenarios)
+                .WithMany()
                 .HasForeignKey(sp => sp.ArmyId);
 
             modelBuilder.Entity<Alliance>()

@@ -1,7 +1,6 @@
 ﻿using DowUmg.Interfaces;
 using DowUmg.Presentation.WPF.Services;
 using DowUmg.Presentation.WPF.Views;
-using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using Splat;
 using System.Reflection;
@@ -37,8 +36,8 @@ namespace DowUmg.Presentation.WPF
 
         private void MigrateDatabase()
         {
-            DbContext context = Locator.Current.GetService<DbContext>();
-            context.Database.Migrate();
+            //DbContext context = Locator.Current.GetService<DbContext>();
+            //context.Database.Migrate();
         }
     }
 }

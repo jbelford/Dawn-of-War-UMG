@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DowUmg.Data.Entities
+﻿namespace DowUmg.Data.Entities
 {
     public class Army
     {
@@ -12,7 +10,5 @@ namespace DowUmg.Data.Entities
         public string Race { get; set; } = null!;
         public Alliance? Alliance { get; set; }
         public string? Image { get; set; }
-
-        public List<ScenarioPlayers> Scenarios { get; set; } = new List<ScenarioPlayers>();
     }
 }

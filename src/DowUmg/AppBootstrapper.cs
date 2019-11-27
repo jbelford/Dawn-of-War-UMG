@@ -1,6 +1,4 @@
-﻿using DowUmg.Data;
-using DowUmg.Services;
-using Microsoft.EntityFrameworkCore;
+﻿using DowUmg.Services;
 using Splat;
 
 namespace DowUmg
@@ -9,9 +7,7 @@ namespace DowUmg
     {
         public static void RegisterDefaults()
         {
-            Locator.CurrentMutable.RegisterLazySingleton(() => new DataLoader());
             Locator.CurrentMutable.RegisterLazySingleton(() => new AppSettingsService());
-            Locator.CurrentMutable.Register<DbContext>(() => new DataContext());
         }
     }
 }

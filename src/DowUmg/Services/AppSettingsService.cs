@@ -1,4 +1,5 @@
-﻿using DowUmg.Interfaces;
+﻿using DowUmg.FileFormats;
+using DowUmg.Interfaces;
 using DowUmg.Models;
 using Splat;
 using System.IO;
@@ -7,14 +8,12 @@ namespace DowUmg.Services
 {
     public class AppSettingsService
     {
-        private readonly DataLoader loader;
         private readonly IFilePathProvider filePathProvider;
         private AppSettings? _settings;
 
-        public AppSettingsService(IFilePathProvider? provider = null, DataLoader? loader = null)
+        public AppSettingsService(IFilePathProvider? provider = null)
         {
             this.filePathProvider = provider ?? Locator.Current.GetService<IFilePathProvider>();
-            this.loader = loader ?? Locator.Current.GetService<DataLoader>();
         }
 
         public AppSettings Settings
@@ -33,7 +32,7 @@ namespace DowUmg.Services
             set
             {
                 _settings = value;
-                loader.SaveJson(this.filePathProvider.SettingsLocation, _settings);
+                new JsonLoader<AppSettings>().Write(this.filePathProvider.SettingsLocation, _settings);
             }
         }
 
@@ -41,11 +40,13 @@ namespace DowUmg.Services
         {
             string settingsPath = this.filePathProvider.SettingsLocation;
 
+            var loader = new JsonLoader<AppSettings>();
+
             AppSettings settings;
 
             if (File.Exists(settingsPath))
             {
-                settings = loader.LoadJson<AppSettings>(settingsPath);
+                settings = loader.Load(settingsPath);
             }
             else
             {
@@ -53,7 +54,7 @@ namespace DowUmg.Services
                 {
                     InstallLocation = this.filePathProvider.SoulstormLocation
                 };
-                loader.SaveJson(settingsPath, settings);
+                loader.Write(settingsPath, settings);
             }
 
             return settings;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DowUmg.Data.Entities
+﻿namespace DowUmg.Data.Entities
 {
     public class DowMap
     {
@@ -13,7 +11,5 @@ namespace DowUmg.Data.Entities
         public byte Players { get; set; }
         public byte Size { get; set; }
         public string Image { get; set; } = null!;
-
-        public List<Scenario> Scenarios { get; } = new List<Scenario>();
     }
 }
