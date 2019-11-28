@@ -39,12 +39,17 @@
 //0x00C - Unknown(4)
 //0x010 - Data Len(4)
 
+using DowUmg.Extensions;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DowUmg.FileFormats
 {
@@ -166,7 +171,8 @@ namespace DowUmg.FileFormats
     {
         private readonly BinaryReader reader;
 
-        private readonly SgaToc[] tocs;
+        private readonly SgaFileHeader header;
+        private readonly SgaDirectory[] directories;
 
         /// <summary>
         /// Create a new SgaFileReader. Will immediately read the header information
@@ -174,19 +180,25 @@ namespace DowUmg.FileFormats
         /// </summary>
         /// <param name="stream">A SGA file stream</param>
         /// <exception cref="IOException" />
-        public SgaFileReader(FileStream stream)
+        public SgaFileReader(string filePath)
         {
-            this.reader = new BinaryReader(stream);
+            this.reader = new BinaryReader(File.OpenRead(filePath));
             try
             {
-                SgaFileHeader header = ReadFileHeader();
+                this.header = ReadFileHeader();
                 byte[] dataHeaderBuffer = ReadDataHeader(header);
                 SgaDataHeaderInfo dataHeaderInfo = ReadDataHeaderInfo(dataHeaderBuffer);
 
                 SgaFile[] files = ReadFiles(header, dataHeaderInfo, dataHeaderBuffer);
                 SgaDirectory[] directories = ReadDirs(files, dataHeaderInfo, dataHeaderBuffer);
 
-                this.tocs = ReadTocs(directories, dataHeaderInfo, dataHeaderBuffer);
+                var tocs = ReadTocs(directories, dataHeaderInfo, dataHeaderBuffer);
+                if (tocs.Length != 1)
+                {
+                    throw new IOException($"SGA file does not have exactly 1 TOC {filePath}");
+                }
+
+                this.directories = directories;
             }
             catch (IOException ex)
             {
@@ -198,6 +210,53 @@ namespace DowUmg.FileFormats
         public void Dispose()
         {
             this.reader.Dispose();
+        }
+
+        public IObservable<SgaRawFile> GetScenarios()
+        {
+            int pos = this.directories.BinarySearch((directory) => @"scenarios\mp".CompareTo(directory.Name));
+            if (pos < 1)
+            {
+                return Observable.Empty<SgaRawFile>();
+            }
+
+            SgaDirectory dir = this.directories[pos];
+
+            return Observable.Create<SgaRawFile>((observer, cancellationToken) => Task.Factory.StartNew(
+                () =>
+                {
+                    var reg = new Regex(@"((_icon|_mm)(_custom)?)\.tga$");
+                    SgaFile[] files = dir.Files.Where(x => reg.IsMatch(x.Name)).ToArray();
+
+                    foreach (var file in files)
+                    {
+                        observer.OnNext(ReadFile(file));
+                    }
+
+                    observer.OnCompleted();
+                },
+                cancellationToken,
+                TaskCreationOptions.None,
+                TaskScheduler.Default));
+        }
+
+        private SgaRawFile ReadFile(SgaFile file)
+        {
+            this.reader.BaseStream.Seek(Convert.ToInt32(this.header.DataOffset) + file.Info.DataOffset, SeekOrigin.Begin);
+
+            byte[] data = this.reader.ReadBytes(Convert.ToInt32(file.Info.DataLengthCompressed));
+
+            if (file.Info.DataLength != file.Info.DataLengthCompressed)
+            {
+                using var outputStream = new MemoryStream();
+                using (var inputStream = new InflaterInputStream(new MemoryStream(data)))
+                {
+                    inputStream.CopyTo(outputStream);
+                }
+                data = outputStream.ToArray();
+            }
+
+            return new SgaRawFile(file.Name, data);
         }
 
         /// <summary>
@@ -243,6 +302,9 @@ namespace DowUmg.FileFormats
             return header;
         }
 
+        //public SgaFile[] GetWinConditions()
+        //{
+        //}
         /// <summary>
         /// Reads the Data header into buffer and verifies the checksum.
         /// </summary>
@@ -304,12 +366,7 @@ namespace DowUmg.FileFormats
                     FolderOffset = BitConverter.ToUInt32(dataHeaderBuffer, offset + 136)
                 };
 
-                var toc = new SgaToc(info);
-
-                // Only add first directory as it will be the root for this archive.
-                toc.Directories.Add(directories[info.StartDir]);
-
-                tocs[i] = toc;
+                tocs[i] = new SgaToc(directories[info.StartDir], info);
             }
 
             return tocs;
@@ -415,18 +472,29 @@ namespace DowUmg.FileFormats
                 }
             }
         }
+
+        public class SgaRawFile
+        {
+            public SgaRawFile(string name, byte[] data)
+            {
+                Name = name;
+                Data = data;
+            }
+
+            public string Name { get; }
+            public byte[] Data { get; }
+        }
     }
 
     internal class SgaToc
     {
-        public SgaToc(SgaToCInfo info)
+        public SgaToc(SgaDirectory root, SgaToCInfo info)
         {
+            RootDirectory = root;
             Info = info;
         }
 
-        public List<SgaDirectory> Directories { get; } = new List<SgaDirectory>();
-
-        //public List<SgaFile> Files { get; } = new List<SgaFile>();
+        public SgaDirectory RootDirectory { get; }
         public SgaToCInfo Info { get; }
     }
 

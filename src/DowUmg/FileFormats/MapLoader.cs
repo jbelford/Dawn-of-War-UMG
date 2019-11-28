@@ -53,7 +53,7 @@ namespace DowUmg.FileFormats
             }
 
             // Unknown yet whether DATAWHMD always starts here or not.
-            reader.BaseStream.Seek(32, SeekOrigin.Begin);
+            reader.BaseStream.Seek(44, SeekOrigin.Begin);
 
             string label = Encoding.UTF8.GetString(reader.ReadBytes(8));
             if (!"DATAWMHD".Equals(label))
