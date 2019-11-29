@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace DowUmg.FileFormats
 {
-    public class DowModule
+    public class DowModuleFile
     {
         public string UIName { get; set; } = null!;
         public string Description { get; set; } = null!;
@@ -17,7 +17,7 @@ namespace DowUmg.FileFormats
         public string[] RequiredMods { get; set; } = null!;
     }
 
-    public class ModuleLoader : IFileLoader<DowModule>
+    public class ModuleLoader : IFileLoader<DowModuleFile>
     {
         private readonly FileIniDataParser parser;
 
@@ -26,14 +26,14 @@ namespace DowUmg.FileFormats
             this.parser = new FileIniDataParser();
         }
 
-        public DowModule Load(string filePath)
+        public DowModuleFile Load(string filePath)
         {
             IniData data = this.parser.ReadFile(filePath);
             KeyDataCollection global = data["global"];
 
             var reg = new Regex(@"^RequiredMod\.\d+$");
 
-            return new DowModule()
+            return new DowModuleFile()
             {
                 UIName = global["UIName"],
                 Description = global["Description"],

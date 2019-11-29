@@ -20,7 +20,7 @@ namespace DowUmg.Services
         /// Detects and returns Dawn of War Module files.
         /// </summary>
         /// <exception cref="IOException" />
-        public DowModule[] GetAllModules()
+        public DowModuleFile[] GetAllModules()
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
 
@@ -30,7 +30,7 @@ namespace DowUmg.Services
             return files.Select(x => moduleLoader.Load(x)).ToArray();
         }
 
-        public Dictionary<int, string> GetLocales(DowModule module)
+        public Dictionary<int, string> GetLocales(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
             string localePath = Path.Combine(dowPath, module.ModFolder, "Locale", "English");
@@ -45,7 +45,7 @@ namespace DowUmg.Services
                 .ToDictionary(x => x.Key, x => x.Last());
         }
 
-        public MapFile[] GetMaps(DowModule module)
+        public MapFile[] GetMaps(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
             string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");

@@ -212,9 +212,24 @@ namespace DowUmg.FileFormats
             this.reader.Dispose();
         }
 
-        public IObservable<SgaRawFile> GetScenarios()
+        public IObservable<SgaRawFile> GetScenarioImages()
         {
-            int pos = this.directories.BinarySearch((directory) => @"scenarios\mp".CompareTo(directory.Name));
+            return GetFiles(@"scenarios\mp", @"((_icon|_mm)(_custom)?)\.tga$");
+        }
+
+        public IObservable<SgaRawFile> GetWinConditions()
+        {
+            return GetFiles(@"scar\winconditions", @"_local\.lua$");
+        }
+
+        public IObservable<SgaRawFile> GetLocales()
+        {
+            return GetFiles(@"Locale\English", @"\.ucs");
+        }
+
+        private IObservable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
+        {
+            int pos = this.directories.BinarySearch((directory) => directoryPath.CompareTo(directory.Name));
             if (pos < 0)
             {
                 return Observable.Empty<SgaRawFile>();
@@ -225,7 +240,7 @@ namespace DowUmg.FileFormats
             return Observable.Create<SgaRawFile>((observer, cancellationToken) => Task.Factory.StartNew(
                 () =>
                 {
-                    var reg = new Regex(@"((_icon|_mm)(_custom)?)\.tga$");
+                    var reg = new Regex(filePattern);
                     SgaFile[] files = dir.Files.Where(x => reg.IsMatch(x.Name)).ToArray();
 
                     foreach (var file in files)
@@ -302,9 +317,6 @@ namespace DowUmg.FileFormats
             return header;
         }
 
-        //public SgaFile[] GetWinConditions()
-        //{
-        //}
         /// <summary>
         /// Reads the Data header into buffer and verifies the checksum.
         /// </summary>
