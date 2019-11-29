@@ -6,8 +6,6 @@ namespace DowUmg.Models
 {
     public class GameInfo
     {
-        public int Id { get; set; }
-
         public GameDifficulty? Difficulty { get; set; }
         public GameResourceRate? ResourceRate { get; set; }
         public GameSpeed? Speed { get; set; }

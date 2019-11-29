@@ -5,8 +5,6 @@ namespace DowUmg.Models
 {
     public class Scenario
     {
-        public int Id { get; set; }
-
         public string Name { get; set; } = null!;
         public string Details { get; set; } = null!;
 
