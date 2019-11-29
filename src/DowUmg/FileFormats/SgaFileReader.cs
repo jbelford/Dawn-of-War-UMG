@@ -262,9 +262,14 @@ namespace DowUmg.FileFormats
 
         private SgaRawFile ReadFile(SgaFile file)
         {
-            this.reader.BaseStream.Seek(Convert.ToInt32(this.header.DataOffset) + file.Info.DataOffset, SeekOrigin.Begin);
+            byte[] data;
 
-            byte[] data = this.reader.ReadBytes(Convert.ToInt32(file.Info.DataLengthCompressed));
+            lock (this.reader)
+            {
+                this.reader.BaseStream.Seek(Convert.ToInt32(this.header.DataOffset) + file.Info.DataOffset, SeekOrigin.Begin);
+
+                data = this.reader.ReadBytes(Convert.ToInt32(file.Info.DataLengthCompressed));
+            }
 
             if (file.Info.DataLength != file.Info.DataLengthCompressed)
             {
@@ -364,6 +369,7 @@ namespace DowUmg.FileFormats
             };
         }
 
+        // This method is not really needed anymore but will leave here for future reference
         private SgaToc[] ReadTocs(in SgaDirectory[] directories, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
         {
             var tocs = new SgaToc[dataHeaderInfo.ToCCount];
