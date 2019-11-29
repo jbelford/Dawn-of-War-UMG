@@ -1,7 +1,8 @@
-﻿using DowUmg.Enums;
+﻿using DowUmg.Data.Entities;
+using DowUmg.Enums;
 using System.Collections.Generic;
 
-namespace DowUmg.Data.Entities
+namespace DowUmg.Models
 {
     public class GameInfo
     {
@@ -17,17 +18,6 @@ namespace DowUmg.Data.Entities
         public bool? Sharing { get; set; }
 
         public List<CustomRule> CustomRules { get; set; } = new List<CustomRule>();
-        public List<GameInfoRule> Rules { get; set; } = new List<GameInfoRule>();
-    }
-
-    /// <summary>
-    /// Must explicitly define entity for many-to-many relationship
-    /// </summary>
-    public class GameInfoRule
-    {
-        public int RuleId { get; set; }
-        public GameRule Rule { get; set; } = null!;
-        public int InfoId { get; set; }
-        public GameInfo Info { get; set; } = null!;
+        public List<GameRule> Rules { get; set; } = new List<GameRule>();
     }
 }

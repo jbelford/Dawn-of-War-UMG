@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using DowUmg.Data.Entities;
+using System.Collections.Generic;
 
-namespace DowUmg.Data.Entities
+namespace DowUmg.Models
 {
     public class Scenario
     {
@@ -20,14 +20,7 @@ namespace DowUmg.Data.Entities
 
         public string? Image { get; set; }
 
-        public int? PreviousId { get; set; }
-
-        [ForeignKey("PreviousId")]
         public Scenario? Previous { get; set; }
-
-        public int? NextId { get; set; }
-
-        [ForeignKey("NextId")]
         public Scenario? Next { get; set; }
 
         public GameInfo? Info { get; set; }
@@ -37,12 +30,7 @@ namespace DowUmg.Data.Entities
 
     public class ScenarioPlayers
     {
-        public int ScenarioId { get; set; }
-        public Scenario Scenario { get; set; } = null!;
-
-        public int ArmyId { get; set; }
-        public Army Army { get; set; } = null!;
-
         public byte Position { get; set; }
+        public Army Army { get; set; } = null!;
     }
 }

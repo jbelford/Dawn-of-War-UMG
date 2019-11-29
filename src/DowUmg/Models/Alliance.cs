@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DowUmg.Data.Entities
+namespace DowUmg.Models
 {
     public class Alliance
     {

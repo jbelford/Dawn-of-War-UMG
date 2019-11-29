@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DowUmg.Data.Entities
+﻿namespace DowUmg.Data.Entities
 {
     public class GameRule
     {
@@ -10,7 +8,5 @@ namespace DowUmg.Data.Entities
         public string Details { get; set; } = null!;
         public DowMod Mod { get; set; } = null!;
         public bool IsWinCondition { get; set; }
-
-        public List<GameInfoRule> Infos { get; set; } = new List<GameInfoRule>();
     }
 }

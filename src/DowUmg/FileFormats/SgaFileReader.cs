@@ -215,7 +215,7 @@ namespace DowUmg.FileFormats
         public IObservable<SgaRawFile> GetScenarios()
         {
             int pos = this.directories.BinarySearch((directory) => @"scenarios\mp".CompareTo(directory.Name));
-            if (pos < 1)
+            if (pos < 0)
             {
                 return Observable.Empty<SgaRawFile>();
             }

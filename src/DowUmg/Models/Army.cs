@@ -1,4 +1,4 @@
-﻿namespace DowUmg.Data.Entities
+﻿namespace DowUmg.Models
 {
     public class Army
     {

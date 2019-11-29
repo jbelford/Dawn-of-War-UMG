@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace DowUmg.Data.Entities
+﻿namespace DowUmg.Models
 {
-    [Owned]
     public class CustomRule
     {
         public int Id { get; set; }
