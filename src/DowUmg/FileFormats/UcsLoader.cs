@@ -9,9 +9,15 @@ namespace DowUmg.FileFormats
     {
         public Dictionary<int, string> Load(string filePath)
         {
+            using var stream = File.OpenRead(filePath);
+            return Load(stream);
+        }
+
+        public Dictionary<int, string> Load(Stream stream)
+        {
             var locales = new Dictionary<int, string>();
 
-            using (var r = new StreamReader(filePath))
+            using (var r = new StreamReader(stream))
             {
                 while (!r.EndOfStream)
                 {

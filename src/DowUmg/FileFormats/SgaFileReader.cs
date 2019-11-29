@@ -212,9 +212,14 @@ namespace DowUmg.FileFormats
             this.reader.Dispose();
         }
 
+        public IObservable<SgaRawFile> GetScenarios()
+        {
+            return GetFiles(@"scenarios\mp", @"\.sgb");
+        }
+
         public IObservable<SgaRawFile> GetScenarioImages()
         {
-            return GetFiles(@"scenarios\mp", @"((_icon|_mm)(_custom)?)\.tga$");
+            return GetFiles(@"scenarios\mp", @"(_icon|_mm)(_custom)?\.tga$");
         }
 
         public IObservable<SgaRawFile> GetWinConditions()
@@ -263,7 +268,7 @@ namespace DowUmg.FileFormats
 
             if (file.Info.DataLength != file.Info.DataLengthCompressed)
             {
-                using var outputStream = new MemoryStream();
+                var outputStream = new MemoryStream();
                 using (var inputStream = new InflaterInputStream(new MemoryStream(data)))
                 {
                     inputStream.CopyTo(outputStream);

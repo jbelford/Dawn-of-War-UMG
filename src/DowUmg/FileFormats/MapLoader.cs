@@ -44,12 +44,17 @@ namespace DowUmg.FileFormats
         /// <exception cref="IOException" />
         public MapFile Load(string filePath)
         {
-            using var reader = new BinaryReader(File.OpenRead(filePath));
+            return Load(File.OpenRead(filePath));
+        }
+
+        public MapFile Load(Stream stream)
+        {
+            using var reader = new BinaryReader(stream);
 
             string chunky = Encoding.UTF8.GetString(reader.ReadBytes(12));
             if (!"Relic Chunky".Equals(chunky))
             {
-                throw new ArgumentException($"Not a Relic Chunky {filePath}");
+                throw new ArgumentException($"Not a Relic Chunky");
             }
 
             // Unknown yet whether DATAWHMD always starts here or not.
@@ -58,7 +63,7 @@ namespace DowUmg.FileFormats
             string label = Encoding.UTF8.GetString(reader.ReadBytes(8));
             if (!"DATAWMHD".Equals(label))
             {
-                throw new IOException($"Could not read {filePath} due to malformatted data");
+                throw new IOException($"Could not read due to malformatted data");
             }
 
             reader.BaseStream.Seek(8, SeekOrigin.Current);
