@@ -45,11 +45,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DowUmg.FileFormats
 {
@@ -242,8 +242,7 @@ namespace DowUmg.FileFormats
 
             SgaDirectory dir = this.directories[pos];
 
-            return Observable.Create<SgaRawFile>((observer, cancellationToken) => Task.Factory.StartNew(
-                () =>
+            return Observable.Create<SgaRawFile>(observer =>
                 {
                     var reg = new Regex(filePattern);
                     SgaFile[] files = dir.Files.Where(x => reg.IsMatch(x.Name)).ToArray();
@@ -254,10 +253,9 @@ namespace DowUmg.FileFormats
                     }
 
                     observer.OnCompleted();
-                },
-                cancellationToken,
-                TaskCreationOptions.None,
-                TaskScheduler.Default));
+
+                    return Disposable.Empty;
+                });
         }
 
         private SgaRawFile ReadFile(SgaFile file)

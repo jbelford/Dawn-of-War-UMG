@@ -1,12 +1,18 @@
 ﻿using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using Splat;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DowUmg.Services
 {
+    /// <summary>
+    /// A service for finding and loading files
+    /// </summary>
     public class ModuleService
     {
         private readonly IFilePathProvider filePathProvider;
@@ -20,14 +26,24 @@ namespace DowUmg.Services
         /// Detects and returns Dawn of War Module files.
         /// </summary>
         /// <exception cref="IOException" />
-        public DowModuleFile[] GetAllModules()
+        public IObservable<DowModuleFile> GetAllModules()
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
+            return Observable.Create<DowModuleFile>(observer =>
+                {
+                    string[] files = Directory.GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly);
 
-            string[] files = Directory.GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly);
+                    var moduleLoader = new ModuleLoader();
 
-            var moduleLoader = new ModuleLoader();
-            return files.Select(x => moduleLoader.Load(x)).ToArray();
+                    foreach (string file in files)
+                    {
+                        observer.OnNext(moduleLoader.Load(file));
+                    }
+
+                    observer.OnCompleted();
+
+                    return Disposable.Empty;
+                });
         }
 
         public Dictionary<int, string> GetLocales(DowModuleFile module)
@@ -45,15 +61,26 @@ namespace DowUmg.Services
                 .ToDictionary(x => x.Key, x => x.Last());
         }
 
-        public MapFile[] GetMaps(DowModuleFile module)
+        public IObservable<MapFile> GetMaps(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
-            string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");
+            return Observable.Create<MapFile>((observer) =>
+                {
+                    string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");
 
-            string[] files = Directory.GetFiles(mapsPath, "*.sgb", SearchOption.AllDirectories);
+                    string[] files = Directory.GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly);
 
-            var mapsLoader = new MapLoader();
-            return files.Select(x => mapsLoader.Load(x)).ToArray();
+                    var mapsLoader = new MapLoader();
+
+                    foreach (string file in files)
+                    {
+                        observer.OnNext(mapsLoader.Load(file));
+                    }
+
+                    observer.OnCompleted();
+
+                    return Disposable.Empty;
+                });
         }
     }
 }
