@@ -44,9 +44,6 @@ namespace DowUmg.Presentation.WPF.Views
                 this.BindCommand(ViewModel, x => x.SelectDirectory, x => x.selectDirectoryButton)
                     .DisposeWith(disposables);
 
-                this.BindCommand(ViewModel, x => x.GoBack, x => x.cancelButton)
-                    .DisposeWith(disposables);
-
                 this.BindCommand(ViewModel, x => x.SaveSettings, x => x.saveButton)
                     .DisposeWith(disposables);
             });

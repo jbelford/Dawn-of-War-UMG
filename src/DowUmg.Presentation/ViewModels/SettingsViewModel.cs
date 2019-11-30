@@ -49,27 +49,15 @@ namespace DowUmg.Presentation.ViewModels
             });
         }
 
-        #region Commands
-
         public ReactiveCommand<Unit, Unit> GoBack { get; }
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
         public ReactiveCommand<Unit, Unit> SelectDirectory { get; }
 
-        #endregion Commands
-
-        #region Interactions
-
         public Interaction<string, string> GetDirectory { get; }
-
-        #endregion Interactions
 
         [Reactive] public string SoulstormDirectory { get; private set; }
 
-        #region Routing
-
         public IScreen HostScreen { get; }
         public string UrlPathSegment => "settings";
-
-        #endregion Routing
     }
 }

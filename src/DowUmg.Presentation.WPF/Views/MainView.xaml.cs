@@ -17,26 +17,29 @@ namespace DowUmg.Presentation.WPF.Views
         {
             InitializeComponent();
 
-            this.WhenActivated(disposables =>
+            this.WhenActivated(d =>
             {
                 this.campaignButton.Events().Click
                     .Select(args => MainViewModel.MenuType.Campaign)
                     .InvokeCommand(this, x => x.ViewModel.OpenContextMenu)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.matchupButton.Events().Click
                     .Select(args => MainViewModel.MenuType.Matchup)
                     .InvokeCommand(this, x => x.ViewModel.OpenContextMenu)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.SettingsAction, x => x.settingsButton)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
+
+                this.BindCommand(ViewModel, x => x.ModsAction, x => x.modsButton)
+                    .DisposeWith(d);
 
                 this.Bind(ViewModel, viewModel => viewModel.ContextMenuIsVisible, view => view.matchupButton.ContextMenu.IsOpen)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.quitButton)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
             });
         }
     }

@@ -1,0 +1,29 @@
+﻿<rxui:ReactiveUserControl
+        x:Class="DowUmg.Presentation.WPF.Controls.ModItemControl"
+        x:TypeArguments="vm:ModItemViewModel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:rxui="http://reactiveui.net"
+        xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d" d:DesignWidth="247.803" d:DesignHeight="49.92">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="Text" Grid.Column="0" Grid.Row="1">
+            <StackPanel x:Name="ItemContent">
+                <TextBlock x:Name="ModName" Text="My Mod" />
+                <TextBlock x:Name="ModDesc" Text="This is a description" />
+            </StackPanel>
+        </TextBlock>
+        <Button x:Name="LoadButton" Grid.Column="2" Grid.Row="1" Margin="5" Content="Load" />
+    </Grid>
+</rxui:ReactiveUserControl>

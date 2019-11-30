@@ -14,10 +14,12 @@ namespace DowUmg.Presentation.WPF.Views
             InitializeComponent();
             ViewModel = new RoutingViewModel();
 
-            this.WhenActivated(disposables =>
+            this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.GoHome, v => v.HomeButton).DisposeWith(d);
             });
         }
     }

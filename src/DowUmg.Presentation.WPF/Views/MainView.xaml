@@ -8,7 +8,7 @@
         xmlns:viewmodels="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d"
-        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" d:DesignWidth="936.913" d:DesignHeight="558.5">
     <StackPanel Margin="20">
         <TextBlock Text="Dawn of War: Ultimate Matchup Generator" HorizontalAlignment="Center" FontSize="36"
             Margin="0,0,0,20" FontWeight="SemiBold" />
@@ -36,6 +36,7 @@
             <Button x:Name="campaignButton" Content="Campaign" ContextMenu="{StaticResource contextMenu}" />
             <Button x:Name="matchupButton" Content="Matchup" ContextMenu="{StaticResource contextMenu}" />
             <Button x:Name="importButton" Content="Import" />
+            <Button x:Name="modsButton" Content="Mods" />
             <Button x:Name="settingsButton" Content="Settings" />
             <Button x:Name="quitButton" Content="Quit" />
         </StackPanel>

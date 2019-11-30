@@ -9,19 +9,19 @@ namespace DowUmg.Presentation.ViewModels
         {
             Router = new RoutingState();
 
+            GoHome = ReactiveCommand.CreateFromObservable(() => Router.NavigateAndReset.Execute(new MainViewModel(this)));
             GoToSettings = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new SettingsViewModel(this)));
+            GotToMods = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new ModsViewModel(this)));
 
             GoBack = Router.NavigateBack;
 
-            Router.NavigateAndReset.Execute(new MainViewModel(this));
+            GoHome.Execute();
         }
 
-        #region Commands
-
         public ReactiveCommand<Unit, Unit> GoBack { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoHome { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
-
-        #endregion Commands
+        public ReactiveCommand<Unit, IRoutableViewModel> GotToMods { get; }
 
         public RoutingState Router { get; }
     }

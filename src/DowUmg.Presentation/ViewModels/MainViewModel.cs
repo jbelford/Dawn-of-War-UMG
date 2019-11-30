@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System;
 using System.Reactive;
 
@@ -6,7 +7,6 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class MainViewModel : ReactiveObject, IRoutableViewModel
     {
-        private bool _contextMenuIsVisible;
         private MenuType menuSelected;
 
         public MainViewModel(RoutingViewModel routing)
@@ -24,6 +24,7 @@ namespace DowUmg.Presentation.ViewModels
             ExportAction = ReactiveCommand.Create(() => { /* todo */ });
 
             SettingsAction = routing.GoToSettings;
+            ModsAction = routing.GotToMods;
 
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
 
@@ -31,22 +32,16 @@ namespace DowUmg.Presentation.ViewModels
                 .Subscribe(_ => this.menuSelected = MenuType.None);
         }
 
-        #region Commands
-
         public ReactiveCommand<Unit, Unit> CloseApp { get; }
         public ReactiveCommand<Unit, Unit> ExportAction { get; }
         public ReactiveCommand<Unit, Unit> LoadAction { get; }
         public ReactiveCommand<Unit, Unit> NewAction { get; }
         public ReactiveCommand<MenuType, Unit> OpenContextMenu { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> ModsAction { get; }
 
-        #endregion Commands
-
-        public bool ContextMenuIsVisible
-        {
-            get => _contextMenuIsVisible;
-            set => this.RaiseAndSetIfChanged(ref this._contextMenuIsVisible, value);
-        }
+        [Reactive]
+        public bool ContextMenuIsVisible { get; private set; }
 
         public IScreen HostScreen { get; }
 

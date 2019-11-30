@@ -9,8 +9,21 @@
         xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
         mc:Ignorable="d"
         Title="Dawn of War: UMG" Height="768" Width="1366">
-
-    <rxui:RoutedViewHost x:Name="RoutedViewHost"
+    <DockPanel>
+        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="0,0,0,2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button x:Name="HomeButton" Background="Transparent" BorderThickness="0"
+                        FontSize="16" Padding="10,5" Grid.Column="0" Content="Home" />
+            </Grid>
+        </Border>
+        <rxui:RoutedViewHost x:Name="RoutedViewHost"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch" />
+    </DockPanel>
 </rxui:ReactiveWindow>

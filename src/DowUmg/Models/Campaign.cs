@@ -4,7 +4,7 @@ namespace DowUmg.Models
 {
     public class Campaign
     {
-        public string? FileName { get; set; };
+        public string? FileName { get; set; }
         public string Name { get; set; } = null!;
         public string Details { get; set; } = null!;
         public bool IsSingle { get; set; }
