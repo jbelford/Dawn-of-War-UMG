@@ -13,18 +13,18 @@ namespace DowUmg.Presentation.ViewModels
     {
         private readonly AppSettingsService settingsService;
 
-        public SettingsViewModel(RoutingViewModel routing, AppSettingsService settingsService = null)
+        public SettingsViewModel(RoutingViewModel routing, AppSettingsService? settingsService = null)
         {
             this.settingsService = settingsService ?? Locator.Current.GetService<AppSettingsService>();
 
             GetDirectory = new Interaction<string, string>();
             HostScreen = routing;
             GoBack = routing.GoBack;
-            SoulstormDirectory = this.settingsService.Settings.InstallLocation;
+            SoulstormDirectory = this.settingsService.Settings.InstallLocation!;
 
             var canSave = this.WhenAnyValue(x => x.SoulstormDirectory)
-                .Select((dir) => !this.settingsService.Settings.InstallLocation.Equals(dir, StringComparison.OrdinalIgnoreCase))
-                .DistinctUntilChanged();
+                .Select(dir => !string.Equals(this.settingsService.Settings.InstallLocation, dir, StringComparison.OrdinalIgnoreCase))
+                .Distinct();
 
             SaveSettings = ReactiveCommand.Create(() =>
             {

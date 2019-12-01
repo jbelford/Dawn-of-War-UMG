@@ -1,4 +1,5 @@
-﻿using DowUmg.Services;
+﻿using DowUmg.Data.Entities;
+using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -12,8 +13,8 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class ModsViewModel : ReactiveObject, IRoutableViewModel, IEnableLogger
     {
-        private IFullLogger logger;
-        private DowModService dowModService;
+        private readonly IFullLogger logger;
+        private readonly DowModService dowModService;
 
         public ModsViewModel(RoutingViewModel routing, DowModService? dowModService = null)
         {
@@ -25,14 +26,15 @@ namespace DowUmg.Presentation.ViewModels
 
             RefreshMods = ReactiveCommand.CreateFromTask(async () =>
             {
-                var loaded = this.dowModService.GetLoadedMods();
+                List<DowMod> loaded = this.dowModService.GetLoadedMods();
                 IList<ModItemViewModel> mods = await this.dowModService.GetUnloadedMods()
                     .Select(mod => new ModItemViewModel()
                     {
                         Module = mod.File,
                         IsLoaded = loaded.Exists(loaded => mod.File.ModFolder.Equals(loaded.Path))
                     })
-                    .ToList();
+                    .ToList()
+                    .SubscribeOn(RxApp.TaskpoolScheduler);
 
                 static bool IsMod(string str) => !"dxp2".Equals(str) && !"w40k".Equals(str);
 

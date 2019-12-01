@@ -22,4 +22,8 @@
     <ProjectReference Include="..\DowUmg\DowUmg.csproj" />
     <ProjectReference Include="..\DowUmg.Presentation\DowUmg.Presentation.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
