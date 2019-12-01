@@ -2,7 +2,6 @@
 using DowUmg.Data.Entities;
 using DowUmg.FileFormats;
 using Splat;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -24,18 +23,19 @@ namespace DowUmg.Services
             return context.Mods.ToList();
         }
 
-        public IObservable<UnloadedMod> GetUnloadedMods()
+        public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
             return this.moduleService.GetAllModules()
                 .Where(x => x.Playable || "w40k".Equals(x.ModFolder.ToLower()))
-                .Select(module => new UnloadedMod() { File = module, Locales = this.moduleService.GetLocales(module) })
-                .Do(unloaded =>
+                .Select(module =>
                 {
-                    if (unloaded.Locales != null)
+                    Locales? locales = this.moduleService.GetLocales(module);
+                    if (locales != null)
                     {
-                        unloaded.File.UIName = unloaded.Locales.Replace(unloaded.File.UIName);
-                        unloaded.File.Description = unloaded.Locales.Replace(unloaded.File.Description);
+                        module.UIName = locales.Replace(module.UIName);
+                        module.Description = locales.Replace(module.Description);
                     }
+                    return new UnloadedMod() { File = module, Locales = locales };
                 });
         }
 

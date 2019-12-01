@@ -1,10 +1,9 @@
 ﻿using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using Splat;
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace DowUmg.Services
@@ -25,24 +24,11 @@ namespace DowUmg.Services
         /// Detects and returns Dawn of War Module files.
         /// </summary>
         /// <exception cref="IOException" />
-        public IObservable<DowModuleFile> GetAllModules()
+        public IEnumerable<DowModuleFile> GetAllModules()
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
-            return Observable.Create<DowModuleFile>(observer =>
-                {
-                    string[] files = GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly);
-
-                    var moduleLoader = new ModuleLoader();
-
-                    foreach (string file in files)
-                    {
-                        observer.OnNext(moduleLoader.Load(file));
-                    }
-
-                    observer.OnCompleted();
-
-                    return Disposable.Empty;
-                });
+            var moduleLoader = new ModuleLoader();
+            return GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly).Select(file => moduleLoader.Load(file));
         }
 
         public Locales? GetLocales(DowModuleFile module)
@@ -61,26 +47,13 @@ namespace DowUmg.Services
                 .Aggregate((a, b) => a.Concat(b));
         }
 
-        public IObservable<MapFile> GetMaps(DowModuleFile module)
+        public IEnumerable<MapFile> GetMaps(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
-            return Observable.Create<MapFile>((observer) =>
-                {
-                    string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");
+            string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");
 
-                    string[] files = GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly);
-
-                    var mapsLoader = new MapLoader();
-
-                    foreach (string file in files)
-                    {
-                        observer.OnNext(mapsLoader.Load(file));
-                    }
-
-                    observer.OnCompleted();
-
-                    return Disposable.Empty;
-                });
+            var mapsLoader = new MapLoader();
+            return GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly).Select(file => mapsLoader.Load(file));
         }
 
         private string[] GetFiles(string path, string searchPattern, SearchOption option)

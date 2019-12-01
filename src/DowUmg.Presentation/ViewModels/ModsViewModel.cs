@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -24,23 +25,7 @@ namespace DowUmg.Presentation.ViewModels
 
             this.dowModService = dowModService ?? Locator.Current.GetService<DowModService>();
 
-            RefreshMods = ReactiveCommand.CreateFromTask(async () =>
-            {
-                List<DowMod> loaded = this.dowModService.GetLoadedMods();
-                IList<ModItemViewModel> mods = await this.dowModService.GetUnloadedMods()
-                    .Select(mod => new ModItemViewModel()
-                    {
-                        Module = mod.File,
-                        IsLoaded = loaded.Exists(loaded => mod.File.ModFolder.Equals(loaded.Path))
-                    })
-                    .ToList()
-                    .SubscribeOn(RxApp.TaskpoolScheduler);
-
-                static bool IsMod(string str) => !"dxp2".Equals(str) && !"w40k".Equals(str);
-
-                ModItems = mods.Where(x => IsMod(x.Module.ModFolder.ToLower())).ToList();
-                BaseGameItems = mods.Where(x => !IsMod(x.Module.ModFolder.ToLower())).ToList();
-            });
+            RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
 
             RefreshMods.ThrownExceptions.Subscribe(exception =>
             {
@@ -49,9 +34,13 @@ namespace DowUmg.Presentation.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> RefreshMods { get; }
+
         public ReactiveCommand<Unit, Unit> ReloadMod { get; }
+
         public ReactiveCommand<Unit, Unit> ReloadMods { get; }
+
         public string UrlPathSegment => "mods";
+
         public IScreen HostScreen { get; }
 
         [Reactive]
@@ -59,5 +48,24 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public IList<ModItemViewModel> BaseGameItems { get; private set; }
+
+        public async Task GetModsAsync()
+        {
+            IList<ModItemViewModel> mods = await Observable.Start(() =>
+                {
+                    List<DowMod> loaded = this.dowModService.GetLoadedMods();
+                    return this.dowModService.GetUnloadedMods()
+                            .Select(mod => new ModItemViewModel()
+                            {
+                                Module = mod.File,
+                                IsLoaded = loaded.Exists(loaded => mod.File.ModFolder.Equals(loaded.Path))
+                            }).ToList();
+                }, RxApp.TaskpoolScheduler);
+
+            ModItems = mods.Where(x => IsMod(x.Module.ModFolder.ToLower())).ToList();
+            BaseGameItems = mods.Where(x => !IsMod(x.Module.ModFolder.ToLower())).ToList();
+        }
+
+        private static bool IsMod(string str) => !"dxp2".Equals(str) && !"w40k".Equals(str);
     }
 }
