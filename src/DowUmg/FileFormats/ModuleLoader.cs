@@ -24,6 +24,7 @@ namespace DowUmg.FileFormats
         public ModuleLoader()
         {
             this.parser = new FileIniDataParser();
+            this.parser.Parser.Configuration.SkipInvalidLines = true;
         }
 
         public DowModuleFile Load(string filePath)
@@ -38,7 +39,7 @@ namespace DowUmg.FileFormats
                 UIName = global["UIName"],
                 Description = global["Description"],
                 DllName = global["DllName"],
-                Playable = bool.Parse(global["Playable"]),
+                Playable = "1".Equals(global["Playable"]),
                 ModFolder = global["ModFolder"],
                 ModVersion = global["ModVersion"],
                 RequiredMods = global.Where(x => reg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray()

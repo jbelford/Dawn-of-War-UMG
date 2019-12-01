@@ -2,7 +2,6 @@
 using DowUmg.Interfaces;
 using Splat;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
@@ -31,7 +30,7 @@ namespace DowUmg.Services
             string dowPath = this.filePathProvider.SoulstormLocation;
             return Observable.Create<DowModuleFile>(observer =>
                 {
-                    string[] files = Directory.GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly);
+                    string[] files = GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly);
 
                     var moduleLoader = new ModuleLoader();
 
@@ -46,19 +45,20 @@ namespace DowUmg.Services
                 });
         }
 
-        public Dictionary<int, string> GetLocales(DowModuleFile module)
+        public Locales? GetLocales(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
             string localePath = Path.Combine(dowPath, module.ModFolder, "Locale", "English");
 
-            string[] files = Directory.GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
+            string[] files = GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
+            if (files.Length == 0)
+            {
+                return null;
+            }
 
             var ucsLoader = new UcsLoader();
             return files.Select(x => ucsLoader.Load(x))
-                .Select(x => x.AsEnumerable())
-                .Aggregate((a, b) => a.Concat(b))
-                .GroupBy(x => x.Key, x => x.Value)
-                .ToDictionary(x => x.Key, x => x.Last());
+                .Aggregate((a, b) => a.Concat(b));
         }
 
         public IObservable<MapFile> GetMaps(DowModuleFile module)
@@ -68,7 +68,7 @@ namespace DowUmg.Services
                 {
                     string mapsPath = Path.Combine(dowPath, module.ModFolder, "Data", "Scenarios", "mp");
 
-                    string[] files = Directory.GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly);
+                    string[] files = GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly);
 
                     var mapsLoader = new MapLoader();
 
@@ -81,6 +81,18 @@ namespace DowUmg.Services
 
                     return Disposable.Empty;
                 });
+        }
+
+        private string[] GetFiles(string path, string searchPattern, SearchOption option)
+        {
+            try
+            {
+                return Directory.GetFiles(path, searchPattern, option);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return new string[0];
+            }
         }
     }
 }

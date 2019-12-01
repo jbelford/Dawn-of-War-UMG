@@ -14,8 +14,6 @@ namespace DowUmg.Presentation.ViewModels
             GotToMods = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new ModsViewModel(this)));
 
             GoBack = Router.NavigateBack;
-
-            GoHome.Execute();
         }
 
         public ReactiveCommand<Unit, Unit> GoBack { get; }

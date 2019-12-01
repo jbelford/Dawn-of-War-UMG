@@ -14,29 +14,23 @@ namespace DowUmg.Presentation.WPF.Controls
         {
             InitializeComponent();
 
-            this.WhenActivated(disposables =>
+            this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.Module.UIName,
-                    view => view.ModName)
-                    .DisposeWith(disposables);
+                    view => view.ModName.Text)
+                    .DisposeWith(d);
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.Module.Description,
-                    view => view.ModDesc)
-                    .DisposeWith(disposables);
-
-                this.OneWayBind(ViewModel,
-                    viewModel => viewModel.IsLoaded,
-                    view => view.LoadButton.IsVisible,
-                    loaded => !loaded)
-                    .DisposeWith(disposables);
+                    view => view.ModDesc.Text)
+                    .DisposeWith(d);
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsLoaded,
                     view => view.Text.Foreground,
                     loaded => new BrushConverter().ConvertFromString(loaded ? "ForestGreen" : "Red"))
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
             });
         }
     }

@@ -13,34 +13,46 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="Mods" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
+        <TextBlock Grid.Row="0" Text="Mods" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <StackPanel Grid.Row="2">
+            <Label Content="Base Game" Target="{Binding ElementName=VanillaModsList, Mode=OneWay}" />
+            <ListBox x:Name="VanillaModsList" HorizontalContentAlignment="Stretch">
+            </ListBox>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label Content="Detected Mods" Target="{Binding ElementName=ModsList, Mode=OneWay}" />
-                <Button x:Name="RefreshButton" Content="Refresh" Grid.Column="2" />
+                <Label Content="Additional" Grid.Column="1" Target="{Binding ElementName=ModsList, Mode=OneWay}" />
+                <Button x:Name="RefreshButton" Content="Refresh Lists" Grid.Column="2" Margin="5" Padding="5,0" HorizontalAlignment="Left" />
             </Grid>
-            <ListBox x:Name="ModsList" ScrollViewer.VerticalScrollBarVisibility="Visible">
-            </ListBox>
         </StackPanel>
-        <Grid Grid.Row="2">
+        <ListBox x:Name="ModsList" Grid.Row="3" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch">
+        </ListBox>
+        <Grid Grid.Row="4" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="130" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <Button x:Name="loadModsButton" Grid.Column="1" Grid.Row="1" FontSize="16" Content="Reload All Mods" />
+            <Button x:Name="loadModsButton" Grid.Column="0" FontSize="16" Content="Reload All Mods" />
+            <Button x:Name="loadButton" Grid.Column="2" FontSize="16" Content="Load Mod" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>
