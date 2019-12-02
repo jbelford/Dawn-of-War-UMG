@@ -9,7 +9,6 @@ namespace DowUmg.Services
     public class AppSettingsService
     {
         private readonly IFilePathProvider filePathProvider;
-        private AppSettings? _settings;
 
         public AppSettingsService(IFilePathProvider? provider = null)
         {
@@ -20,44 +19,31 @@ namespace DowUmg.Services
         {
             get
             {
-                if (_settings == null)
+                string settingsPath = this.filePathProvider.SettingsLocation;
+
+                var loader = new JsonLoader<AppSettings>();
+
+                AppSettings settings;
+
+                if (File.Exists(settingsPath))
                 {
-                    _settings = InitSettings();
+                    settings = loader.Load(settingsPath);
                 }
-                return new AppSettings
+                else
                 {
-                    InstallLocation = this._settings.InstallLocation
-                };
+                    settings = new AppSettings
+                    {
+                        InstallLocation = this.filePathProvider.SoulstormLocation
+                    };
+                    loader.Write(settingsPath, settings);
+                }
+
+                return settings;
             }
             set
             {
-                _settings = value;
-                new JsonLoader<AppSettings>().Write(this.filePathProvider.SettingsLocation, _settings);
+                new JsonLoader<AppSettings>().Write(this.filePathProvider.SettingsLocation, value);
             }
-        }
-
-        private AppSettings InitSettings()
-        {
-            string settingsPath = this.filePathProvider.SettingsLocation;
-
-            var loader = new JsonLoader<AppSettings>();
-
-            AppSettings settings;
-
-            if (File.Exists(settingsPath))
-            {
-                settings = loader.Load(settingsPath);
-            }
-            else
-            {
-                settings = new AppSettings
-                {
-                    InstallLocation = this.filePathProvider.SoulstormLocation
-                };
-                loader.Write(settingsPath, settings);
-            }
-
-            return settings;
         }
     }
 }

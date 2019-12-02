@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -212,50 +211,38 @@ namespace DowUmg.FileFormats
             this.reader.Dispose();
         }
 
-        public IObservable<SgaRawFile> GetScenarios()
+        public IEnumerable<SgaRawFile> GetScenarios()
         {
             return GetFiles(@"scenarios\mp", @"\.sgb");
         }
 
-        public IObservable<SgaRawFile> GetScenarioImages()
+        public IEnumerable<SgaRawFile> GetScenarioImages()
         {
             return GetFiles(@"scenarios\mp", @"(_icon|_mm)(_custom)?\.tga$");
         }
 
-        public IObservable<SgaRawFile> GetWinConditions()
+        public IEnumerable<SgaRawFile> GetWinConditions()
         {
             return GetFiles(@"scar\winconditions", @"_local\.lua$");
         }
 
-        public IObservable<SgaRawFile> GetLocales()
+        public IEnumerable<SgaRawFile> GetLocales()
         {
             return GetFiles(@"Locale\English", @"\.ucs");
         }
 
-        private IObservable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
+        private IEnumerable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
         {
             int pos = this.directories.BinarySearch((directory) => directoryPath.CompareTo(directory.Name));
             if (pos < 0)
             {
-                return Observable.Empty<SgaRawFile>();
+                return Enumerable.Empty<SgaRawFile>();
             }
 
-            SgaDirectory dir = this.directories[pos];
-
-            return Observable.Create<SgaRawFile>(observer =>
-                {
-                    var reg = new Regex(filePattern);
-                    SgaFile[] files = dir.Files.Where(x => reg.IsMatch(x.Name)).ToArray();
-
-                    foreach (var file in files)
-                    {
-                        observer.OnNext(ReadFile(file));
-                    }
-
-                    observer.OnCompleted();
-
-                    return Disposable.Empty;
-                });
+            var reg = new Regex(filePattern);
+            return this.directories[pos].Files
+                .Where(x => reg.IsMatch(x.Name))
+                .Select(file => ReadFile(file));
         }
 
         private SgaRawFile ReadFile(SgaFile file)
