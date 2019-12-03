@@ -9,6 +9,11 @@ namespace DowUmg.FileFormats
     {
         protected readonly Dictionary<string, string> mappings;
 
+        public Locales()
+        {
+            this.mappings = new Dictionary<string, string>();
+        }
+
         public Locales(Dictionary<string, string> mappings)
         {
             this.mappings = mappings;

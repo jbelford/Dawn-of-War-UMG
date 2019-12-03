@@ -1,5 +1,4 @@
 ﻿using DowUmg.Interfaces;
-using System;
 using System.IO;
 using System.Text;
 
@@ -54,7 +53,7 @@ namespace DowUmg.FileFormats
             string chunky = Encoding.UTF8.GetString(reader.ReadBytes(12));
             if (!"Relic Chunky".Equals(chunky))
             {
-                throw new ArgumentException($"Not a Relic Chunky");
+                throw new IOException($"Not a Relic Chunky");
             }
 
             // Unknown yet whether DATAWHMD always starts here or not.

@@ -480,18 +480,18 @@ namespace DowUmg.FileFormats
                 }
             }
         }
+    }
 
-        public class SgaRawFile
+    public class SgaRawFile
+    {
+        public SgaRawFile(string name, byte[] data)
         {
-            public SgaRawFile(string name, byte[] data)
-            {
-                Name = name;
-                Data = data;
-            }
-
-            public string Name { get; }
-            public byte[] Data { get; }
+            Name = name;
+            Data = data;
         }
+
+        public string Name { get; }
+        public byte[] Data { get; }
     }
 
     internal class SgaToc

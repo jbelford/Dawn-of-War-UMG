@@ -8,6 +8,16 @@ namespace DowUmg.Presentation.WPF.Services
     public class WindowsFilePathProvider : IFilePathProvider
     {
         private string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        private string _soulstormLocation;
+
+        public WindowsFilePathProvider()
+        {
+            RegistryKey key = Environment.Is64BitOperatingSystem
+                ? Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm")
+                : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
+
+            this._soulstormLocation = key.GetValue("InstallLocation") as string;
+        }
 
         public string AppDataLocation => Path.Combine(appData, "DowUmg");
 
@@ -15,16 +25,6 @@ namespace DowUmg.Presentation.WPF.Services
 
         public string DataLocation => Path.Combine(AppDataLocation, "data.db");
 
-        public string SoulstormLocation
-        {
-            get
-            {
-                RegistryKey key = Environment.Is64BitOperatingSystem
-                ? Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm")
-                : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
-
-                return key.GetValue("InstallLocation") as string;
-            }
-        }
+        public string SoulstormLocation => _soulstormLocation;
     }
 }

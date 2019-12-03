@@ -9,6 +9,9 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public DowModuleFile Module { get; set; }
 
+        public Locales Locales { get; set; }
+
+        [Reactive]
         public bool IsLoaded { get; set; }
     }
 }

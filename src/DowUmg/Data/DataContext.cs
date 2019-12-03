@@ -23,5 +23,21 @@ namespace DowUmg.Data
             optionsBuilder.UseSqlite($"Data Source={this.appDataProvider.DataLocation}",
                 x => x.MigrationsAssembly("DowUmg.Migrations"));
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DowMod>().HasKey(x => x.ModFolder);
+            modelBuilder.Entity<DowMod>().HasMany(x => x.Maps)
+                .WithOne(x => x.Mod)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey("ModId");
+            modelBuilder.Entity<DowMod>().HasMany(x => x.Rules)
+                .WithOne(x => x.Mod)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey("ModId");
+
+            modelBuilder.Entity<DowMap>().Property<int>("Id");
+            modelBuilder.Entity<GameRule>().Property<int>("Id");
+        }
     }
 }

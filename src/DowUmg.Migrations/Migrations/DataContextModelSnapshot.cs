@@ -29,21 +29,17 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ModId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ModId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte>("Players")
+                    b.Property<int>("Players")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte>("Size")
+                    b.Property<int>("Size")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -55,9 +51,8 @@ namespace DowUmg.Migrations.Migrations
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ModFolder")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Details")
                         .IsRequired()
@@ -67,11 +62,7 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("ModFolder");
 
                     b.ToTable("Mods");
                 });
@@ -89,8 +80,8 @@ namespace DowUmg.Migrations.Migrations
                     b.Property<bool>("IsWinCondition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ModId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ModId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -108,8 +99,7 @@ namespace DowUmg.Migrations.Migrations
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Maps")
                         .HasForeignKey("ModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
@@ -117,8 +107,7 @@ namespace DowUmg.Migrations.Migrations
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Rules")
                         .HasForeignKey("ModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

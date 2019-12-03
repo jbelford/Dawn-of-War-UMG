@@ -10,15 +10,13 @@ namespace DowUmg.Migrations.Migrations
                 name: "Mods",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    ModFolder = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Details = table.Column<string>(nullable: false),
-                    Path = table.Column<string>(nullable: false)
+                    Details = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mods", x => x.Id);
+                    table.PrimaryKey("PK_Mods", x => x.ModFolder);
                 });
 
             migrationBuilder.CreateTable(
@@ -29,7 +27,7 @@ namespace DowUmg.Migrations.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false),
-                    ModId = table.Column<int>(nullable: false),
+                    ModId = table.Column<string>(nullable: true),
                     IsWinCondition = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -39,7 +37,7 @@ namespace DowUmg.Migrations.Migrations
                         name: "FK_GameRules_Mods_ModId",
                         column: x => x.ModId,
                         principalTable: "Mods",
-                        principalColumn: "Id",
+                        principalColumn: "ModFolder",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -51,10 +49,9 @@ namespace DowUmg.Migrations.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false),
-                    Path = table.Column<string>(nullable: false),
-                    ModId = table.Column<int>(nullable: false),
-                    Players = table.Column<byte>(nullable: false),
-                    Size = table.Column<byte>(nullable: false),
+                    ModId = table.Column<string>(nullable: true),
+                    Players = table.Column<int>(nullable: false),
+                    Size = table.Column<int>(nullable: false),
                     Image = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -64,7 +61,7 @@ namespace DowUmg.Migrations.Migrations
                         name: "FK_Maps_Mods_ModId",
                         column: x => x.ModId,
                         principalTable: "Mods",
-                        principalColumn: "Id",
+                        principalColumn: "ModFolder",
                         onDelete: ReferentialAction.Cascade);
                 });
 

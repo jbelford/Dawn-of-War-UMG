@@ -19,7 +19,6 @@ namespace DowUmg.Presentation.ViewModels
 
             GetDirectory = new Interaction<string, string?>();
             HostScreen = routing;
-            GoBack = routing.GoBack;
             SavedSettings = this.settingsService.Settings;
             SoulstormDirectory = SavedSettings.InstallLocation!;
 
@@ -37,20 +36,16 @@ namespace DowUmg.Presentation.ViewModels
 
                 return newSettings;
             }, canSave);
-
             SaveSettings.Subscribe(settings => SavedSettings = settings);
 
             SelectDirectory = ReactiveCommand.CreateFromObservable(() => GetDirectory.Handle(SoulstormDirectory));
-
             SelectDirectory.Where(x => x != null).Subscribe(dir => SoulstormDirectory = dir!);
-
             SelectDirectory.ThrownExceptions.Subscribe(exception =>
             {
                 this.Log().Warn("Error", exception);
             });
         }
 
-        public ReactiveCommand<Unit, Unit> GoBack { get; }
         public ReactiveCommand<Unit, AppSettings> SaveSettings { get; }
         public ReactiveCommand<Unit, string?> SelectDirectory { get; }
 
