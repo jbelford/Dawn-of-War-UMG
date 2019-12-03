@@ -23,21 +23,25 @@ namespace DowUmg.Presentation.ViewModels
 
             this.logger = this.Log();
 
-            var canLoad = this.WhenAnyValue(x => x.Loading, x => x.SelectedBaseItem, x => x.SelectedModItem,
-                    (loading, baseItem, modItem) => !loading && (baseItem != null || modItem != null))
-                .DistinctUntilChanged();
+            var whenNotLoading = this.WhenAnyValue(x => x.Loading).Select(loading => !loading).DistinctUntilChanged();
+
+            var whenItemSelected = this.WhenAnyValue(x => x.SelectedBaseItem, x => x.SelectedModItem,
+                    (baseItem, modItem) => baseItem != null || modItem != null).DistinctUntilChanged();
+
+            var canLoadSpecific = whenNotLoading.CombineLatest(whenItemSelected, (notLoading, itemSelected) => notLoading && itemSelected).DistinctUntilChanged();
 
             this.dowModService = dowModService ?? Locator.Current.GetService<DowModService>();
 
             RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
-            ReloadMod = ReactiveCommand.CreateFromTask<Unit, DowMod>(LoadAsync, canLoad);
+            ReloadMod = ReactiveCommand.CreateFromTask(async () => await LoadModAsync(SelectedBaseItem ?? SelectedModItem!), canLoadSpecific);
+            ReloadMods = ReactiveCommand.CreateFromTask(LoadAllMods, whenNotLoading);
 
             RefreshMods.ThrownExceptions.Subscribe(exception =>
             {
                 this.logger.Error(exception);
             });
 
-            ReloadMod.IsExecuting.DistinctUntilChanged()
+            Observable.CombineLatest(ReloadMod.IsExecuting, ReloadMods.IsExecuting, (a, b) => a || b)
                 .ToPropertyEx(this, x => x.Loading, false);
         }
 
@@ -65,7 +69,9 @@ namespace DowUmg.Presentation.ViewModels
 
         public extern bool Loading { [ObservableAsProperty] get; }
 
-        public async Task GetModsAsync()
+        private static bool IsMod(string str) => !"dxp2".Equals(str) && !"w40k".Equals(str);
+
+        private async Task GetModsAsync()
         {
             IList<ModItemViewModel> mods = await Observable.Start(() =>
                 {
@@ -83,21 +89,24 @@ namespace DowUmg.Presentation.ViewModels
             BaseGameItems = mods.Where(x => !IsMod(x.Module.ModFolder.ToLower())).ToList();
         }
 
-        public async Task<DowMod> LoadAsync(Unit arg)
+        private async Task LoadAllMods()
         {
-            ModItemViewModel modItem = SelectedBaseItem ?? SelectedModItem!;
+            await Task.WhenAll(ModItems.Select(LoadModAsync).ToArray());
+            await Task.WhenAll(BaseGameItems.Select(LoadModAsync).ToArray());
+        }
+
+        private async Task<DowMod> LoadModAsync(ModItemViewModel modItem)
+        {
             DowMod mod = await Observable.Start(() =>
-                {
-                    var unloaded = new UnloadedMod() { File = modItem.Module, Locales = modItem.Locales };
-                    return IsMod(modItem.Module.ModFolder.ToLower())
-                        ? this.dowModService.LoadMod(unloaded)
-                        : this.dowModService.LoadModArchive(unloaded);
-                }, RxApp.TaskpoolScheduler);
+            {
+                var unloaded = new UnloadedMod() { File = modItem.Module, Locales = modItem.Locales };
+                return IsMod(modItem.Module.ModFolder.ToLower())
+                    ? this.dowModService.LoadMod(unloaded)
+                    : this.dowModService.LoadModArchive(unloaded);
+            }, RxApp.TaskpoolScheduler);
 
             modItem.IsLoaded = true;
             return mod;
         }
-
-        private static bool IsMod(string str) => !"dxp2".Equals(str) && !"w40k".Equals(str);
     }
 }

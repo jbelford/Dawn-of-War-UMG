@@ -94,7 +94,12 @@ namespace DowUmg.Services
 
         public DowMod LoadModArchive(UnloadedMod unloaded)
         {
-            string archiveFolder = Path.Combine(this.filePathProvider.AppDataLocation, unloaded.File.ModFolder, "MapImages");
+            string archiveFolder = Path.Combine(this.filePathProvider.AppDataLocation, unloaded.File.ModFolder, "data", "scenarios", "mp");
+            if (Directory.Exists(archiveFolder))
+            {
+                Directory.Delete(archiveFolder, true);
+            }
+
             Directory.CreateDirectory(archiveFolder);
 
             string sgaFileName = $"{unloaded.File.ModFolder}Data.sga";
@@ -133,7 +138,7 @@ namespace DowUmg.Services
                     {
                         Name = unloaded.Locales.Replace(mapFile.Name),
                         Details = unloaded.Locales.Replace(mapFile.Description),
-                        Image = Path.Combine(archiveFolder, image),
+                        Image = image,
                         Players = mapFile.Players,
                         Size = mapFile.Size
                     });
