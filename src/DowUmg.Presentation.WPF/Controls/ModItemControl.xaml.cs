@@ -16,15 +16,8 @@ namespace DowUmg.Presentation.WPF.Controls
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel,
-                    viewModel => viewModel.Module.UIName,
-                    view => view.ModName.Text)
-                    .DisposeWith(d);
-
-                this.OneWayBind(ViewModel,
-                    viewModel => viewModel.Module.Description,
-                    view => view.ModDesc.Text)
-                    .DisposeWith(d);
+                this.ModName.Text = ViewModel.Module.UIName;
+                this.ModDesc.Text = ViewModel.Module.Description;
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsLoaded,

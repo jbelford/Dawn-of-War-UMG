@@ -24,8 +24,6 @@ namespace DowUmg.Presentation.WPF.Views
                 this.BindCommand(ViewModel, vm => vm.RefreshMods, v => v.RefreshButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.ReloadMod, v => v.loadButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.ReloadMods, v => v.loadModsButton).DisposeWith(d);
-
-                ViewModel.RefreshMods.Execute();
             });
         }
     }

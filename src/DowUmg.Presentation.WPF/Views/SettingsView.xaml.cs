@@ -14,15 +14,15 @@ namespace DowUmg.Presentation.WPF.Views
         {
             InitializeComponent();
 
-            this.WhenActivated(disposables =>
+            this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.SoulstormDirectory, view => view.directoryTextBox.Text)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.ViewModel.GetDirectory
                     .RegisterHandler(interaction =>
                     {
-                        var openFileDialog = new CommonOpenFileDialog()
+                        using var openFileDialog = new CommonOpenFileDialog()
                         {
                             InitialDirectory = interaction.Input ?? "C:\\",
                             IsFolderPicker = true
@@ -39,13 +39,13 @@ namespace DowUmg.Presentation.WPF.Views
                                 break;
                         }
                     })
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.SelectDirectory, x => x.selectDirectoryButton)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.SaveSettings, x => x.saveButton)
-                    .DisposeWith(disposables);
+                    .DisposeWith(d);
             });
         }
     }

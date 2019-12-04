@@ -9,9 +9,9 @@ namespace DowUmg.Presentation.ViewModels
     {
         private MenuType menuSelected;
 
-        public MainViewModel(RoutingViewModel routing)
+        public MainViewModel(IScreen screen)
         {
-            HostScreen = routing;
+            HostScreen = screen;
 
             OpenContextMenu = ReactiveCommand.Create<MenuType>(selected =>
             {
@@ -23,8 +23,8 @@ namespace DowUmg.Presentation.ViewModels
             LoadAction = ReactiveCommand.Create(() => { /* todo */ });
             ExportAction = ReactiveCommand.Create(() => { /* todo */ });
 
-            SettingsAction = routing.GoToSettings;
-            ModsAction = routing.GotToMods;
+            SettingsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen)));
+            ModsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new ModsViewModel(HostScreen)));
 
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
 

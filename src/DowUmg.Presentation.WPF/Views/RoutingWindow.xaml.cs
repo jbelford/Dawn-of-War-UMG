@@ -20,8 +20,6 @@ namespace DowUmg.Presentation.WPF.Views
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.GoHome, v => v.HomeButton).DisposeWith(d);
-
-                ViewModel.GoHome.Execute();
             });
         }
     }

@@ -31,9 +31,9 @@ namespace DowUmg.Presentation.WPF
 
         private void RegisterDependencies()
         {
-            Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
             Locator.CurrentMutable.RegisterLazySingleton<IFilePathProvider>(() => new WindowsFilePathProvider());
             AppBootstrapper.RegisterDefaults();
+            Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
         }
 
         private void MigrateDatabase()

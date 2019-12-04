@@ -29,7 +29,7 @@
         <StackPanel Grid.Row="0">
             <TextBlock Text="Settings" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
             <StackPanel>
-                <Label Target="{Binding ElementName=Directory, Mode=OneWay}" Content="Soulstorm Directory" />
+                <Label Content="Soulstorm Directory" />
                 <Grid Name="Directory">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

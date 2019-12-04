@@ -9,18 +9,21 @@ using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class SettingsViewModel : ReactiveObject, IRoutableViewModel, IEnableLogger
+    public class SettingsViewModel : ReactiveObject, IRoutableViewModel
     {
         private readonly AppSettingsService settingsService;
 
-        public SettingsViewModel(RoutingViewModel routing, AppSettingsService? settingsService = null)
+        public SettingsViewModel(IScreen screen, AppSettingsService? settingsService = null)
         {
             this.settingsService = settingsService ?? Locator.Current.GetService<AppSettingsService>();
 
-            GetDirectory = new Interaction<string, string?>();
-            HostScreen = routing;
-            SavedSettings = this.settingsService.Settings;
-            SoulstormDirectory = SavedSettings.InstallLocation!;
+            HostScreen = screen;
+            SavedSettings = this.settingsService.GetSettings();
+
+            SelectDirectory = ReactiveCommand.CreateFromObservable(() => GetDirectory.Handle(SoulstormDirectory));
+
+            SelectDirectory.Where(dir => dir != null)
+                .ToPropertyEx(this, x => x.SoulstormDirectory, initialValue: SavedSettings.InstallLocation);
 
             IObservable<bool> canSave = this.WhenAnyValue(x => x.SoulstormDirectory, x => x.SavedSettings,
                     (dir, settings) => !string.Equals(settings.InstallLocation, dir, StringComparison.OrdinalIgnoreCase))
@@ -28,31 +31,20 @@ namespace DowUmg.Presentation.ViewModels
 
             SaveSettings = ReactiveCommand.Create(() =>
             {
-                var newSettings = new AppSettings()
+                SavedSettings = new AppSettings()
                 {
                     InstallLocation = SoulstormDirectory
                 };
-                this.settingsService.Settings = newSettings;
-
-                return newSettings;
+                this.settingsService.SaveSettings(SavedSettings);
             }, canSave);
-            SaveSettings.Subscribe(settings => SavedSettings = settings);
-
-            SelectDirectory = ReactiveCommand.CreateFromObservable(() => GetDirectory.Handle(SoulstormDirectory));
-            SelectDirectory.Where(x => x != null).Subscribe(dir => SoulstormDirectory = dir!);
-            SelectDirectory.ThrownExceptions.Subscribe(exception =>
-            {
-                this.Log().Warn("Error", exception);
-            });
         }
 
-        public ReactiveCommand<Unit, AppSettings> SaveSettings { get; }
+        public ReactiveCommand<Unit, Unit> SaveSettings { get; }
         public ReactiveCommand<Unit, string?> SelectDirectory { get; }
 
-        public Interaction<string, string?> GetDirectory { get; }
+        public Interaction<string, string?> GetDirectory { get; } = new Interaction<string, string?>();
 
-        [Reactive]
-        public string SoulstormDirectory { get; private set; }
+        public extern string SoulstormDirectory { [ObservableAsProperty] get; }
 
         [Reactive]
         public AppSettings SavedSettings { get; private set; }

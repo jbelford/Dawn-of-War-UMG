@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using System;
 using System.Reactive;
 
 namespace DowUmg.Presentation.ViewModels
@@ -10,10 +11,10 @@ namespace DowUmg.Presentation.ViewModels
             Router = new RoutingState();
 
             GoHome = ReactiveCommand.CreateFromObservable(() => Router.NavigateAndReset.Execute(new MainViewModel(this)));
-            GoToSettings = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new SettingsViewModel(this)));
-            GotToMods = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new ModsViewModel(this)));
 
             GoBack = Router.NavigateBack;
+
+            GoHome.Execute().Subscribe();
         }
 
         public ReactiveCommand<Unit, Unit> GoBack { get; }
