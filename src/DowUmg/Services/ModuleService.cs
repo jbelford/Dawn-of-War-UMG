@@ -34,20 +34,15 @@ namespace DowUmg.Services
             return GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly).Select(file => moduleLoader.Load(file));
         }
 
-        public Locales GetLocales(DowModuleFile module)
+        public LocaleStore GetLocales(DowModuleFile module)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
             string localePath = Path.Combine(dowPath, module.ModFolder, "Locale", "English");
 
             string[] files = GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
-            if (files.Length == 0)
-            {
-                return new Locales();
-            }
 
-            var ucsLoader = new UcsLoader();
-            return files.Select(x => ucsLoader.Load(x))
-                .Aggregate((a, b) => a.Concat(b));
+            var ucsLoader = new LocaleLoader();
+            return new LocaleStore(files.Select(x => ucsLoader.Load(x)).ToArray());
         }
 
         public IEnumerable<DowMap> GetMaps(DowModuleFile module)

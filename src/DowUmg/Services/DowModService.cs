@@ -48,7 +48,7 @@ namespace DowUmg.Services
                 {
                     if (mods.ContainsKey(name))
                     {
-                        mod.Locales.Concat(mods[name].Locales);
+                        mod.Locales.Dependencies.Add(mods[name].Locales);
                     }
                 }
             }
@@ -180,6 +180,6 @@ namespace DowUmg.Services
     public class UnloadedMod
     {
         public DowModuleFile File { get; set; } = null!;
-        public Locales Locales { get; set; } = null!;
+        public LocaleStore Locales { get; set; } = null!;
     }
 }
