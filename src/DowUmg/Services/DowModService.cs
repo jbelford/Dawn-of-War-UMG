@@ -2,24 +2,23 @@
 using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using DowUmg.Repositories;
+using DowUmg.Services.Module;
 using Splat;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 
 namespace DowUmg.Services
 {
     public class DowModService : IEnableLogger
     {
-        private readonly ModuleService moduleService;
         private readonly IFilePathProvider filePathProvider;
-        private readonly IFullLogger logger;
+        private readonly ILogger logger;
         private readonly ModsRepository mods;
+        private readonly ModuleExtractorFactory moduleExtractorFactory = new ModuleExtractorFactory();
 
-        public DowModService(ModuleService? moduleService = null, IFilePathProvider? filePathProvider = null)
+        public DowModService(IFilePathProvider? filePathProvider = null)
         {
-            this.moduleService = moduleService ?? Locator.Current.GetService<ModuleService>();
             this.filePathProvider = filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
             this.mods = new ModsRepository();
             this.logger = this.Log();
@@ -32,36 +31,44 @@ namespace DowUmg.Services
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
-            Dictionary<string, UnloadedMod> mods = this.moduleService.GetAllModules()
-                .Select(module => new UnloadedMod() { File = module, Locales = this.moduleService.GetLocales(module) })
-                .GroupBy(mod => mod.File.ModFolder)
-                .ToDictionary(g => g.Key, g =>
-                {
-                    UnloadedMod last = g.Last();
-                    last.File.UIName = g.Select(mod => mod.File.UIName).Aggregate((a, b) => $"{a} / {b}");
-                    return last;
-                });
-
-            foreach (UnloadedMod mod in mods.Values)
+            var modules = new Dictionary<string, UnloadedMod>();
+            foreach (DowModuleFile module in GetAllModules())
             {
-                foreach (string name in mod.File.RequiredMods)
+                if (modules.ContainsKey(module.ModFolder))
                 {
-                    if (mods.ContainsKey(name))
+                    modules[module.ModFolder].File.UIName += $" / {module.UIName}";
+                }
+                else
+                {
+                    modules[module.ModFolder] = new UnloadedMod()
                     {
-                        mod.Locales.Dependencies.Add(mods[name].Locales);
+                        File = module,
+                        Locales = GetLocales(module)
+                    };
+                }
+            }
+
+            foreach (UnloadedMod unloaded in modules.Values)
+            {
+                foreach (string name in unloaded.File.RequiredMods)
+                {
+                    if (modules.ContainsKey(name))
+                    {
+                        unloaded.Locales.Dependencies.Add(modules[name].Locales);
                     }
                 }
             }
 
-            return mods.Values.Select(module =>
+            foreach (var module in modules.Values)
+            {
+                if (module.Locales != null)
                 {
-                    if (module.Locales != null)
-                    {
-                        module.File.UIName = module.Locales.Replace(module.File.UIName);
-                        module.File.Description = module.Locales.Replace(module.File.Description);
-                    }
-                    return module;
-                });
+                    module.File.UIName = module.Locales.Replace(module.File.UIName);
+                    module.File.Description = module.Locales.Replace(module.File.Description);
+                }
+
+                yield return module;
+            }
         }
 
         public DowMod LoadMod(UnloadedMod unloaded)
@@ -73,107 +80,63 @@ namespace DowUmg.Services
                 Details = unloaded.File.Description,
             };
 
-            mod.Maps.AddRange(this.moduleService.GetMaps(unloaded.File)
-                .Select(map =>
-                {
-                    map.Name = unloaded.Locales.Replace(map.Name);
-                    map.Details = unloaded.Locales.Replace(map.Details);
-                    return map;
-                }));
+            using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
 
-            mod.Rules.AddRange(this.moduleService.GetGameRules(unloaded.File)
-                .Select(rule => new GameRule()
+            foreach (MapFile map in extractor.GetMaps())
+            {
+                string? image = extractor.GetMapImage(map.FileName);
+                if (image == null)
+                {
+                    this.logger.Write($"{mod.Name} Probably not valid map {map.FileName}", LogLevel.Info);
+                    continue;
+                }
+
+                mod.Maps.Add(new DowMap()
+                {
+                    Name = unloaded.Locales.Replace(map.Name),
+                    Details = unloaded.Locales.Replace(map.Description),
+                    Players = map.Players,
+                    Size = map.Size,
+                    Image = image
+                });
+            }
+
+            foreach (GameRuleFile rule in extractor.GetGameRules())
+            {
+                mod.Rules.Add(new GameRule()
                 {
                     Name = unloaded.Locales.Replace(rule.Title),
                     Details = unloaded.Locales.Replace(rule.Description),
                     IsWinCondition = rule.VictoryCondition
-                }));
+                });
+            }
 
             return this.mods.Upsert(mod);
         }
 
-        public DowMod LoadModArchive(UnloadedMod unloaded)
+        private LocaleStore GetLocales(DowModuleFile module)
         {
-            string archiveFolder = Path.Combine(this.filePathProvider.AppDataLocation, unloaded.File.ModFolder, "data", "scenarios", "mp");
-            if (Directory.Exists(archiveFolder))
-            {
-                Directory.Delete(archiveFolder, true);
-            }
-
-            Directory.CreateDirectory(archiveFolder);
-
-            string sgaFileName = $"{unloaded.File.ModFolder}Data.sga";
-
-            var mod = new DowMod()
-            {
-                Name = unloaded.File.UIName,
-                ModFolder = unloaded.File.ModFolder,
-                Details = unloaded.File.Description,
-            };
-
-            var images = new HashSet<string>();
-
-            using var sgaReader = new SgaFileReader(Path.Combine(this.filePathProvider.SoulstormLocation, unloaded.File.ModFolder, sgaFileName));
-
-            foreach (var rawFile in sgaReader.GetScenarioImages())
-            {
-                images.Add(rawFile.Name);
-                File.WriteAllBytes(Path.Combine(archiveFolder, rawFile.Name), rawFile.Data);
-            }
-
-            var mapLoader = new MapLoader();
-            foreach (var scenario in sgaReader.GetScenarios())
-            {
-                string? image = this.moduleService.GetImage(images, scenario.Name);
-                if (image == null)
-                {
-                    this.logger.Info($"Probably not valid map {scenario.Name}");
-                    continue;
-                }
-
-                MapFile? mapFile = LoadMap(mapLoader, scenario);
-                if (mapFile != null)
-                {
-                    mod.Maps.Add(new DowMap()
-                    {
-                        Name = unloaded.Locales.Replace(mapFile.Name),
-                        Details = unloaded.Locales.Replace(mapFile.Description),
-                        Image = image,
-                        Players = mapFile.Players,
-                        Size = mapFile.Size
-                    });
-                }
-            }
-
-            var gameRuleLoader = new GameRuleLoader();
-            foreach (var winCondtion in sgaReader.GetWinConditions())
-            {
-                GameRuleFile? gameRule = gameRuleLoader.Load(new MemoryStream(winCondtion.Data));
-                if (gameRule != null)
-                {
-                    mod.Rules.Add(new GameRule()
-                    {
-                        Name = unloaded.Locales.Replace(gameRule.Title),
-                        Details = unloaded.Locales.Replace(gameRule.Description),
-                        IsWinCondition = gameRule.VictoryCondition
-                    });
-                }
-            }
-
-            return this.mods.Upsert(mod);
+            using var extractor = this.moduleExtractorFactory.CreateFileSystem(module);
+            return new LocaleStore(extractor.GetLocales().ToArray());
         }
 
-        public MapFile? LoadMap(MapLoader loader, SgaRawFile file)
+        private IEnumerable<DowModuleFile> GetAllModules()
+        {
+            string dowPath = this.filePathProvider.SoulstormLocation;
+            var moduleLoader = new ModuleLoader();
+            return GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly).Select(file => moduleLoader.Load(file));
+        }
+
+        private string[] GetFiles(string path, string searchPattern, SearchOption option)
         {
             try
             {
-                return loader.Load(new MemoryStream(file.Data));
+                return Directory.GetFiles(path, searchPattern, option);
             }
-            catch (IOException ex)
+            catch (DirectoryNotFoundException)
             {
-                this.logger.Info(ex, $"Failed to load {file.Name}");
+                return new string[0];
             }
-            return null;
         }
     }
 

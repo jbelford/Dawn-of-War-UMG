@@ -6,6 +6,7 @@ namespace DowUmg.FileFormats
 {
     public class MapFile
     {
+        public string FileName { get; set; } = null!;
         public int Players { get; set; }
         public int Size { get; set; }
         public string Name { get; set; } = null!;
@@ -43,10 +44,10 @@ namespace DowUmg.FileFormats
         /// <exception cref="IOException" />
         public MapFile Load(string filePath)
         {
-            return Load(File.OpenRead(filePath));
+            return Load(File.OpenRead(filePath), filePath);
         }
 
-        public MapFile Load(Stream stream)
+        public MapFile Load(Stream stream, string filePath)
         {
             using var reader = new BinaryReader(stream);
 
@@ -88,7 +89,8 @@ namespace DowUmg.FileFormats
                 Name = name,
                 Description = description,
                 Players = players,
-                Size = size
+                Size = size,
+                FileName = Path.GetFileNameWithoutExtension(filePath)
             };
         }
     }

@@ -116,9 +116,7 @@ namespace DowUmg.Presentation.ViewModels
             DowMod mod = await Observable.Start(() =>
             {
                 var unloaded = new UnloadedMod() { File = modItem.Module, Locales = modItem.Locales };
-                return IsMod(modItem.Module.ModFolder.ToLower())
-                    ? this.dowModService.LoadMod(unloaded)
-                    : this.dowModService.LoadModArchive(unloaded);
+                return this.dowModService.LoadMod(unloaded);
             }, RxApp.TaskpoolScheduler);
 
             modItem.IsLoaded = true;

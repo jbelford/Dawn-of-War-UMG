@@ -231,7 +231,7 @@ namespace DowUmg.FileFormats
             return GetFiles(@"Locale\English", @"\.ucs");
         }
 
-        private IEnumerable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
+        public IEnumerable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
         {
             int pos = this.directories.BinarySearch((directory) => directoryPath.CompareTo(directory.Name));
             if (pos < 0)
