@@ -24,15 +24,13 @@ namespace DowUmg.Presentation.WPF.Views
                     .InvokeCommand(this, x => x.ViewModel.OpenContextMenu)
                     .DisposeWith(d);
 
-                this.matchupButton.Events().Click
-                    .Select(args => MainViewModel.MenuType.Matchup)
-                    .InvokeCommand(this, x => x.ViewModel.OpenContextMenu)
-                    .DisposeWith(d);
-
                 this.BindCommand(ViewModel, x => x.SettingsAction, x => x.settingsButton)
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.ModsAction, x => x.modsButton)
+                    .DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.MatchupAction, v => v.matchupButton)
                     .DisposeWith(d);
 
                 this.Bind(ViewModel, viewModel => viewModel.ContextMenuIsVisible, view => view.matchupButton.ContextMenu.IsOpen)

@@ -25,6 +25,7 @@ namespace DowUmg.Presentation.ViewModels
 
             SettingsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen)));
             ModsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new ModsViewModel(HostScreen)));
+            MatchupAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new GenerationSettingsViewModel(HostScreen)));
 
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
 
@@ -39,6 +40,7 @@ namespace DowUmg.Presentation.ViewModels
         public ReactiveCommand<MenuType, Unit> OpenContextMenu { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> ModsAction { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> MatchupAction { get; }
 
         [Reactive]
         public bool ContextMenuIsVisible { get; private set; }
@@ -47,6 +49,6 @@ namespace DowUmg.Presentation.ViewModels
 
         public string UrlPathSegment => "main";
 
-        public enum MenuType { Campaign, Matchup, None };
+        public enum MenuType { Campaign, None };
     }
 }

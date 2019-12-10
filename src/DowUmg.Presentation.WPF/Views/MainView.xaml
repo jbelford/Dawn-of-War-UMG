@@ -34,7 +34,7 @@
             </StackPanel.Resources>
 
             <Button x:Name="campaignButton" Content="Campaign" ContextMenu="{StaticResource contextMenu}" />
-            <Button x:Name="matchupButton" Content="Matchup" ContextMenu="{StaticResource contextMenu}" />
+            <Button x:Name="matchupButton" Content="Matchup" />
             <Button x:Name="importButton" Content="Import" />
             <Button x:Name="modsButton" Content="Mods" />
             <Button x:Name="settingsButton" Content="Settings" />
