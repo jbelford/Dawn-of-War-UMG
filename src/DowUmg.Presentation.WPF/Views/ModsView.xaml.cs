@@ -1,4 +1,4 @@
-﻿using DowUmg.Presentation.ViewModels;
+﻿using DowUmg.Presentation.ViewModels.Mods;
 using ReactiveUI;
 using System.Reactive.Disposables;
 

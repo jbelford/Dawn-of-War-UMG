@@ -2,7 +2,7 @@
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace DowUmg.Presentation.ViewModels
+namespace DowUmg.Presentation.ViewModels.Mods
 {
     public class ModItemViewModel : ReactiveObject
     {

@@ -12,7 +12,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace DowUmg.Presentation.ViewModels
+namespace DowUmg.Presentation.ViewModels.Mods
 {
     public class ModsViewModel : ReactiveObject, IRoutableViewModel, IEnableLogger
     {

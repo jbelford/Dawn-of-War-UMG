@@ -1,0 +1,97 @@
+﻿<rxui:ReactiveUserControl
+            x:Class="DowUmg.Presentation.WPF.Controls.GeneralTabItem"
+            x:TypeArguments="vm:GeneralTabViewModel"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:rxui="http://reactiveui.net"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels.Generation;assembly=DowUmg.Presentation"
+            mc:Ignorable="d"
+            d:DesignHeight="298.256" d:DesignWidth="554.07">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Players" FontSize="16" HorizontalAlignment="Center" />
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Content="Human" Grid.Row="0" Grid.Column="0" />
+                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5">
+                    <ComboBoxItem IsSelected="True">1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Min" Grid.Row="1" Grid.Column="0" />
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="5">
+                    <ComboBoxItem IsSelected="True">1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Max" Grid.Row="2" Grid.Column="0" />
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="5">
+                    <ComboBoxItem IsSelected="True">2</ComboBoxItem>
+                    <ComboBoxItem>3</ComboBoxItem>
+                    <ComboBoxItem>4</ComboBoxItem>
+                    <ComboBoxItem>5</ComboBoxItem>
+                    <ComboBoxItem>6</ComboBoxItem>
+                    <ComboBoxItem>7</ComboBoxItem>
+                    <ComboBoxItem>8</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Map Filter" FontSize="16" HorizontalAlignment="Center" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" MinWidth="50" MaxWidth="150" />
+                    <ColumnDefinition Width="*" MaxWidth="25" />
+                    <ColumnDefinition Width="*" MinWidth="50" MaxWidth="150" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <Label Content="Type" />
+                    <StackPanel HorizontalAlignment="Center">
+                        <CheckBox Content="2p" />
+                        <CheckBox Content="3p" />
+                        <CheckBox Content="4p" />
+                        <CheckBox Content="5p" />
+                        <CheckBox Content="6p" />
+                        <CheckBox Content="7p" />
+                        <CheckBox Content="8p" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="3" HorizontalAlignment="Center">
+                    <Label Content="Size" />
+                    <StackPanel HorizontalAlignment="Center">
+                        <CheckBox Content="129" />
+                        <CheckBox Content="257" />
+                        <CheckBox Content="513" />
+                        <CheckBox Content="1025" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</rxui:ReactiveUserControl>

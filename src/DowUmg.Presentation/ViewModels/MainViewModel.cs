@@ -1,4 +1,6 @@
-﻿using ReactiveUI;
+﻿using DowUmg.Presentation.ViewModels.Generation;
+using DowUmg.Presentation.ViewModels.Mods;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Reactive;
@@ -25,7 +27,7 @@ namespace DowUmg.Presentation.ViewModels
 
             SettingsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen)));
             ModsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new ModsViewModel(HostScreen)));
-            MatchupAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new GenerationSettingsViewModel(HostScreen)));
+            MatchupAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new GenerationViewModel(HostScreen)));
 
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
 
