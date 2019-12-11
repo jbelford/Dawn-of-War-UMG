@@ -82,7 +82,7 @@ namespace DowUmg.FileFormats
         }
     }
 
-    public class LocaleLoader : IFileLoader<Locales>
+    internal class LocaleLoader : IFileLoader<Locales>
     {
         private readonly Regex reg = new Regex(@"^(\d+)(?:[\s\t]+(.*))?$");
 

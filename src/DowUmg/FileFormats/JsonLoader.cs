@@ -4,7 +4,7 @@ using System.IO;
 
 namespace DowUmg.FileFormats
 {
-    public class JsonLoader<T> : IFileLoader<T>
+    internal class JsonLoader<T> : IFileLoader<T>
     {
         public T Load(string filePath)
         {

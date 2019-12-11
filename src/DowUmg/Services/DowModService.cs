@@ -2,7 +2,6 @@
 using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using DowUmg.Repositories;
-using DowUmg.Services.Module;
 using Splat;
 using System.Collections.Generic;
 using System.IO;

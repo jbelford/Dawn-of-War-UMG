@@ -15,7 +15,7 @@ namespace DowUmg.FileFormats
         public bool AlwaysOn { get; set; }
     }
 
-    public class GameRuleLoader : IFileLoader<GameRuleFile?>
+    internal class GameRuleLoader : IFileLoader<GameRuleFile?>
     {
         public GameRuleFile? Load(string filePath)
         {

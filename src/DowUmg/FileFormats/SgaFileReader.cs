@@ -159,14 +159,19 @@ namespace DowUmg.FileFormats
         public uint DataLength;
     }
 
-    public class InvalidSgaException : IOException
+    public class SgaRawFile
     {
-        public InvalidSgaException(string message) : base(message)
+        public SgaRawFile(string name, byte[] data)
         {
+            Name = name;
+            Data = data;
         }
+
+        public string Name { get; }
+        public byte[] Data { get; }
     }
 
-    public class SgaFileReader : IDisposable
+    internal class SgaFileReader : IDisposable
     {
         private readonly BinaryReader reader;
 
@@ -482,16 +487,11 @@ namespace DowUmg.FileFormats
         }
     }
 
-    public class SgaRawFile
+    internal class InvalidSgaException : IOException
     {
-        public SgaRawFile(string name, byte[] data)
+        public InvalidSgaException(string message) : base(message)
         {
-            Name = name;
-            Data = data;
         }
-
-        public string Name { get; }
-        public byte[] Data { get; }
     }
 
     internal class SgaToc

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DowUmg.Services.Module
+namespace DowUmg.Services
 {
     public class ModuleArchiveExtractor : IModuleDataExtractor, IEnableLogger
     {
@@ -29,7 +29,7 @@ namespace DowUmg.Services.Module
         public IEnumerable<GameRuleFile> GetGameRules()
         {
             var gameRuleLoader = new GameRuleLoader();
-            foreach (var wincondition in this.sgaFileReader.GetWinConditions())
+            foreach (var wincondition in sgaFileReader.GetWinConditions())
             {
                 GameRuleFile? gameRule = gameRuleLoader.Load(new MemoryStream(wincondition.Data));
                 if (gameRule != null)
@@ -42,7 +42,7 @@ namespace DowUmg.Services.Module
         public IEnumerable<Locales> GetLocales()
         {
             var localesLoader = new LocaleLoader();
-            return this.sgaFileReader.GetLocales()
+            return sgaFileReader.GetLocales()
                 .Select(x => new MemoryStream(x.Data))
                 .Select(x => localesLoader.Load(x));
         }
@@ -50,7 +50,7 @@ namespace DowUmg.Services.Module
         public IEnumerable<MapFile> GetMaps()
         {
             var mapLoader = new MapLoader();
-            foreach (var scenario in this.sgaFileReader.GetScenarios())
+            foreach (var scenario in sgaFileReader.GetScenarios())
             {
                 MapFile? mapFile = LoadMap(mapLoader, scenario);
                 if (mapFile != null)
@@ -63,7 +63,7 @@ namespace DowUmg.Services.Module
         public string? GetMapImage(string fileName)
         {
             string noExt = Path.GetFileNameWithoutExtension(fileName);
-            List<SgaRawFile> images = this.sgaFileReader.GetFiles(@"scenarios\mp", $@"{noExt}_(icon|mm)(_custom)?\.tga$")
+            List<SgaRawFile> images = sgaFileReader.GetFiles(@"scenarios\mp", $@"{noExt}_(icon|mm)(_custom)?\.tga$")
                     .ToList();
             if (images.Count == 0)
             {
@@ -74,7 +74,7 @@ namespace DowUmg.Services.Module
 
             SgaRawFile image = images.Last();
 
-            string imagesFolder = Path.Combine(this.cacheFolder, "data", "scenarios", "mp");
+            string imagesFolder = Path.Combine(cacheFolder, "data", "scenarios", "mp");
             Directory.CreateDirectory(imagesFolder);
             File.WriteAllBytes(Path.Combine(imagesFolder, image.Name), image.Data);
 
@@ -90,7 +90,7 @@ namespace DowUmg.Services.Module
             }
             catch (IOException ex)
             {
-                this.logger.Write(ex, $"Failed to load {scenario.Name}", LogLevel.Error);
+                logger.Write(ex, $"Failed to load {scenario.Name}", LogLevel.Error);
             }
 
             return mapFile;

@@ -17,7 +17,7 @@ namespace DowUmg.FileFormats
         public string[] RequiredMods { get; set; } = null!;
     }
 
-    public class ModuleLoader : IFileLoader<DowModuleFile>
+    internal class ModuleLoader : IFileLoader<DowModuleFile>
     {
         private readonly FileIniDataParser parser;
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace DowUmg.Presentation.DesignTime
 {
-    public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
+    internal class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
         public DataContext CreateDbContext(string[] args)
         {

@@ -1,6 +1,6 @@
 ﻿namespace DowUmg.Interfaces
 {
-    public interface IFileLoader<T>
+    internal interface IFileLoader<T>
     {
         public T Load(string filePath);
     }

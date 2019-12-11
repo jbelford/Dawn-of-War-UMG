@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DowUmg.Repositories
 {
-    public class ModsRepository
+    internal class ModsRepository
     {
         public List<DowMod> GetAll()
         {

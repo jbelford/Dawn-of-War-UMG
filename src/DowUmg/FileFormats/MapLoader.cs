@@ -4,15 +4,6 @@ using System.Text;
 
 namespace DowUmg.FileFormats
 {
-    public class MapFile
-    {
-        public string FileName { get; set; } = null!;
-        public int Players { get; set; }
-        public int Size { get; set; }
-        public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
-    }
-
     /**
     * Chunky files are LITTLE-ENDIAN
     *
@@ -35,7 +26,16 @@ namespace DowUmg.FileFormats
     * X byte description
     */
 
-    public class MapLoader : IFileLoader<MapFile>
+    public class MapFile
+    {
+        public string FileName { get; set; } = null!;
+        public int Players { get; set; }
+        public int Size { get; set; }
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+    }
+
+    internal class MapLoader : IFileLoader<MapFile>
     {
         /// <summary>
         /// Loads information from an SGB map file.
