@@ -1,5 +1,6 @@
 ﻿using DowUmg.Data;
 using DowUmg.Interfaces;
+using DowUmg.Presentation.Handlers;
 using DowUmg.Presentation.WPF.Services;
 using DowUmg.Presentation.WPF.Views;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace DowUmg.Presentation.WPF
             InitializeComponent();
             RegisterDependencies();
             MigrateDatabase();
+
+            RxApp.DefaultExceptionHandler = new DefaultExceptionHandler();
         }
 
         private void OnApplicationStartup(object sender, StartupEventArgs args)
