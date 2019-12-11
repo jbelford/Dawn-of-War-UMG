@@ -1,6 +1,4 @@
-﻿using DowUmg.Presentation.ViewModels.Generation;
-using DowUmg.Presentation.ViewModels.Mods;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Reactive;

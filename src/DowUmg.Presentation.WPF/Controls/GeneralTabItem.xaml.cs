@@ -1,4 +1,4 @@
-﻿using DowUmg.Presentation.ViewModels.Generation;
+﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Controls

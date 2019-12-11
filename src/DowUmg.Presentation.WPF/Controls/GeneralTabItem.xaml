@@ -6,7 +6,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:rxui="http://reactiveui.net"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels.Generation;assembly=DowUmg.Presentation"
+            xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
             mc:Ignorable="d"
             d:DesignHeight="298.256" d:DesignWidth="554.07">
     <Grid Margin="10">

@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace DowUmg.Presentation.ViewModels.Generation
+namespace DowUmg.Presentation.ViewModels
 {
     public class GeneralTabViewModel : ReactiveObject
     {

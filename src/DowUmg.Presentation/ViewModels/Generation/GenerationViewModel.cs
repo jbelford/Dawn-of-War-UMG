@@ -1,7 +1,7 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace DowUmg.Presentation.ViewModels.Generation
+namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationViewModel : ReactiveObject, IRoutableViewModel
     {

@@ -12,7 +12,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace DowUmg.Presentation.ViewModels.Mods
+namespace DowUmg.Presentation.ViewModels
 {
     public class ModsViewModel : ReactiveObject, IRoutableViewModel, IEnableLogger
     {
@@ -23,7 +23,7 @@ namespace DowUmg.Presentation.ViewModels.Mods
         {
             HostScreen = screen;
 
-            this.logger = this.Log();
+            logger = this.Log();
 
             var whenNotLoading = this.WhenAnyValue(x => x.Loading).Select(loading => !loading).DistinctUntilChanged();
 
@@ -40,11 +40,11 @@ namespace DowUmg.Presentation.ViewModels.Mods
             RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
             RefreshMods.ThrownExceptions.Subscribe(exception =>
             {
-                this.logger.Error(exception);
+                logger.Error(exception);
             });
             RefreshMods.Execute().Subscribe();
 
-            Observable.CombineLatest(ReloadMod.IsExecuting, ReloadMods.IsExecuting, (a, b) => a || b)
+            ReloadMod.IsExecuting.CombineLatest(ReloadMods.IsExecuting, (a, b) => a || b)
                 .ToPropertyEx(this, x => x.Loading, false);
 
             RefreshMods.Select(mods => mods.Where(x => x.Module.Playable).Where(x => IsMod(x.Module.ModFolder.ToLower())))
@@ -94,8 +94,8 @@ namespace DowUmg.Presentation.ViewModels.Mods
         {
             return await Observable.Start(() =>
                 {
-                    List<DowMod> loaded = this.dowModService.GetLoadedMods();
-                    return this.dowModService.GetUnloadedMods()
+                    List<DowMod> loaded = dowModService.GetLoadedMods();
+                    return dowModService.GetUnloadedMods()
                             .Select(mod => new ModItemViewModel()
                             {
                                 Module = mod.File,
@@ -116,7 +116,7 @@ namespace DowUmg.Presentation.ViewModels.Mods
             DowMod mod = await Observable.Start(() =>
             {
                 var unloaded = new UnloadedMod() { File = modItem.Module, Locales = modItem.Locales };
-                return this.dowModService.LoadMod(unloaded);
+                return dowModService.LoadMod(unloaded);
             }, RxApp.TaskpoolScheduler);
 
             modItem.IsLoaded = true;
