@@ -8,90 +8,74 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
             mc:Ignorable="d"
-            d:DesignHeight="298.256" d:DesignWidth="554.07">
+            d:DesignHeight="404.256" d:DesignWidth="733.07">
+    <UserControl.Resources>
+        <!--Use DataTemplate to avoid boilerplate of ViewFor -->
+        <DataTemplate x:Key="CheckBoxList">
+            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Label}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-            <TextBlock Text="Players" FontSize="16" HorizontalAlignment="Center" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Column="1">
+            <GroupBox.Header>
+                <Label FontStyle="Italic">Players</Label>
+            </GroupBox.Header>
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="35" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+
                 <Label Content="Human" Grid.Row="0" Grid.Column="0" />
-                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5">
-                    <ComboBoxItem IsSelected="True">1</ComboBoxItem>
-                    <ComboBoxItem>2</ComboBoxItem>
-                    <ComboBoxItem>3</ComboBoxItem>
-                    <ComboBoxItem>4</ComboBoxItem>
-                    <ComboBoxItem>5</ComboBoxItem>
-                    <ComboBoxItem>6</ComboBoxItem>
-                    <ComboBoxItem>7</ComboBoxItem>
-                    <ComboBoxItem>8</ComboBoxItem>
-                </ComboBox>
-                <Label Content="Min" Grid.Row="1" Grid.Column="0" />
-                <ComboBox Grid.Row="1" Grid.Column="1" Margin="5">
-                    <ComboBoxItem IsSelected="True">1</ComboBoxItem>
-                    <ComboBoxItem>2</ComboBoxItem>
-                    <ComboBoxItem>3</ComboBoxItem>
-                    <ComboBoxItem>4</ComboBoxItem>
-                    <ComboBoxItem>5</ComboBoxItem>
-                    <ComboBoxItem>6</ComboBoxItem>
-                    <ComboBoxItem>7</ComboBoxItem>
-                    <ComboBoxItem>8</ComboBoxItem>
-                </ComboBox>
-                <Label Content="Max" Grid.Row="2" Grid.Column="0" />
-                <ComboBox Grid.Row="2" Grid.Column="1" Margin="5">
-                    <ComboBoxItem IsSelected="True">2</ComboBoxItem>
-                    <ComboBoxItem>3</ComboBoxItem>
-                    <ComboBoxItem>4</ComboBoxItem>
-                    <ComboBoxItem>5</ComboBoxItem>
-                    <ComboBoxItem>6</ComboBoxItem>
-                    <ComboBoxItem>7</ComboBoxItem>
-                    <ComboBoxItem>8</ComboBoxItem>
-                </ComboBox>
+                <ComboBox x:Name="HumanComboBox" Grid.Row="0" Grid.Column="2" />
+
+                <Label Content="Min" Grid.Row="2" Grid.Column="0" />
+                <ComboBox x:Name="MinComboBox" Grid.Row="2" Grid.Column="2" />
+
+                <Label Content="Max" Grid.Row="5" Grid.Column="0" />
+                <ComboBox x:Name="MaxComboBox" Grid.Row="5" Grid.Column="2" />
             </Grid>
-        </StackPanel>
-        <StackPanel Grid.Column="1">
-            <TextBlock Text="Map Filter" FontSize="16" HorizontalAlignment="Center" />
+        </GroupBox>
+
+        <GroupBox Grid.Column="3" Padding="10,0,10,10">
+            <GroupBox.Header>
+                <Label FontStyle="Italic">Maps</Label>
+            </GroupBox.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" MinWidth="50" MaxWidth="150" />
-                    <ColumnDefinition Width="*" MaxWidth="25" />
-                    <ColumnDefinition Width="*" MinWidth="50" MaxWidth="150" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                <StackPanel Grid.Column="0">
                     <Label Content="Type" />
-                    <StackPanel HorizontalAlignment="Center">
-                        <CheckBox Content="2p" />
-                        <CheckBox Content="3p" />
-                        <CheckBox Content="4p" />
-                        <CheckBox Content="5p" />
-                        <CheckBox Content="6p" />
-                        <CheckBox Content="7p" />
-                        <CheckBox Content="8p" />
-                    </StackPanel>
+                    <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource CheckBoxList}" />
                 </StackPanel>
-                <StackPanel Grid.Column="3" HorizontalAlignment="Center">
+                <StackPanel Grid.Column="2">
                     <Label Content="Size" />
-                    <StackPanel HorizontalAlignment="Center">
-                        <CheckBox Content="129" />
-                        <CheckBox Content="257" />
-                        <CheckBox Content="513" />
-                        <CheckBox Content="1025" />
-                    </StackPanel>
+                    <ItemsControl x:Name="MapSizes"  ItemTemplate="{StaticResource CheckBoxList}" />
                 </StackPanel>
             </Grid>
-        </StackPanel>
+        </GroupBox>
     </Grid>
 </rxui:ReactiveUserControl>
