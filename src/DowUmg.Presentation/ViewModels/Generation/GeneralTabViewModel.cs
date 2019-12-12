@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace DowUmg.Presentation.ViewModels
@@ -33,7 +33,8 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public int MaxPlayers { get; set; }
 
-        public List<CheckBoxItemModel> MapTypes { get; } = new List<CheckBoxItemModel>();
-        public List<CheckBoxItemModel> MapSizes { get; } = new List<CheckBoxItemModel>();
+        public ObservableCollection<CheckBoxItemModel> MapTypes { get; } = new ObservableCollection<CheckBoxItemModel>();
+
+        public ObservableCollection<CheckBoxItemModel> MapSizes { get; } = new ObservableCollection<CheckBoxItemModel>();
     }
 }

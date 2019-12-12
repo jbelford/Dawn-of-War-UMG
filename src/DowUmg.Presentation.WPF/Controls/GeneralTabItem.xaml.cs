@@ -21,8 +21,8 @@ namespace DowUmg.Presentation.WPF.Controls
 
             this.WhenActivated(d =>
             {
-                this.MapSizes.ItemsSource = ViewModel.MapSizes;
-                this.MapTypes.ItemsSource = ViewModel.MapTypes;
+                this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.HumanPlayers, v => v.HumanComboBox.SelectedIndex,
                     hp => hp - 1, idx => idx + 1).DisposeWith(d);
