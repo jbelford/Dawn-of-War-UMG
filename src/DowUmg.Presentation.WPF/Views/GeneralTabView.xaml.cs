@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows.Controls;
 
-namespace DowUmg.Presentation.WPF.Controls
+namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
     /// Interaction logic for GeneralTabItem.xaml
@@ -23,6 +23,11 @@ namespace DowUmg.Presentation.WPF.Controls
             {
                 this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.DiffOption, v => v.DiffOption.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.SpeedOption, v => v.SpeedOption.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.RateOption, v => v.RateOption.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.StartingOption, v => v.StartingOption.Content).DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.HumanPlayers, v => v.HumanComboBox.SelectedIndex,
                     hp => hp - 1, idx => idx + 1).DisposeWith(d);

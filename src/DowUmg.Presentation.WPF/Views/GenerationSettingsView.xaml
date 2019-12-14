@@ -20,7 +20,6 @@
             <TabItem Header="General">
                 <rxui:ViewModelViewHost x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
             </TabItem>
-            <TabItem x:Name="GameTab" Header="Game" />
             <TabItem x:Name="ModsTab" Header="Mods" />
         </TabControl>
         <Grid Grid.Row="2">

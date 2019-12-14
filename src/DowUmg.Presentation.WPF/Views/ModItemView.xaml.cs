@@ -3,14 +3,14 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Windows.Media;
 
-namespace DowUmg.Presentation.WPF.Controls
+namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
     /// Interaction logic for ModListControl.xaml
     /// </summary>
-    public partial class ModItemControl : ReactiveUserControl<ModItemViewModel>
+    public partial class ModItemView : ReactiveUserControl<ModItemViewModel>
     {
-        public ModItemControl()
+        public ModItemView()
         {
             InitializeComponent();
 
