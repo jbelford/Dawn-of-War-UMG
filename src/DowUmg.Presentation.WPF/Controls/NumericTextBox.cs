@@ -2,6 +2,7 @@
 using System;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DowUmg.Presentation.WPF.Controls
@@ -12,11 +13,17 @@ namespace DowUmg.Presentation.WPF.Controls
         {
             this.WhenActivated(d =>
             {
-                var reg = new Regex(@"^[0-9]+$");
                 this.Events().PreviewTextInput
                     .Subscribe(e =>
                     {
-                        e.Handled = !reg.IsMatch(e.Text);
+                        if (SelectionStart == 0 && Text.Length > 0)
+                        {
+                            e.Handled = !Regex.IsMatch(e.Text, @"^[1-9][0-9]*$");
+                        }
+                        else
+                        {
+                            e.Handled = !Regex.IsMatch(e.Text, @"^[0-9]+$");
+                        }
                     }).DisposeWith(d);
             });
         }

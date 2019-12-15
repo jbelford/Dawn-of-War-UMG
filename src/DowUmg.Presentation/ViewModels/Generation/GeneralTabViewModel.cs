@@ -2,20 +2,19 @@
 using ReactiveUI.Fody.Helpers;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
     public class GeneralTabViewModel : ReactiveObject
     {
-        private const int MinValue = 0;
-        private const int MaxValue = 1000;
-        private const int DefaultValue = 100;
-
         public GeneralTabViewModel()
         {
-            HumanPlayers = 1;
-            MinPlayers = 2;
-            MaxPlayers = 8;
+            HumanPlayers = new OptionInputViewModel<int>(Enumerable.Range(1, 8).ToArray());
+            MinPlayers = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
+            MaxPlayers = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
+            MaxPlayers.SelectedItem = MaxPlayers.Items.Last();
 
             foreach (var x in Enumerable.Range(2, 7))
             {
@@ -27,37 +26,75 @@ namespace DowUmg.Presentation.ViewModels
             MapSizes.Add(new ToggleItemViewModel("513", true));
             MapSizes.Add(new ToggleItemViewModel("1025", true));
 
-            DiffOption = new GameOptionViewModel("Difficulty");
-            DiffOption.Items.Add(new NumberInputViewModel("Easy", MinValue, MaxValue, DefaultValue));
-            DiffOption.Items.Add(new NumberInputViewModel("Standard", MinValue, MaxValue, DefaultValue));
-            DiffOption.Items.Add(new NumberInputViewModel("Hard", MinValue, MaxValue, DefaultValue));
-            DiffOption.Items.Add(new NumberInputViewModel("Harder", MinValue, MaxValue, DefaultValue));
-            DiffOption.Items.Add(new NumberInputViewModel("Insane", MinValue, MaxValue, DefaultValue));
+            DiffOption = new GameOptionViewModel("Difficulty", "Easy", "Standard", "Hard", "Harder", "Insane");
+            SpeedOption = new GameOptionViewModel("Game Speed", "Very Slow", "Slow", "Normal", "Fast");
+            RateOption = new GameOptionViewModel("Resource Rate", "Low", "Standard", "High");
+            StartingOption = new GameOptionViewModel("Starting Resources", "Standard", "Quick-Start");
 
-            SpeedOption = new GameOptionViewModel("Game Speed");
-            SpeedOption.Items.Add(new NumberInputViewModel("Very Slow", MinValue, MaxValue, DefaultValue));
-            SpeedOption.Items.Add(new NumberInputViewModel("Slow", MinValue, MaxValue, DefaultValue));
-            SpeedOption.Items.Add(new NumberInputViewModel("Normal", MinValue, MaxValue, DefaultValue));
-            SpeedOption.Items.Add(new NumberInputViewModel("Fast", MinValue, MaxValue, DefaultValue));
+            RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
+            {
+                foreach (var minItem in MinPlayers.Items)
+                {
+                    minItem.IsEnabled = minItem.Content >= item.Content;
+                }
+                if (!MinPlayers.SelectedItem.IsEnabled)
+                {
+                    MinPlayers.SelectedItem = MinPlayers.Items.Where(x => x.IsEnabled).First();
+                }
+            });
 
-            RateOption = new GameOptionViewModel("Resource Rate");
-            RateOption.Items.Add(new NumberInputViewModel("Low", MinValue, MaxValue, DefaultValue));
-            RateOption.Items.Add(new NumberInputViewModel("Standard", MinValue, MaxValue, DefaultValue));
-            RateOption.Items.Add(new NumberInputViewModel("High", MinValue, MaxValue, DefaultValue));
+            RefreshForMinPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
+            {
+                foreach (var maxItem in MaxPlayers.Items)
+                {
+                    maxItem.IsEnabled = maxItem.Content >= item.Content;
+                }
+                if (!MaxPlayers.SelectedItem.IsEnabled)
+                {
+                    MaxPlayers.SelectedItem = MaxPlayers.Items.Where(x => x.IsEnabled).First();
+                }
+            });
 
-            StartingOption = new GameOptionViewModel("Starting Resources");
-            StartingOption.Items.Add(new NumberInputViewModel("Standard", MinValue, MaxValue, DefaultValue));
-            StartingOption.Items.Add(new NumberInputViewModel("Quick-Start", MinValue, MaxValue, DefaultValue));
+            RefreshMapsForRange = ReactiveCommand.Create(((OptionInputItem<int> min, OptionInputItem<int> max) minMax) =>
+            {
+                for (int i = 0; i < MapTypes.Count; ++i)
+                {
+                    ToggleItemViewModel mapType = MapTypes[i];
+                    int mapPlayers = i + 2;
+                    bool wasDisabled = !mapType.IsEnabled;
+                    mapType.IsEnabled = mapPlayers >= minMax.min.Content && mapPlayers <= minMax.max.Content;
+                    if (!mapType.IsEnabled)
+                    {
+                        mapType.IsToggled = false;
+                    }
+                    else if (wasDisabled)
+                    {
+                        mapType.IsToggled = true;
+                    }
+                }
+            });
+
+            this.WhenAnyValue(x => x.HumanPlayers.SelectedItem)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshForHumanPlayers);
+
+            this.WhenAnyValue(x => x.MinPlayers.SelectedItem)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshForMinPlayers);
+
+            this.WhenAnyValue(x => x.MinPlayers.SelectedItem, x => x.MaxPlayers.SelectedItem)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshMapsForRange);
         }
 
         [Reactive]
-        public int HumanPlayers { get; set; }
+        public OptionInputViewModel<int> HumanPlayers { get; set; }
 
         [Reactive]
-        public int MinPlayers { get; set; }
+        public OptionInputViewModel<int> MinPlayers { get; set; }
 
         [Reactive]
-        public int MaxPlayers { get; set; }
+        public OptionInputViewModel<int> MaxPlayers { get; set; }
 
         public ObservableCollection<ToggleItemViewModel> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel>();
 
@@ -74,5 +111,9 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public GameOptionViewModel StartingOption { get; set; }
+
+        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
+        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMinPlayers { get; }
+        public ReactiveCommand<(OptionInputItem<int>, OptionInputItem<int>), Unit> RefreshMapsForRange { get; }
     }
 }

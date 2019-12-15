@@ -11,8 +11,23 @@
             mc:Ignorable="d"
             d:DesignHeight="404.256" d:DesignWidth="733.07">
     <UserControl.Resources>
-        <DataTemplate x:Key="CheckBoxTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
-            <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}" />
+        <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
+            <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}" IsEnabled="{Binding IsEnabled}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:IntOptionInputViewModel}">
+            <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:IntOptionInputItem}">
+                        <TextBlock Text="{Binding Content, Mode=OneTime}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ComboBoxItem}">
+                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
         </DataTemplate>
 
         <DataTemplate x:Key="GameOptionTemplate" DataType="{x:Type vm:GameOptionViewModel}">
@@ -21,11 +36,13 @@
                     <Setter Property="FontStyle" Value="Italic" />
                 </Style>
             </DataTemplate.Resources>
+
             <GroupBox Padding="5">
                 <GroupBox.Header>
                     <ContentControl Content="{Binding Header, Mode=OneTime}"
-                        ContentTemplate="{StaticResource CheckBoxTemplate}" />
+                        ContentTemplate="{StaticResource ToggleItemTemplate}" />
                 </GroupBox.Header>
+
                 <ItemsControl ItemsSource="{Binding Items}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:NumberInputViewModel}">
@@ -35,10 +52,11 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="40" />
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Content="{Binding Label, Mode=OneTime}"
+                                <Label Grid.Column="1" Content="{Binding Label, Mode=OneTime}"
                                        Margin="0,0,5,0"
                                        HorizontalContentAlignment="Right" />
-                                <controls:NumericTextBox Grid.Column="2" MaxLength="4" Text="{Binding Input}"
+                                <controls:NumericTextBox Grid.Column="2" MaxLength="4"
+                                        Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
                                         HorizontalContentAlignment="Right"
                                         VerticalContentAlignment="Center" />
                             </Grid>
@@ -54,7 +72,9 @@
             </GroupBox>
         </DataTemplate>
     </UserControl.Resources>
+
     <WrapPanel Margin="10">
+
         <GroupBox Padding="10" Margin="0,0,10,10">
             <GroupBox.Header>
                 <Label FontStyle="Italic">Players</Label>
@@ -74,13 +94,16 @@
                 </Grid.RowDefinitions>
 
                 <Label Content="Human" Grid.Row="0" Grid.Column="0" />
-                <ComboBox x:Name="HumanComboBox" Grid.Row="0" Grid.Column="2" />
+                <ContentControl x:Name="HumanComboBox" Grid.Row="0" Grid.Column="2"
+                    ContentTemplate="{StaticResource OptionInputTemplate}" />
 
                 <Label Content="Min" Grid.Row="2" Grid.Column="0" />
-                <ComboBox x:Name="MinComboBox" Grid.Row="2" Grid.Column="2" />
+                <ContentControl x:Name="MinComboBox" Grid.Row="2" Grid.Column="2"
+                    ContentTemplate="{StaticResource OptionInputTemplate}" />
 
                 <Label Content="Max" Grid.Row="5" Grid.Column="0" />
-                <ComboBox x:Name="MaxComboBox" Grid.Row="5" Grid.Column="2" />
+                <ContentControl x:Name="MaxComboBox" Grid.Row="5" Grid.Column="2"
+                    ContentTemplate="{StaticResource OptionInputTemplate}" />
             </Grid>
         </GroupBox>
 
@@ -94,9 +117,10 @@
                     <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+
                 <StackPanel Grid.Column="0">
                     <Label Content="Type" />
-                    <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource CheckBoxTemplate}">
+                    <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}">
                         <ItemsControl.ItemContainerStyle>
                             <Style>
                                 <Setter Property="FrameworkElement.Margin" Value="5" />
@@ -104,9 +128,10 @@
                         </ItemsControl.ItemContainerStyle>
                     </ItemsControl>
                 </StackPanel>
+
                 <StackPanel Grid.Column="2">
                     <Label Content="Size" />
-                    <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource CheckBoxTemplate}">
+                    <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}">
                         <ItemsControl.ItemContainerStyle>
                             <Style>
                                 <Setter Property="FrameworkElement.Margin" Value="5" />
@@ -120,6 +145,6 @@
         <ContentControl x:Name="DiffOption" Margin="0,0,10,10" ContentTemplate="{StaticResource GameOptionTemplate}" />
         <ContentControl x:Name="SpeedOption" Margin="0,0,10,10" ContentTemplate="{StaticResource GameOptionTemplate}" />
         <ContentControl x:Name="RateOption" Margin="0,0,10,10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-        <ContentControl x:Name="StartingOption" ContentTemplate="{StaticResource GameOptionTemplate}" />
+        <ContentControl x:Name="StartingOption" Margin="0,0,0,10" ContentTemplate="{StaticResource GameOptionTemplate}" />
     </WrapPanel>
 </rxui:ReactiveUserControl>
