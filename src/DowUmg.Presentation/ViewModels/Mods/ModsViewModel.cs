@@ -100,7 +100,8 @@ namespace DowUmg.Presentation.ViewModels
                             {
                                 Module = mod.File,
                                 Locales = mod.Locales,
-                                IsLoaded = loaded.Exists(loaded => mod.File.ModFolder.Equals(loaded.ModFolder))
+                                IsLoaded = loaded.Exists(loaded => mod.File.ModFolder.Equals(loaded.ModFolder)
+                                    && loaded.IsAddition == mod.File.UIName.Contains("Additions"))
                             }).ToList();
                 }, RxApp.TaskpoolScheduler);
         }

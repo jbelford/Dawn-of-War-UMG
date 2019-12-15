@@ -23,7 +23,7 @@ namespace DowUmg.Services
 
             images = new Lazy<ISet<string>>(
                 () => GetFiles(mapsPath, "*.tga", SearchOption.TopDirectoryOnly)
-                    .Select(x => Path.GetFileName(x))
+                    .Select(x => Path.GetFileName(x).ToLower())
                     .ToHashSet());
         }
 
@@ -66,7 +66,7 @@ namespace DowUmg.Services
 
         public string? GetMapImage(string fileName)
         {
-            string fileNoExt = Path.GetFileNameWithoutExtension(fileName);
+            string fileNoExt = Path.GetFileNameWithoutExtension(fileName).ToLower();
             string? image = null;
             if (images.Value.Contains(fileNoExt + "_mm_custom.tga"))
             {

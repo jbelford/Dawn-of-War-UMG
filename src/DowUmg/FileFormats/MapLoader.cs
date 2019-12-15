@@ -7,6 +7,17 @@ namespace DowUmg.FileFormats
     /**
     * Chunky files are LITTLE-ENDIAN
     *
+    * First 11 bytes are UTF8 "Chunky File"
+    *
+    * 12 bytes unknown
+    *
+    * 8 bytes "FOLDSCEN"
+    * 4 byte YEAR
+    * 4 byte unknown - could be time of the year / size of the folder
+    * 4 byte size of some  text before reaching DATAWHMD
+    * X bytes of some text
+    *
+    * 8 bytes "DATAWHMD"
     * Chunk Header Format:
     * 4 byte chunk type "DATA"
     * 4 byte chunk ID "WHMD"
@@ -57,8 +68,15 @@ namespace DowUmg.FileFormats
                 throw new IOException($"Not a Relic Chunky");
             }
 
-            // Unknown yet whether DATAWHMD always starts here or not.
-            reader.BaseStream.Seek(44, SeekOrigin.Begin);
+            reader.BaseStream.Seek(12, SeekOrigin.Current);
+            string foldscen = Encoding.UTF8.GetString(reader.ReadBytes(8));
+            if (!"FOLDSCEN".Equals(foldscen))
+            {
+                throw new IOException($"Could not read due to malformatted data");
+            }
+
+            reader.BaseStream.Seek(8, SeekOrigin.Current);
+            reader.BaseStream.Seek(reader.ReadInt32(), SeekOrigin.Current);
 
             string label = Encoding.UTF8.GetString(reader.ReadBytes(8));
             if (!"DATAWMHD".Equals(label))
