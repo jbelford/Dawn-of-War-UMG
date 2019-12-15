@@ -10,13 +10,14 @@ namespace DowUmg.Migrations.Migrations
                 name: "Mods",
                 columns: table => new
                 {
+                    IsAddition = table.Column<bool>(nullable: false),
                     ModFolder = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mods", x => x.ModFolder);
+                    table.PrimaryKey("PK_Mods", x => new { x.IsAddition, x.ModFolder });
                 });
 
             migrationBuilder.CreateTable(
@@ -27,17 +28,18 @@ namespace DowUmg.Migrations.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false),
-                    ModId = table.Column<string>(nullable: true),
+                    ModId1 = table.Column<bool>(nullable: false),
+                    ModId2 = table.Column<string>(nullable: true),
                     IsWinCondition = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GameRules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GameRules_Mods_ModId",
-                        column: x => x.ModId,
+                        name: "FK_GameRules_Mods_ModId1_ModId2",
+                        columns: x => new { x.ModId1, x.ModId2 },
                         principalTable: "Mods",
-                        principalColumn: "ModFolder",
+                        principalColumns: new[] { "IsAddition", "ModFolder" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -49,7 +51,8 @@ namespace DowUmg.Migrations.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false),
-                    ModId = table.Column<string>(nullable: true),
+                    ModId1 = table.Column<bool>(nullable: false),
+                    ModId2 = table.Column<string>(nullable: true),
                     Players = table.Column<int>(nullable: false),
                     Size = table.Column<int>(nullable: false),
                     Image = table.Column<string>(nullable: false)
@@ -58,22 +61,22 @@ namespace DowUmg.Migrations.Migrations
                 {
                     table.PrimaryKey("PK_Maps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Maps_Mods_ModId",
-                        column: x => x.ModId,
+                        name: "FK_Maps_Mods_ModId1_ModId2",
+                        columns: x => new { x.ModId1, x.ModId2 },
                         principalTable: "Mods",
-                        principalColumn: "ModFolder",
+                        principalColumns: new[] { "IsAddition", "ModFolder" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameRules_ModId",
+                name: "IX_GameRules_ModId1_ModId2",
                 table: "GameRules",
-                column: "ModId");
+                columns: new[] { "ModId1", "ModId2" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Maps_ModId",
+                name: "IX_Maps_ModId1_ModId2",
                 table: "Maps",
-                column: "ModId");
+                columns: new[] { "ModId1", "ModId2" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

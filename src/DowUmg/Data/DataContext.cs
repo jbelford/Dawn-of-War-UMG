@@ -26,15 +26,15 @@ namespace DowUmg.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DowMod>().HasKey(x => x.ModFolder);
+            modelBuilder.Entity<DowMod>().HasKey(x => new { x.IsAddition, x.ModFolder });
             modelBuilder.Entity<DowMod>().HasMany(x => x.Maps)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey("ModId");
+                .HasForeignKey("ModId1", "ModId2");
             modelBuilder.Entity<DowMod>().HasMany(x => x.Rules)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey("ModId");
+                .HasForeignKey("ModId1", "ModId2");
 
             modelBuilder.Entity<DowMap>().Property<int>("Id");
             modelBuilder.Entity<GameRule>().Property<int>("Id");

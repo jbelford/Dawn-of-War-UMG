@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DowUmg.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191203044032_InitialCreate")]
+    [Migration("20191215040531_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,10 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ModId")
+                    b.Property<bool>("ModId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModId2")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -46,13 +49,16 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId");
+                    b.HasIndex("ModId1", "ModId2");
 
                     b.ToTable("Maps");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
                 {
+                    b.Property<bool>("IsAddition")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ModFolder")
                         .HasColumnType("TEXT");
 
@@ -64,7 +70,7 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ModFolder");
+                    b.HasKey("IsAddition", "ModFolder");
 
                     b.ToTable("Mods");
                 });
@@ -82,7 +88,10 @@ namespace DowUmg.Migrations.Migrations
                     b.Property<bool>("IsWinCondition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ModId")
+                    b.Property<bool>("ModId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModId2")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -91,7 +100,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId");
+                    b.HasIndex("ModId1", "ModId2");
 
                     b.ToTable("GameRules");
                 });
@@ -100,7 +109,7 @@ namespace DowUmg.Migrations.Migrations
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Maps")
-                        .HasForeignKey("ModId")
+                        .HasForeignKey("ModId1", "ModId2")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -108,7 +117,7 @@ namespace DowUmg.Migrations.Migrations
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Rules")
-                        .HasForeignKey("ModId")
+                        .HasForeignKey("ModId1", "ModId2")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

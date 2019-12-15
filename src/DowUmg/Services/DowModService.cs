@@ -68,6 +68,14 @@ namespace DowUmg.Services
 
                 yield return module;
             }
+
+            // Yeah whatever
+
+            var dxp2 = modules["DXP2"];
+            yield return new UnloadedMod() { File = CreateAdditionsModule(dxp2.File), Locales = dxp2.Locales };
+
+            var w40k = modules["W40k"];
+            yield return new UnloadedMod() { File = CreateAdditionsModule(w40k.File), Locales = w40k.Locales };
         }
 
         public DowMod LoadMod(UnloadedMod unloaded)
@@ -77,6 +85,7 @@ namespace DowUmg.Services
                 Name = unloaded.File.UIName,
                 ModFolder = unloaded.File.ModFolder,
                 Details = unloaded.File.Description,
+                IsAddition = unloaded.File.UIName.Contains("Additions")
             };
 
             using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
@@ -111,6 +120,20 @@ namespace DowUmg.Services
             }
 
             return this.mods.Upsert(mod);
+        }
+
+        private static DowModuleFile CreateAdditionsModule(DowModuleFile mod)
+        {
+            return new DowModuleFile()
+            {
+                Description = mod.Description,
+                DllName = mod.Description,
+                ModFolder = mod.ModFolder,
+                ModVersion = mod.ModVersion,
+                Playable = mod.Playable,
+                RequiredMods = mod.RequiredMods,
+                UIName = $"{mod.UIName} - Additions"
+            };
         }
 
         private LocaleStore GetLocales(DowModuleFile module)

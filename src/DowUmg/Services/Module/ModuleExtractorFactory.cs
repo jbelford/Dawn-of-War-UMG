@@ -22,8 +22,13 @@ namespace DowUmg.Services
             {
                 case "dxp2":
                 case "w40k":
-                    string cacheFolder = Path.Combine(filePathProvider.AppDataLocation, file.ModFolder);
-                    return new ModuleArchiveExtractor(Path.Combine(folder, $"{file.ModFolder}Data.sga"), cacheFolder);
+                    if (!file.UIName.Contains("Additions"))
+                    {
+                        string cacheFolder = Path.Combine(filePathProvider.AppDataLocation, file.ModFolder);
+                        return new ModuleArchiveExtractor(Path.Combine(folder, $"{file.ModFolder}Data.sga"), cacheFolder);
+                    }
+                    // Yep this is the only time goto is OK
+                    goto default;
 
                 default:
                     return new ModuleFileSystemExtractor(folder);

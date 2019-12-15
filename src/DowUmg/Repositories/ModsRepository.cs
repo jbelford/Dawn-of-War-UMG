@@ -18,7 +18,7 @@ namespace DowUmg.Repositories
             using var context = new DataContext();
             using var transaction = context.Database.BeginTransaction();
 
-            DowMod? existing = context.Mods.Find(mod.ModFolder);
+            DowMod? existing = context.Mods.Find(mod.IsAddition, mod.ModFolder);
             if (existing != null)
             {
                 context.Mods.Remove(existing);
