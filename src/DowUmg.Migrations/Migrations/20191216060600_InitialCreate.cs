@@ -68,6 +68,28 @@ namespace DowUmg.Migrations.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Races",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    ModId1 = table.Column<bool>(nullable: false),
+                    ModId2 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Races", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Races_Mods_ModId1_ModId2",
+                        columns: x => new { x.ModId1, x.ModId2 },
+                        principalTable: "Mods",
+                        principalColumns: new[] { "IsAddition", "ModFolder" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_GameRules_ModId1_ModId2",
                 table: "GameRules",
@@ -76,6 +98,11 @@ namespace DowUmg.Migrations.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Maps_ModId1_ModId2",
                 table: "Maps",
+                columns: new[] { "ModId1", "ModId2" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Races_ModId1_ModId2",
+                table: "Races",
                 columns: new[] { "ModId1", "ModId2" });
         }
 
@@ -86,6 +113,9 @@ namespace DowUmg.Migrations.Migrations
 
             migrationBuilder.DropTable(
                 name: "Maps");
+
+            migrationBuilder.DropTable(
+                name: "Races");
 
             migrationBuilder.DropTable(
                 name: "Mods");

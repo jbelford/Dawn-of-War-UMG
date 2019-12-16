@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DowUmg.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191215040531_InitialCreate")]
+    [Migration("20191216060600_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,33 @@ namespace DowUmg.Migrations.Migrations
                     b.ToTable("Mods");
                 });
 
+            modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ModId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModId2")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModId1", "ModId2");
+
+                    b.ToTable("Races");
+                });
+
             modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
                 {
                     b.Property<int>("Id")
@@ -109,6 +136,14 @@ namespace DowUmg.Migrations.Migrations
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Maps")
+                        .HasForeignKey("ModId1", "ModId2")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
+                {
+                    b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
+                        .WithMany("Races")
                         .HasForeignKey("ModId1", "ModId2")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

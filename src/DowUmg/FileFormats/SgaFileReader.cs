@@ -176,7 +176,7 @@ namespace DowUmg.FileFormats
         private readonly BinaryReader reader;
 
         private readonly SgaFileHeader header;
-        private readonly SgaDirectory[] directories;
+        private readonly Dictionary<string, SgaDirectory> directories;
 
         /// <summary>
         /// Create a new SgaFileReader. Will immediately read the header information
@@ -202,7 +202,11 @@ namespace DowUmg.FileFormats
                     throw new IOException($"SGA file does not have exactly 1 TOC {filePath}");
                 }
 
-                this.directories = directories;
+                this.directories = new Dictionary<string, SgaDirectory>(directories.Length);
+                foreach (var directory in directories)
+                {
+                    this.directories.Add(directory.Name, directory);
+                }
             }
             catch (IOException ex)
             {
@@ -236,16 +240,20 @@ namespace DowUmg.FileFormats
             return GetFiles(@"Locale\English", @"\.ucs");
         }
 
+        public IEnumerable<SgaRawFile> GetRaces()
+        {
+            return GetFiles(@"attrib\racebps", @"\.rgd");
+        }
+
         public IEnumerable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
         {
-            int pos = this.directories.BinarySearch((directory) => directoryPath.CompareTo(directory.Name));
-            if (pos < 0)
+            if (!this.directories.ContainsKey(directoryPath))
             {
                 return Enumerable.Empty<SgaRawFile>();
             }
 
             var reg = new Regex(filePattern);
-            return this.directories[pos].Files
+            return this.directories[directoryPath].Files
                 .Where(x => reg.IsMatch(x.Name))
                 .Select(file => ReadFile(file));
         }
@@ -402,7 +410,7 @@ namespace DowUmg.FileFormats
                     FileEnd = BitConverter.ToUInt16(dataHeaderBuffer, offset + 10)
                 };
 
-                string name = GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
+                string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
 
                 var dir = new SgaDirectory(name, info);
 
@@ -461,29 +469,12 @@ namespace DowUmg.FileFormats
                     };
                 }
 
-                string name = GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
+                string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
 
                 files[i] = new SgaFile(name, info);
             }
 
             return files;
-        }
-
-        /// <summary>
-        /// Returns the null-terminated string at the offset in the buffer.
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        private string GetAsciiString(in byte[] buffer, int offset)
-        {
-            unsafe
-            {
-                fixed (byte* p = buffer)
-                {
-                    return new string((sbyte*)(p + offset));
-                }
-            }
         }
     }
 
@@ -518,6 +509,11 @@ namespace DowUmg.FileFormats
         public List<SgaDirectory> Directories { get; } = new List<SgaDirectory>();
         public List<SgaFile> Files { get; } = new List<SgaFile>();
         public string Name { get; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     internal class SgaFile

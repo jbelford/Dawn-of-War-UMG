@@ -10,5 +10,6 @@ namespace DowUmg.Data.Entities
         public string Details { get; set; } = null!;
         public List<DowMap> Maps { get; } = new List<DowMap>();
         public List<GameRule> Rules { get; } = new List<GameRule>();
+        public List<DowRace> Races { get; } = new List<DowRace>();
     }
 }

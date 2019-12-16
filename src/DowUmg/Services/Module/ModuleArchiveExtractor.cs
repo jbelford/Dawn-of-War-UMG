@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DowUmg.Services
 {
-    public class ModuleArchiveExtractor : IModuleDataExtractor, IEnableLogger
+    internal class ModuleArchiveExtractor : IModuleDataExtractor, IEnableLogger
     {
         private readonly SgaFileReader sgaFileReader;
 
@@ -79,6 +79,14 @@ namespace DowUmg.Services
             File.WriteAllBytes(Path.Combine(imagesFolder, image.Name), image.Data);
 
             return image.Name;
+        }
+
+        public IEnumerable<RaceFile> GetRaces()
+        {
+            var raceLoader = new RaceLoader();
+            return sgaFileReader.GetRaces()
+                .Select(x => new MemoryStream(x.Data))
+                .Select(x => raceLoader.Load(x));
         }
 
         private MapFile? LoadMap(MapLoader mapLoader, SgaRawFile scenario)

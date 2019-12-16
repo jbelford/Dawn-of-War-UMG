@@ -17,6 +17,7 @@ namespace DowUmg.Data
         public DbSet<DowMap> Maps { get; set; } = null!;
         public DbSet<DowMod> Mods { get; set; } = null!;
         public DbSet<GameRule> GameRules { get; set; } = null!;
+        public DbSet<DowRace> Races { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,9 +36,14 @@ namespace DowUmg.Data
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey("ModId1", "ModId2");
+            modelBuilder.Entity<DowMod>().HasMany(x => x.Races)
+                .WithOne(x => x.Mod)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey("ModId1", "ModId2");
 
             modelBuilder.Entity<DowMap>().Property<int>("Id");
             modelBuilder.Entity<GameRule>().Property<int>("Id");
+            modelBuilder.Entity<DowRace>().Property<int>("Id");
         }
     }
 }

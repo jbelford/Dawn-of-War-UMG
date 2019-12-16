@@ -13,5 +13,7 @@ namespace DowUmg.Interfaces
         public string? GetMapImage(string fileName);
 
         public IEnumerable<GameRuleFile> GetGameRules();
+
+        public IEnumerable<RaceFile> GetRaces();
     }
 }

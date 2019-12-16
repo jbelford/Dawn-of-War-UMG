@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DowUmg.Services
 {
-    public class ModuleFileSystemExtractor : IModuleDataExtractor, IEnableLogger
+    internal class ModuleFileSystemExtractor : IModuleDataExtractor, IEnableLogger
     {
         private readonly string rootDir;
         private readonly ILogger logger;
@@ -85,6 +85,16 @@ namespace DowUmg.Services
                 image = fileNoExt + "_icon.tga";
             }
             return image;
+        }
+
+        public IEnumerable<RaceFile> GetRaces()
+        {
+            var raceLoader = new RaceLoader();
+            string path = Path.Combine(rootDir, "Data", "attrib", "racebps");
+            foreach (string file in GetFiles(path, "*.rgd", SearchOption.TopDirectoryOnly))
+            {
+                yield return raceLoader.Load(file);
+            }
         }
 
         private MapFile? LoadMap(MapLoader mapsLoader, string file)

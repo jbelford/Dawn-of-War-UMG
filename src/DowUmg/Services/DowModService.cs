@@ -90,6 +90,15 @@ namespace DowUmg.Services
 
             using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
 
+            foreach (RaceFile race in extractor.GetRaces().Where(race => race.Playable))
+            {
+                mod.Races.Add(new DowRace()
+                {
+                    Name = unloaded.Locales.Replace(race.Name),
+                    Description = unloaded.Locales.Replace(race.Description)
+                });
+            }
+
             foreach (MapFile map in extractor.GetMaps())
             {
                 string? image = extractor.GetMapImage(map.FileName);
