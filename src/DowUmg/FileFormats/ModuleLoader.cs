@@ -1,4 +1,5 @@
-﻿using DowUmg.Interfaces;
+﻿using DowUmg.Constants;
+using DowUmg.Interfaces;
 using IniParser;
 using IniParser.Model;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace DowUmg.FileFormats
         public string ModFolder { get; set; } = null!;
         public string ModVersion { get; set; } = null!;
         public string[] RequiredMods { get; set; } = null!;
+        public bool IsVanilla { get; set; }
     }
 
     internal class ModuleLoader : IFileLoader<DowModuleFile>
@@ -33,6 +35,7 @@ namespace DowUmg.FileFormats
             KeyDataCollection global = data["global"];
 
             var reg = new Regex(@"^RequiredMod\.\d+$");
+            string modFolder = global["ModFolder"];
 
             return new DowModuleFile()
             {
@@ -40,10 +43,15 @@ namespace DowUmg.FileFormats
                 Description = global["Description"],
                 DllName = global["DllName"],
                 Playable = "1".Equals(global["Playable"]),
-                ModFolder = global["ModFolder"],
+                ModFolder = modFolder,
                 ModVersion = global["ModVersion"],
-                RequiredMods = global.Where(x => reg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray()
+                RequiredMods = global.Where(x => reg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
+                IsVanilla = IsVanilla(modFolder)
             };
         }
+
+        private static bool IsVanilla(string str) =>
+            DowConstants.DXP2Folder.Equals(str, System.StringComparison.OrdinalIgnoreCase)
+            || DowConstants.W40kFolder.Equals(str, System.StringComparison.OrdinalIgnoreCase);
     }
 }

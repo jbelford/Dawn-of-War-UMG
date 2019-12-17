@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DowUmg.Enums
+namespace DowUmg.Constants
 {
     public enum GameResourceRate
     {

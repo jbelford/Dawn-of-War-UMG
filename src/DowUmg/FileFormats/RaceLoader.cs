@@ -36,7 +36,7 @@ namespace DowUmg.FileFormats
             RgdFile file = rgd.Read(stream);
             try
             {
-                if (file.Entries[RaceDetailsHash] is RgdEntry<Dictionary<uint, RgdEntry>> details
+                if (file.Entries[RaceDetailsHash] is RgdEntry<Dictionary<uint, IRgdEntry>> details
                     && details.Value[NameHash] is RgdEntry<string> name
                     && details.Value[DescHash] is RgdEntry<string> desc
                     && details.Value[PlayableHash] is RgdEntry<bool> playable)

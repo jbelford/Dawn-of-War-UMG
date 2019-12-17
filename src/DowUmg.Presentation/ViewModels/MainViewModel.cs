@@ -5,14 +5,12 @@ using System.Reactive;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class MainViewModel : ReactiveObject, IRoutableViewModel
+    public class MainViewModel : RoutableReactiveObject
     {
         private MenuType menuSelected;
 
-        public MainViewModel(IScreen screen)
+        public MainViewModel(IScreen screen) : base(screen, "main")
         {
-            HostScreen = screen;
-
             OpenContextMenu = ReactiveCommand.Create<MenuType>(selected =>
             {
                 ContextMenuIsVisible = true;
@@ -44,10 +42,6 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public bool ContextMenuIsVisible { get; private set; }
-
-        public IScreen HostScreen { get; }
-
-        public string UrlPathSegment => "main";
 
         public enum MenuType { Campaign, None };
     }

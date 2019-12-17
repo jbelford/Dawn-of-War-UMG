@@ -18,26 +18,12 @@ namespace DowUmg.Services
         {
             string folder = Path.Combine(filePathProvider.SoulstormLocation, file.ModFolder);
 
-            switch (file.ModFolder.ToLower())
+            if (file.IsVanilla)
             {
-                case "dxp2":
-                case "w40k":
-                    if (!file.UIName.Contains("Additions"))
-                    {
-                        string cacheFolder = Path.Combine(filePathProvider.AppDataLocation, file.ModFolder);
-                        return new ModuleArchiveExtractor(Path.Combine(folder, $"{file.ModFolder}Data.sga"), cacheFolder);
-                    }
-                    // Yep this is the only time goto is OK
-                    goto default;
-
-                default:
-                    return new ModuleFileSystemExtractor(folder);
+                string cacheFolder = Path.Combine(filePathProvider.AppDataLocation, file.ModFolder);
+                return new ModuleArchiveExtractor(Path.Combine(folder, $"{file.ModFolder}Data.sga"), cacheFolder);
             }
-        }
 
-        internal ModuleFileSystemExtractor CreateFileSystem(DowModuleFile file)
-        {
-            string folder = Path.Combine(filePathProvider.SoulstormLocation, file.ModFolder);
             return new ModuleFileSystemExtractor(folder);
         }
     }

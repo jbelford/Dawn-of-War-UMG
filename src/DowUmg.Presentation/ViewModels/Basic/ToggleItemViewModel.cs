@@ -1,9 +1,8 @@
-using DowUmg.Presentation.ViewModels.Basic;
 using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemViewModel : DisableableOption
+    public class ToggleItemViewModel : DisableableReactiveObject
     {
         public ToggleItemViewModel(string label, bool toggled = false)
         {

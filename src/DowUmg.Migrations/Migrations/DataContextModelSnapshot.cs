@@ -54,7 +54,7 @@ namespace DowUmg.Migrations.Migrations
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
                 {
-                    b.Property<bool>("IsAddition")
+                    b.Property<bool>("IsVanilla")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ModFolder")
@@ -68,7 +68,7 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("IsAddition", "ModFolder");
+                    b.HasKey("IsVanilla", "ModFolder");
 
                     b.ToTable("Mods");
                 });

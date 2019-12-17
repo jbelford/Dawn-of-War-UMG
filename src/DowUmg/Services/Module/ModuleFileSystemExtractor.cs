@@ -41,16 +41,6 @@ namespace DowUmg.Services
                 .Where(rule => rule != null) as IEnumerable<GameRuleFile>;
         }
 
-        public IEnumerable<Locales> GetLocales()
-        {
-            string localePath = Path.Combine(rootDir, "Locale", "English");
-
-            string[] files = GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
-
-            var ucsLoader = new LocaleLoader();
-            return files.Select(x => ucsLoader.Load(x));
-        }
-
         public IEnumerable<MapFile> GetMaps()
         {
             var mapsLoader = new MapLoader();

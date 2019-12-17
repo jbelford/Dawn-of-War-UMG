@@ -1,9 +1,9 @@
-using ReactiveUI.Validation.Helpers;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GameOptionViewModel : ReactiveValidationObject<GameOptionViewModel>
+    public class GameOptionViewModel : ReactiveObject
     {
         public GameOptionViewModel(string name, params string[] options)
         {

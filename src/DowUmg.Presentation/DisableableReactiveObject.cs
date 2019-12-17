@@ -1,9 +1,9 @@
 ﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace DowUmg.Presentation.ViewModels.Basic
+namespace DowUmg.Presentation
 {
-    public class DisableableOption : ReactiveObject
+    public class DisableableReactiveObject : ReactiveObject
     {
         [Reactive]
         public bool IsEnabled { get; set; } = true;

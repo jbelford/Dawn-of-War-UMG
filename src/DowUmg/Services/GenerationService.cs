@@ -10,5 +10,9 @@ namespace DowUmg.Services
         {
             this.modService = modService ?? Locator.Current.GetService<DowModService>();
         }
+
+        public void GenerateMatchup()
+        {
+        }
     }
 }

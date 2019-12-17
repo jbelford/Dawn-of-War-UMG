@@ -3,20 +3,14 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GenerationViewModel : ReactiveObject, IRoutableViewModel
+    public class GenerationViewModel : RoutableReactiveObject
     {
-        public GenerationViewModel(IScreen screen)
+        public GenerationViewModel(IScreen screen) : base(screen, "matchup")
         {
-            HostScreen = screen;
-
             GeneralTab = new GeneralTabViewModel();
         }
 
         [Reactive]
         public GeneralTabViewModel GeneralTab { get; private set; }
-
-        public string UrlPathSegment => "matchup";
-
-        public IScreen HostScreen { get; private set; }
     }
 }

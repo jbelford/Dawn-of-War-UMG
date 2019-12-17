@@ -39,14 +39,6 @@ namespace DowUmg.Services
             }
         }
 
-        public IEnumerable<Locales> GetLocales()
-        {
-            var localesLoader = new LocaleLoader();
-            return sgaFileReader.GetLocales()
-                .Select(x => new MemoryStream(x.Data))
-                .Select(x => localesLoader.Load(x));
-        }
-
         public IEnumerable<MapFile> GetMaps()
         {
             var mapLoader = new MapLoader();

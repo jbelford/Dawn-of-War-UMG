@@ -6,14 +6,12 @@ namespace DowUmg.Interfaces
 {
     internal interface IModuleDataExtractor : IDisposable
     {
-        public IEnumerable<Locales> GetLocales();
+        IEnumerable<MapFile> GetMaps();
 
-        public IEnumerable<MapFile> GetMaps();
+        string? GetMapImage(string fileName);
 
-        public string? GetMapImage(string fileName);
+        IEnumerable<GameRuleFile> GetGameRules();
 
-        public IEnumerable<GameRuleFile> GetGameRules();
-
-        public IEnumerable<RaceFile> GetRaces();
+        IEnumerable<RaceFile> GetRaces();
     }
 }

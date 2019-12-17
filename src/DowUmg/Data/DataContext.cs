@@ -27,7 +27,7 @@ namespace DowUmg.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DowMod>().HasKey(x => new { x.IsAddition, x.ModFolder });
+            modelBuilder.Entity<DowMod>().HasKey(x => new { x.IsVanilla, x.ModFolder });
             modelBuilder.Entity<DowMod>().HasMany(x => x.Maps)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)

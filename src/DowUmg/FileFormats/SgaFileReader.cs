@@ -235,11 +235,6 @@ namespace DowUmg.FileFormats
             return GetFiles(@"scar\winconditions", @"_local\.lua$");
         }
 
-        public IEnumerable<SgaRawFile> GetLocales()
-        {
-            return GetFiles(@"Locale\English", @"\.ucs");
-        }
-
         public IEnumerable<SgaRawFile> GetRaces()
         {
             return GetFiles(@"attrib\racebps", @"\.rgd");

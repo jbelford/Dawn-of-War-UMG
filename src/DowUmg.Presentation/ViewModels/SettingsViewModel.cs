@@ -9,15 +9,14 @@ using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class SettingsViewModel : ReactiveObject, IRoutableViewModel
+    public class SettingsViewModel : RoutableReactiveObject
     {
         private readonly AppSettingsService settingsService;
 
-        public SettingsViewModel(IScreen screen, AppSettingsService? settingsService = null)
+        public SettingsViewModel(IScreen screen, AppSettingsService? settingsService = null) : base(screen, "settings")
         {
             this.settingsService = settingsService ?? Locator.Current.GetService<AppSettingsService>();
 
-            HostScreen = screen;
             SavedSettings = this.settingsService.GetSettings();
 
             SelectDirectory = ReactiveCommand.CreateFromObservable(() => GetDirectory.Handle(SoulstormDirectory));
@@ -48,8 +47,5 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public AppSettings SavedSettings { get; private set; }
-
-        public IScreen HostScreen { get; }
-        public string UrlPathSegment => "settings";
     }
 }

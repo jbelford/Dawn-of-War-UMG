@@ -1,5 +1,4 @@
-﻿using DowUmg.Presentation.ViewModels.Basic;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Collections.ObjectModel;
 
@@ -25,7 +24,7 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<OptionInputItem<T>> Items { get; } = new ObservableCollection<OptionInputItem<T>>();
     }
 
-    public class OptionInputItem<T> : DisableableOption
+    public class OptionInputItem<T> : DisableableReactiveObject
     {
         public OptionInputItem(T content)
         {

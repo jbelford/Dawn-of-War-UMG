@@ -10,14 +10,14 @@ namespace DowUmg.Migrations.Migrations
                 name: "Mods",
                 columns: table => new
                 {
-                    IsAddition = table.Column<bool>(nullable: false),
+                    IsVanilla = table.Column<bool>(nullable: false),
                     ModFolder = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Details = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mods", x => new { x.IsAddition, x.ModFolder });
+                    table.PrimaryKey("PK_Mods", x => new { x.IsVanilla, x.ModFolder });
                 });
 
             migrationBuilder.CreateTable(
@@ -39,7 +39,7 @@ namespace DowUmg.Migrations.Migrations
                         name: "FK_GameRules_Mods_ModId1_ModId2",
                         columns: x => new { x.ModId1, x.ModId2 },
                         principalTable: "Mods",
-                        principalColumns: new[] { "IsAddition", "ModFolder" },
+                        principalColumns: new[] { "IsVanilla", "ModFolder" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -64,7 +64,7 @@ namespace DowUmg.Migrations.Migrations
                         name: "FK_Maps_Mods_ModId1_ModId2",
                         columns: x => new { x.ModId1, x.ModId2 },
                         principalTable: "Mods",
-                        principalColumns: new[] { "IsAddition", "ModFolder" },
+                        principalColumns: new[] { "IsVanilla", "ModFolder" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -86,7 +86,7 @@ namespace DowUmg.Migrations.Migrations
                         name: "FK_Races_Mods_ModId1_ModId2",
                         columns: x => new { x.ModId1, x.ModId2 },
                         principalTable: "Mods",
-                        principalColumns: new[] { "IsAddition", "ModFolder" },
+                        principalColumns: new[] { "IsVanilla", "ModFolder" },
                         onDelete: ReferentialAction.Cascade);
                 });
 

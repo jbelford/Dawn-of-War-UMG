@@ -55,20 +55,9 @@ namespace DowUmg.FileFormats
      *
      */
 
-    internal interface RgdEntry
+    internal interface IRgdEntry
     {
         public uint Hash { get; }
-
-        public RgdEntryType Type { get; }
-    }
-
-    internal enum RgdEntryType
-    {
-        Table = 0,
-        Int,
-        Float,
-        String,
-        Bool
     }
 
     internal enum RgdDataType : int
@@ -84,28 +73,25 @@ namespace DowUmg.FileFormats
 
     internal class RgdFile
     {
-        public RgdFile(Dictionary<uint, RgdEntry> entries)
+        public RgdFile(Dictionary<uint, IRgdEntry> entries)
         {
             Entries = entries;
         }
 
-        public Dictionary<uint, RgdEntry> Entries { get; }
+        public Dictionary<uint, IRgdEntry> Entries { get; }
     }
 
-    internal class RgdEntry<T> : RgdEntry
+    internal class RgdEntry<T> : IRgdEntry
     {
-        public RgdEntry(uint hash, T value, RgdEntryType type)
+        public RgdEntry(uint hash, T value)
         {
             Hash = hash;
-            Type = type;
             Value = value;
         }
 
         public T Value { get; }
 
         public uint Hash { get; }
-
-        public RgdEntryType Type { get; }
     }
 
     internal class RgdReader
@@ -152,24 +138,24 @@ namespace DowUmg.FileFormats
             return new RgdFile(ReadEntries(dataBuff, 0));
         }
 
-        private Dictionary<uint, RgdEntry> ReadEntries(in byte[] data, int pos)
+        private Dictionary<uint, IRgdEntry> ReadEntries(in byte[] data, int pos)
         {
             int keyCount = BitConverter.ToInt32(data, pos);
             int newPos = pos + 4;
             int dataOffset = newPos + keyCount * (3 * 4);
 
-            var entries = new Dictionary<uint, RgdEntry>(keyCount);
+            var entries = new Dictionary<uint, IRgdEntry>(keyCount);
 
             for (int i = 0; i < keyCount; ++i)
             {
-                RgdEntry entry = ReadEntry(data, newPos + (i * 3 * 4), dataOffset);
+                IRgdEntry entry = ReadEntry(data, newPos + (i * 3 * 4), dataOffset);
                 entries[entry.Hash] = entry;
             }
 
             return entries;
         }
 
-        private RgdEntry ReadEntry(in byte[] data, int pos, int dataOffset)
+        private IRgdEntry ReadEntry(in byte[] data, int pos, int dataOffset)
         {
             uint hash = BitConverter.ToUInt32(data, pos);
             int type = BitConverter.ToInt32(data, pos + 4);
@@ -178,12 +164,12 @@ namespace DowUmg.FileFormats
             int startIndex = dataOffset + entryOffset;
             return ((RgdDataType)type) switch
             {
-                RgdDataType.Float => new RgdEntry<float>(hash, BitConverter.ToSingle(data, startIndex), RgdEntryType.Float),
-                RgdDataType.Integer => new RgdEntry<int>(hash, BitConverter.ToInt32(data, startIndex), RgdEntryType.Int),
-                RgdDataType.Bool => new RgdEntry<bool>(hash, BitConverter.ToBoolean(data, startIndex), RgdEntryType.Bool),
-                RgdDataType.String => new RgdEntry<string>(hash, Parsing.GetAsciiString(data, startIndex), RgdEntryType.String),
-                RgdDataType.WString => new RgdEntry<string>(hash, Parsing.GetUnicodeString(data, startIndex), RgdEntryType.String),
-                RgdDataType.Table => new RgdEntry<Dictionary<uint, RgdEntry>>(hash, ReadEntries(data, startIndex), RgdEntryType.Table),
+                RgdDataType.Float => new RgdEntry<float>(hash, BitConverter.ToSingle(data, startIndex)),
+                RgdDataType.Integer => new RgdEntry<int>(hash, BitConverter.ToInt32(data, startIndex)),
+                RgdDataType.Bool => new RgdEntry<bool>(hash, BitConverter.ToBoolean(data, startIndex)),
+                RgdDataType.String => new RgdEntry<string>(hash, Parsing.GetAsciiString(data, startIndex)),
+                RgdDataType.WString => new RgdEntry<string>(hash, Parsing.GetUnicodeString(data, startIndex)),
+                RgdDataType.Table => new RgdEntry<Dictionary<uint, IRgdEntry>>(hash, ReadEntries(data, startIndex)),
                 _ => throw new Exception($"Unknown data type encountered {type}"),
             };
         }

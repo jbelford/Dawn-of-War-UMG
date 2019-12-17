@@ -16,10 +16,10 @@ namespace DowUmg.Services
         private readonly ModsRepository mods;
         private readonly ModuleExtractorFactory moduleExtractorFactory = new ModuleExtractorFactory();
 
-        public DowModService(IFilePathProvider? filePathProvider = null)
+        internal DowModService(IFilePathProvider? filePathProvider = null, ModsRepository? modsRepository = null)
         {
             this.filePathProvider = filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
-            this.mods = new ModsRepository();
+            this.mods = modsRepository ?? Locator.Current.GetService<ModsRepository>();
             this.logger = this.Log();
         }
 
@@ -42,7 +42,7 @@ namespace DowUmg.Services
                     modules[module.ModFolder] = new UnloadedMod()
                     {
                         File = module,
-                        Locales = GetLocales(module)
+                        Locales = new LocaleStore(GetLocales(module.ModFolder).ToArray())
                     };
                 }
             }
@@ -69,13 +69,12 @@ namespace DowUmg.Services
                 yield return module;
             }
 
-            // Yeah whatever
-
-            var dxp2 = modules["DXP2"];
-            yield return new UnloadedMod() { File = CreateAdditionsModule(dxp2.File), Locales = dxp2.Locales };
-
-            var w40k = modules["W40k"];
-            yield return new UnloadedMod() { File = CreateAdditionsModule(w40k.File), Locales = w40k.Locales };
+            // Add unloaded mods for the uncompressed data possibly contained in vanilla mod folders
+            // This data would include custom maps that were installed elsewhere
+            foreach (var mod in modules.Values.Where(unloaded => unloaded.File.IsVanilla))
+            {
+                yield return new UnloadedMod() { File = CreateAdditionsModule(mod.File), Locales = mod.Locales };
+            }
         }
 
         public DowMod LoadMod(UnloadedMod unloaded)
@@ -85,7 +84,7 @@ namespace DowUmg.Services
                 Name = unloaded.File.UIName,
                 ModFolder = unloaded.File.ModFolder,
                 Details = unloaded.File.Description,
-                IsAddition = unloaded.File.UIName.Contains("Additions")
+                IsVanilla = unloaded.File.IsVanilla
             };
 
             using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
@@ -135,20 +134,32 @@ namespace DowUmg.Services
         {
             return new DowModuleFile()
             {
-                Description = mod.Description,
-                DllName = mod.Description,
+                Description = "Custom uncompressed data found in the base game (Map Addons, etc.)",
+                DllName = mod.DllName,
                 ModFolder = mod.ModFolder,
                 ModVersion = mod.ModVersion,
                 Playable = mod.Playable,
                 RequiredMods = mod.RequiredMods,
-                UIName = $"{mod.UIName} - Additions"
+                UIName = $"{mod.UIName} - Additions",
+                IsVanilla = false
             };
         }
 
-        private LocaleStore GetLocales(DowModuleFile module)
+        private IEnumerable<Locales> GetLocales(string modFolder)
         {
-            using var extractor = this.moduleExtractorFactory.CreateFileSystem(module);
-            return new LocaleStore(extractor.GetLocales().ToArray());
+            string dowPath = this.filePathProvider.SoulstormLocation;
+            string localePath = Path.Combine(dowPath, modFolder, "Locale", "English");
+
+            try
+            {
+                string[] files = Directory.GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
+                var ucsLoader = new LocaleLoader();
+                return files.Select(x => ucsLoader.Load(x));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return Enumerable.Empty<Locales>();
+            }
         }
 
         private IEnumerable<DowModuleFile> GetAllModules()
