@@ -18,7 +18,9 @@
         <TextBlock Grid.Row="0" Text="Generation Settings" FontSize="18" />
         <TabControl Grid.Row="1" Margin="0,20">
             <TabItem Header="General">
-                <rxui:ViewModelViewHost x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
+                <ScrollViewer>
+                    <rxui:ViewModelViewHost x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
+                </ScrollViewer>
             </TabItem>
             <TabItem x:Name="ModsTab" Header="Mods" />
         </TabControl>

@@ -11,10 +11,13 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GeneralTabViewModel()
         {
-            HumanPlayers = new OptionInputViewModel<int>(Enumerable.Range(1, 8).ToArray());
-            MinPlayers = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
-            MaxPlayers = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
-            MaxPlayers.SelectedItem = MaxPlayers.Items.Last();
+            Mod = new OptionInputViewModel<string>("Dawn of War: Soulstorm");
+
+            GlobalPlayerOptions = new PlayersSelectViewModel("Players",
+                new OptionInputViewModel<int>(Enumerable.Range(1, 8).ToArray()),
+                new RangeViewModel(2, 8));
+
+            TeamNum = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
 
             foreach (var x in Enumerable.Range(2, 7))
             {
@@ -33,25 +36,14 @@ namespace DowUmg.Presentation.ViewModels
 
             RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
             {
-                foreach (var minItem in MinPlayers.Items)
+                OptionInputViewModel<int> minInput = GlobalPlayerOptions.MinMax.MinInput;
+                foreach (var minItem in minInput.Items)
                 {
                     minItem.IsEnabled = minItem.Content >= item.Content;
                 }
-                if (!MinPlayers.SelectedItem.IsEnabled)
+                if (!minInput.SelectedItem.IsEnabled)
                 {
-                    MinPlayers.SelectedItem = MinPlayers.Items.Where(x => x.IsEnabled).First();
-                }
-            });
-
-            RefreshForMinPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
-            {
-                foreach (var maxItem in MaxPlayers.Items)
-                {
-                    maxItem.IsEnabled = maxItem.Content >= item.Content;
-                }
-                if (!MaxPlayers.SelectedItem.IsEnabled)
-                {
-                    MaxPlayers.SelectedItem = MaxPlayers.Items.Where(x => x.IsEnabled).First();
+                    minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
                 }
             });
 
@@ -74,46 +66,65 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
-            this.WhenAnyValue(x => x.HumanPlayers.SelectedItem)
+            RefreshTeamList = ReactiveCommand.Create((int teams) =>
+            {
+                if (TeamPlayerOptions.Count < teams)
+                {
+                    for (int i = TeamPlayerOptions.Count; i < teams; ++i)
+                    {
+                        var teamOptions = new PlayersSelectViewModel($"Team {i + 1}",
+                            new OptionInputViewModel<int>(Enumerable.Range(0, 7).ToArray()),
+                            new RangeViewModel(0, 7));
+
+                        TeamPlayerOptions.Add(teamOptions);
+                    }
+                }
+                else
+                {
+                    for (int i = TeamPlayerOptions.Count - 1; i >= teams; --i)
+                    {
+                        TeamPlayerOptions.RemoveAt(i);
+                    }
+                }
+            });
+
+            this.WhenAnyValue(x => x.GlobalPlayerOptions.Humans.SelectedItem)
                 .DistinctUntilChanged()
                 .InvokeCommand(RefreshForHumanPlayers);
 
-            this.WhenAnyValue(x => x.MinPlayers.SelectedItem)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForMinPlayers);
-
-            this.WhenAnyValue(x => x.MinPlayers.SelectedItem, x => x.MaxPlayers.SelectedItem)
+            this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem,
+                    x => x.GlobalPlayerOptions.MinMax.MaxInput.SelectedItem)
                 .DistinctUntilChanged()
                 .InvokeCommand(RefreshMapsForRange);
+
+            this.WhenAnyValue(x => x.TeamNum.SelectedItem)
+                .DistinctUntilChanged()
+                .Select(item => item.Content)
+                .InvokeCommand(RefreshTeamList);
         }
 
-        [Reactive]
-        public OptionInputViewModel<int> HumanPlayers { get; set; }
+        public OptionInputViewModel<string> Mod { get; }
 
         [Reactive]
-        public OptionInputViewModel<int> MinPlayers { get; set; }
+        public bool TeamIsEven { get; set; } = true;
 
-        [Reactive]
-        public OptionInputViewModel<int> MaxPlayers { get; set; }
+        public OptionInputViewModel<int> TeamNum { get; }
+
+        public PlayersSelectViewModel GlobalPlayerOptions { get; }
+        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } = new ObservableCollection<PlayersSelectViewModel>();
 
         public ObservableCollection<ToggleItemViewModel> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel>();
 
         public ObservableCollection<ToggleItemViewModel> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel>();
 
-        [Reactive]
         public GameOptionViewModel DiffOption { get; set; }
-
-        [Reactive]
         public GameOptionViewModel SpeedOption { get; set; }
-
-        [Reactive]
         public GameOptionViewModel RateOption { get; set; }
-
-        [Reactive]
         public GameOptionViewModel StartingOption { get; set; }
 
         public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
-        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMinPlayers { get; }
         public ReactiveCommand<(OptionInputItem<int>, OptionInputItem<int>), Unit> RefreshMapsForRange { get; }
+
+        public ReactiveCommand<int, Unit> RefreshTeamList { get; }
     }
 }

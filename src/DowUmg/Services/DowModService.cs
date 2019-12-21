@@ -28,6 +28,11 @@ namespace DowUmg.Services
             return this.mods.GetAll();
         }
 
+        public List<DowMod> GetVanillaMods()
+        {
+            return this.mods.GetVanilla();
+        }
+
         public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
             var modules = new Dictionary<string, UnloadedMod>();

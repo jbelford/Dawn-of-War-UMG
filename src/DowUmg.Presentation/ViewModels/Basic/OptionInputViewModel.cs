@@ -34,16 +34,16 @@ namespace DowUmg.Presentation.ViewModels
         public T Content { get; set; }
     }
 
-    public class IntOptionInputViewModel : OptionInputViewModel<int>
+    public class OptionInputViewModel : OptionInputViewModel<object>
     {
-        public IntOptionInputViewModel(params int[] items) : base(items)
+        public OptionInputViewModel(params object[] items) : base(items)
         {
         }
     }
 
-    public class IntOptionInputItem : OptionInputItem<int>
+    public class OptionInputItem : OptionInputItem<object>
     {
-        public IntOptionInputItem(int content) : base(content)
+        public OptionInputItem(object content) : base(content)
         {
         }
     }

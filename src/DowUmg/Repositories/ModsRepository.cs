@@ -13,6 +13,12 @@ namespace DowUmg.Repositories
             return context.Mods.ToList();
         }
 
+        public List<DowMod> GetVanilla()
+        {
+            using var context = new DataContext();
+            return context.Mods.Where(mod => mod.IsVanilla).ToList();
+        }
+
         public DowMod Upsert(DowMod mod)
         {
             using var context = new DataContext();
