@@ -11,8 +11,6 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GeneralTabViewModel()
         {
-            Mod = new OptionInputViewModel<string>("Dawn of War: Soulstorm");
-
             GlobalPlayerOptions = new PlayersSelectViewModel("Players",
                 new OptionInputViewModel<int>(Enumerable.Range(1, 8).ToArray()),
                 new RangeViewModel(2, 8));
@@ -28,24 +26,6 @@ namespace DowUmg.Presentation.ViewModels
             MapSizes.Add(new ToggleItemViewModel("257", true));
             MapSizes.Add(new ToggleItemViewModel("513", true));
             MapSizes.Add(new ToggleItemViewModel("1025", true));
-
-            DiffOption = new GameOptionViewModel("Difficulty", "Easy", "Standard", "Hard", "Harder", "Insane");
-            SpeedOption = new GameOptionViewModel("Game Speed", "Very Slow", "Slow", "Normal", "Fast");
-            RateOption = new GameOptionViewModel("Resource Rate", "Low", "Standard", "High");
-            StartingOption = new GameOptionViewModel("Starting Resources", "Standard", "Quick-Start");
-
-            RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
-            {
-                OptionInputViewModel<int> minInput = GlobalPlayerOptions.MinMax.MinInput;
-                foreach (var minItem in minInput.Items)
-                {
-                    minItem.IsEnabled = minItem.Content >= item.Content;
-                }
-                if (!minInput.SelectedItem.IsEnabled)
-                {
-                    minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
-                }
-            });
 
             RefreshMapsForRange = ReactiveCommand.Create(((OptionInputItem<int> min, OptionInputItem<int> max) minMax) =>
             {
@@ -66,6 +46,18 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
+            RefreshForMin = ReactiveCommand.Create((OptionInputItem<int> min) =>
+            {
+                foreach (var teamItem in TeamNum.Items)
+                {
+                    teamItem.IsEnabled = teamItem.Content <= min.Content;
+                }
+                if (!TeamNum.SelectedItem.IsEnabled)
+                {
+                    TeamNum.SelectedItem = TeamNum.Items.Last(x => x.IsEnabled);
+                }
+            });
+
             RefreshTeamList = ReactiveCommand.Create((int teams) =>
             {
                 if (TeamPlayerOptions.Count < teams)
@@ -74,7 +66,7 @@ namespace DowUmg.Presentation.ViewModels
                     {
                         var teamOptions = new PlayersSelectViewModel($"Team {i + 1}",
                             new OptionInputViewModel<int>(Enumerable.Range(0, 7).ToArray()),
-                            new RangeViewModel(0, 7));
+                            new RangeViewModel(1, 7));
 
                         TeamPlayerOptions.Add(teamOptions);
                     }
@@ -88,10 +80,6 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
-            this.WhenAnyValue(x => x.GlobalPlayerOptions.Humans.SelectedItem)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForHumanPlayers);
-
             this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem,
                     x => x.GlobalPlayerOptions.MinMax.MaxInput.SelectedItem)
                 .DistinctUntilChanged()
@@ -101,9 +89,11 @@ namespace DowUmg.Presentation.ViewModels
                 .DistinctUntilChanged()
                 .Select(item => item.Content)
                 .InvokeCommand(RefreshTeamList);
-        }
 
-        public OptionInputViewModel<string> Mod { get; }
+            this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshForMin);
+        }
 
         [Reactive]
         public bool TeamIsEven { get; set; } = true;
@@ -117,14 +107,8 @@ namespace DowUmg.Presentation.ViewModels
 
         public ObservableCollection<ToggleItemViewModel> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel>();
 
-        public GameOptionViewModel DiffOption { get; set; }
-        public GameOptionViewModel SpeedOption { get; set; }
-        public GameOptionViewModel RateOption { get; set; }
-        public GameOptionViewModel StartingOption { get; set; }
-
-        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
         public ReactiveCommand<(OptionInputItem<int>, OptionInputItem<int>), Unit> RefreshMapsForRange { get; }
-
+        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMin { get; }
         public ReactiveCommand<int, Unit> RefreshTeamList { get; }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using ReactiveUI;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -9,6 +12,23 @@ namespace DowUmg.Presentation.ViewModels
             Label = label;
             Humans = humans;
             MinMax = minMax;
+
+            RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
+            {
+                OptionInputViewModel<int> minInput = MinMax.MinInput;
+                foreach (var minItem in minInput.Items)
+                {
+                    minItem.IsEnabled = minItem.Content >= item.Content;
+                }
+                if (!minInput.SelectedItem.IsEnabled)
+                {
+                    minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
+                }
+            });
+
+            this.WhenAnyValue(x => x.Humans.SelectedItem)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshForHumanPlayers);
         }
 
         public string Label { get; }
@@ -16,5 +36,7 @@ namespace DowUmg.Presentation.ViewModels
         public OptionInputViewModel<int> Humans { get; }
 
         public RangeViewModel MinMax { get; }
+
+        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
     }
 }

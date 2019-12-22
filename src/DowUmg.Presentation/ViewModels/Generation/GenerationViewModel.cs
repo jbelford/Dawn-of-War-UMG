@@ -1,5 +1,4 @@
 ﻿using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -8,9 +7,14 @@ namespace DowUmg.Presentation.ViewModels
         public GenerationViewModel(IScreen screen) : base(screen, "matchup")
         {
             GeneralTab = new GeneralTabViewModel();
+            GameTab = new GameTabViewModel();
+            Mod = new OptionInputViewModel<string>("Dawn of War: Soulstorm");
         }
 
-        [Reactive]
-        public GeneralTabViewModel GeneralTab { get; private set; }
+        public GeneralTabViewModel GeneralTab { get; }
+
+        public GameTabViewModel GameTab { get; }
+
+        public OptionInputViewModel<string> Mod { get; }
     }
 }

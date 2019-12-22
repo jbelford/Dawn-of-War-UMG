@@ -11,25 +11,6 @@
             mc:Ignorable="d"
             d:DesignHeight="404.256" d:DesignWidth="733.07">
     <UserControl.Resources>
-        <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
-            <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}" IsEnabled="{Binding IsEnabled}" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-            <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:OptionInputItem}">
-                        <TextBlock Text="{Binding Content, Mode=OneTime}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-                <ComboBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ComboBoxItem}">
-                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
-                    </Style>
-                </ComboBox.ItemContainerStyle>
-            </ComboBox>
-        </DataTemplate>
-
         <DataTemplate x:Key="MinMaxTemplate" DataType="{x:Type vm:RangeViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -77,137 +58,95 @@
                 </Grid>
             </GroupBox>
         </DataTemplate>
-
-        <DataTemplate x:Key="NumberInputTemplate" DataType="{x:Type vm:NumberInputViewModel}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Content="{Binding Label, Mode=OneTime}"
-                    Margin="0,0,5,0"
-                    HorizontalContentAlignment="Right" />
-                <controls:NumericTextBox Grid.Column="2" MaxLength="4"
-                    Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                    HorizontalContentAlignment="Right"
-                    VerticalContentAlignment="Center" />
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="GameOptionTemplate" DataType="{x:Type vm:GameOptionViewModel}">
-            <DataTemplate.Resources>
-                <Style TargetType="CheckBox">
-                    <Setter Property="FontStyle" Value="Italic" />
-                </Style>
-            </DataTemplate.Resources>
-
-            <GroupBox Padding="5">
-                <GroupBox.Header>
-                    <ContentControl Content="{Binding Header, Mode=OneTime}"
-                        ContentTemplate="{StaticResource ToggleItemTemplate}" />
-                </GroupBox.Header>
-
-                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource NumberInputTemplate}">
-                    <ItemsControl.ItemContainerStyle>
-                        <Style>
-                            <Setter Property="FrameworkElement.Margin" Value="5" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
-            </GroupBox>
-        </DataTemplate>
     </UserControl.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <WrapPanel Grid.Row="0">
-            <Label Content="Mod" />
-            <ContentControl x:Name="ModOption" Width="200" ContentTemplate="{StaticResource OptionInputTemplate}" />
-        </WrapPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <WrapPanel Margin="10" Grid.Row="1">
-            <GroupBox Padding="5,0,5,5" Margin="0,0,10,10">
-                <GroupBox.Header>
-                    <Label FontStyle="Italic">Maps</Label>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="25" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <Label Content="Type" />
-                        <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}">
-                            <ItemsControl.ItemContainerStyle>
-                                <Style>
-                                    <Setter Property="FrameworkElement.Margin" Value="5" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="2">
-                        <Label Content="Size" />
-                        <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}">
-                            <ItemsControl.ItemContainerStyle>
-                                <Style>
-                                    <Setter Property="FrameworkElement.Margin" Value="5" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
-                    </StackPanel>
-                </Grid>
-            </GroupBox>
-
-            <ContentControl x:Name="DiffOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="SpeedOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="RateOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="StartingOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-        </WrapPanel>
-
-        <WrapPanel Grid.Row="2">
-            <ContentControl x:Name="GlobalPlayerOptions" ContentTemplate="{StaticResource PlayersTemplate}" />
-            <GroupBox Padding="10">
-                <GroupBox.Header>
-                    <Label>Teams</Label>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" MinWidth="10" />
-                        <ColumnDefinition Width="Auto" MinWidth="50" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center">
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <ContentControl x:Name="GlobalPlayerOptions" ContentTemplate="{StaticResource PlayersTemplate}" />
+                <GroupBox Padding="10">
+                    <GroupBox.Header>
+                        <Label>Teams</Label>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" MinWidth="10" />
+                            <ColumnDefinition Width="Auto" MinWidth="50" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" MinHeight="5" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <RadioButton x:Name="EvenRadio" Grid.Row="0" GroupName="distgrp">Even Distribution</RadioButton>
-                        <RadioButton Grid.Row="2" GroupName="distgrp">Random Distribution</RadioButton>
+                        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" MinHeight="5" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <RadioButton x:Name="EvenRadio" Grid.Row="0" GroupName="distgrp">Even Distribution</RadioButton>
+                            <RadioButton Grid.Row="2" GroupName="distgrp">Random Distribution</RadioButton>
+                        </Grid>
+                        <Label Content="Num" Grid.Column="2" Grid.Row="0" />
+                        <ContentControl x:Name="TeamNum" Grid.Column="2" Grid.Row="1"
+                            ContentTemplate="{StaticResource OptionInputTemplate}" />
                     </Grid>
-                    <Label Content="Num" Grid.Column="2" Grid.Row="0" />
-                    <ContentControl x:Name="TeamNum" Grid.Column="2" Grid.Row="1"
-                        ContentTemplate="{StaticResource OptionInputTemplate}" />
-                </Grid>
-            </GroupBox>
-        </WrapPanel>
+                </GroupBox>
+            </StackPanel>
 
-        <Grid Grid.Row="3" Margin="5,0">
+            <WrapPanel Grid.Row="0" Grid.Column="2">
+                <GroupBox Padding="5,0,5,5" Margin="0,0,10,10">
+                    <GroupBox.Header>
+                        <Label FontStyle="Italic">Maps</Label>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="25" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Type" />
+                            <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}">
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.Margin" Value="5" />
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Size" />
+                            <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}">
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.Margin" Value="5" />
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="5,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -215,7 +154,8 @@
             <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Customize Team Composition" />
             <Separator Grid.Row="1" />
         </Grid>
-        <ItemsControl Grid.Row="4" x:Name="Teams" Margin="10" ItemTemplate="{StaticResource PlayersTemplate}">
+
+        <ItemsControl Grid.Row="2" x:Name="Teams" Margin="10" ItemTemplate="{StaticResource PlayersTemplate}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" />
