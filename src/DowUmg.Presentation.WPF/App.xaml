@@ -11,10 +11,10 @@
         </Style>
 
         <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-            <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+            <ComboBox ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:OptionInputItem}">
-                        <TextBlock Text="{Binding Content, Mode=OneTime}" />
+                        <TextBlock Text="{Binding Path=Display, Mode=OneTime}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
                 <ComboBox.ItemContainerStyle>

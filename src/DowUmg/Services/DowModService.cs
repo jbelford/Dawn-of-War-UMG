@@ -25,12 +25,19 @@ namespace DowUmg.Services
 
         public List<DowMod> GetLoadedMods()
         {
-            return this.mods.GetAll();
+            List<DowMod> mods = this.mods.GetAll();
+            mods.Sort((a, b) => a.Name.CompareTo(b.Name));
+            return mods;
         }
 
-        public List<DowMod> GetVanillaMods()
+        public void RemoveLoadedMods()
         {
-            return this.mods.GetVanilla();
+            this.mods.DropAll();
+        }
+
+        public DowMod Load(DowMod mod)
+        {
+            return this.mods.Load(mod);
         }
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()
@@ -58,6 +65,7 @@ namespace DowUmg.Services
                 {
                     if (modules.ContainsKey(name))
                     {
+                        unloaded.Dependencies.Add(modules[name]);
                         unloaded.Locales.Dependencies.Add(modules[name].Locales);
                     }
                 }
@@ -82,15 +90,42 @@ namespace DowUmg.Services
             }
         }
 
-        public DowMod LoadMod(UnloadedMod unloaded)
+        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded,
+            Dictionary<string, (DowMod? vanilla, DowMod? mod)> allLoaded)
         {
+            if (allLoaded.ContainsKey(unloaded.File.ModFolder))
+            {
+                var modules = allLoaded[unloaded.File.ModFolder];
+                if (unloaded.File.IsVanilla)
+                {
+                    if (modules.vanilla != null)
+                    {
+                        return modules.vanilla;
+                    }
+                }
+                else if (modules.mod != null)
+                {
+                    return modules.mod;
+                }
+            }
+
             var mod = new DowMod()
             {
                 Name = unloaded.File.UIName,
                 ModFolder = unloaded.File.ModFolder,
                 Details = unloaded.File.Description,
-                IsVanilla = unloaded.File.IsVanilla
+                IsVanilla = unloaded.File.IsVanilla,
+                Playable = unloaded.File.Playable
             };
+
+            foreach (var dependency in unloaded.Dependencies)
+            {
+                mod.Dependencies.Add(new DowModDependency()
+                {
+                    MainMod = mod,
+                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, allLoaded)
+                });
+            }
 
             using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
 
@@ -132,7 +167,30 @@ namespace DowUmg.Services
                 });
             }
 
-            return this.mods.Upsert(mod);
+            var newMod = this.mods.Upsert(mod);
+
+            if (allLoaded.ContainsKey(newMod.ModFolder))
+            {
+                var module = allLoaded[newMod.ModFolder];
+                if (newMod.IsVanilla)
+                {
+                    module.vanilla = newMod;
+                }
+                else
+                {
+                    module.mod = newMod;
+                }
+            }
+            else if (newMod.IsVanilla)
+            {
+                allLoaded[newMod.ModFolder] = (newMod, null);
+            }
+            else
+            {
+                allLoaded[newMod.ModFolder] = (null, newMod);
+            }
+
+            return newMod;
         }
 
         private static DowModuleFile CreateAdditionsModule(DowModuleFile mod)
@@ -191,5 +249,6 @@ namespace DowUmg.Services
     {
         public DowModuleFile File { get; set; } = null!;
         public LocaleStore Locales { get; set; } = null!;
+        public List<UnloadedMod> Dependencies { get; set; } = new List<UnloadedMod>();
     }
 }

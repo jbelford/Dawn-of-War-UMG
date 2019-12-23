@@ -22,7 +22,6 @@ namespace DowUmg.Presentation.WPF.Views
                 this.OneWayBind(ViewModel, vm => vm.BaseGameItems, v => v.VanillaModsList.ItemsSource).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.RefreshMods, v => v.RefreshButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.ReloadMod, v => v.loadButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.ReloadMods, v => v.loadModsButton).DisposeWith(d);
             });
         }

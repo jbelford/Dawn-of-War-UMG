@@ -18,7 +18,7 @@ namespace DowUmg.Services
 
         public Matchup GenerateMatchup(int humans, int players)
         {
-            List<DowMod> mods = this.modService.GetVanillaMods();
+            List<DowMod> mods = this.modService.GetLoadedMods().Where(mod => mod.IsVanilla).ToList();
 
             List<DowMap> maps = mods.SelectMany(mod => mod.Maps).ToList();
             List<DowRace> races = mods.SelectMany(mod => mod.Races).ToList();

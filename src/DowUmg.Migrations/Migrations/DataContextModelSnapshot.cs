@@ -29,11 +29,8 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("ModId1")
+                    b.Property<int>("ModId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ModId2")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -47,20 +44,25 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId1", "ModId2");
+                    b.HasIndex("ModId");
 
                     b.ToTable("Maps");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsVanilla")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ModFolder")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Details")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -68,9 +70,29 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("IsVanilla", "ModFolder");
+                    b.Property<bool>("Playable")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsVanilla", "ModFolder");
 
                     b.ToTable("Mods");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowModDependency", b =>
+                {
+                    b.Property<int>("MainModId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DepModId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MainModId", "DepModId");
+
+                    b.HasIndex("DepModId");
+
+                    b.ToTable("ModDependencies");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
@@ -83,11 +105,8 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("ModId1")
+                    b.Property<int>("ModId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ModId2")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -95,7 +114,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId1", "ModId2");
+                    b.HasIndex("ModId");
 
                     b.ToTable("Races");
                 });
@@ -113,11 +132,8 @@ namespace DowUmg.Migrations.Migrations
                     b.Property<bool>("IsWinCondition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("ModId1")
+                    b.Property<int>("ModId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ModId2")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -125,7 +141,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId1", "ModId2");
+                    b.HasIndex("ModId");
 
                     b.ToTable("GameRules");
                 });
@@ -134,24 +150,42 @@ namespace DowUmg.Migrations.Migrations
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Maps")
-                        .HasForeignKey("ModId1", "ModId2")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowModDependency", b =>
+                {
+                    b.HasOne("DowUmg.Data.Entities.DowMod", "DepMod")
+                        .WithMany("Dependents")
+                        .HasForeignKey("DepModId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DowUmg.Data.Entities.DowMod", "MainMod")
+                        .WithMany("Dependencies")
+                        .HasForeignKey("MainModId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Races")
-                        .HasForeignKey("ModId1", "ModId2")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
                         .WithMany("Rules")
-                        .HasForeignKey("ModId1", "ModId2")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -31,24 +31,20 @@ namespace DowUmg.Presentation.ViewModels
 
             var canLoadSpecific = whenNotLoading.CombineLatest(whenItemSelected, (notLoading, itemSelected) => notLoading && itemSelected).DistinctUntilChanged();
 
-            ReloadMod = ReactiveCommand.CreateFromTask(async () => await LoadModAsync(SelectedBaseItem ?? SelectedModItem!), canLoadSpecific);
             ReloadMods = ReactiveCommand.CreateFromTask(LoadAllMods, whenNotLoading);
 
             RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
             RefreshMods.ThrownExceptions.Subscribe(exception => logger.Error(exception));
             RefreshMods.Execute().Subscribe();
 
-            ReloadMod.IsExecuting.CombineLatest(ReloadMods.IsExecuting, (a, b) => a || b)
-                .ToPropertyEx(this, x => x.Loading, false);
-
-            RefreshMods.Select(mods => mods.Where(x => x.Module.Playable && !x.Module.IsVanilla))
+            RefreshMods.Select(mods => mods.Where(x => !x.Module.File.IsVanilla))
                 .Subscribe(mods =>
                 {
                     ModItems.Clear();
                     ModItems.AddRange(mods);
                 });
 
-            RefreshMods.Select(mods => mods.Where(x => x.Module.IsVanilla))
+            RefreshMods.Select(mods => mods.Where(x => x.Module.File.IsVanilla))
                 .Subscribe(mods =>
                 {
                     BaseGameItems.Clear();
@@ -57,7 +53,6 @@ namespace DowUmg.Presentation.ViewModels
         }
 
         public ReactiveCommand<Unit, IList<ModItemViewModel>> RefreshMods { get; }
-        public ReactiveCommand<Unit, DowMod> ReloadMod { get; }
         public ReactiveCommand<Unit, Unit> ReloadMods { get; }
         public IObservableCollection<ModItemViewModel> ModItems { get; } = new ObservableCollectionExtended<ModItemViewModel>();
         public IObservableCollection<ModItemViewModel> BaseGameItems { get; } = new ObservableCollectionExtended<ModItemViewModel>();
@@ -78,8 +73,7 @@ namespace DowUmg.Presentation.ViewModels
                     return dowModService.GetUnloadedMods()
                             .Select(unloaded => new ModItemViewModel()
                             {
-                                Module = unloaded.File,
-                                Locales = unloaded.Locales,
+                                Module = unloaded,
                                 IsLoaded = mods.Exists(mod => unloaded.File.ModFolder.Equals(mod.ModFolder)
                                     && mod.IsVanilla == unloaded.File.IsVanilla)
                             }).ToList();
@@ -88,16 +82,26 @@ namespace DowUmg.Presentation.ViewModels
 
         private async Task LoadAllMods()
         {
-            await Task.WhenAll(ModItems.Select(LoadModAsync).ToArray());
-            await Task.WhenAll(BaseGameItems.Select(LoadModAsync).ToArray());
+            Dictionary<string, UnloadedMod> allUnloaded = BaseGameItems.Concat(ModItems)
+                .GroupBy(item => item.Module.File.ModFolder, item => item.Module)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            this.dowModService.RemoveLoadedMods();
+
+            var allLoaded = new Dictionary<string, (DowMod?, DowMod?)>();
+
+            foreach (var item in BaseGameItems.Concat(ModItems))
+            {
+                await LoadModAsync(item, allUnloaded, allLoaded);
+            }
         }
 
-        private async Task<DowMod> LoadModAsync(ModItemViewModel modItem)
+        private async Task<DowMod> LoadModAsync(ModItemViewModel modItem, Dictionary<string, UnloadedMod> allUnloaded,
+            Dictionary<string, (DowMod?, DowMod?)> allLoaded)
         {
             DowMod mod = await Observable.Start(() =>
             {
-                var unloaded = new UnloadedMod() { File = modItem.Module, Locales = modItem.Locales };
-                return dowModService.LoadMod(unloaded);
+                return dowModService.LoadMod(modItem.Module, allUnloaded, allLoaded);
             }, RxApp.TaskpoolScheduler);
 
             modItem.IsLoaded = true;

@@ -1,4 +1,4 @@
-﻿using DowUmg.FileFormats;
+﻿using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -6,9 +6,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class ModItemViewModel : ReactiveObject
     {
-        public DowModuleFile Module { get; set; }
-
-        public LocaleStore Locales { get; set; }
+        public UnloadedMod Module { get; set; }
 
         [Reactive]
         public bool IsLoaded { get; set; }

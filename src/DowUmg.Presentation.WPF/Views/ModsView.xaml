@@ -52,15 +52,13 @@
                  ItemTemplate="{StaticResource ModItemTemplate}" />
         <Grid Grid.Row="4" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="130" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <Button x:Name="loadModsButton" Grid.Column="0" FontSize="16" Content="Reload All Mods" />
-            <Button x:Name="loadButton" Grid.Column="2" FontSize="16" Content="Load Mod" />
+            <Button x:Name="loadModsButton" Grid.Column="1" FontSize="16" Content="Reload All Mods" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

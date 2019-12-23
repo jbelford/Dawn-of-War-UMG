@@ -16,8 +16,8 @@ namespace DowUmg.Presentation.WPF.Views
 
             this.WhenActivated(d =>
             {
-                this.ModName.Text = ViewModel.Module.UIName;
-                this.ModDesc.Text = ViewModel.Module.Description;
+                this.ModName.Text = ViewModel.Module.File.UIName;
+                this.ModDesc.Text = ViewModel.Module.File.Description;
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsLoaded,
