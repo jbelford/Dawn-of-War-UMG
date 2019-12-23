@@ -88,24 +88,20 @@ namespace DowUmg.Presentation.ViewModels
 
             this.dowModService.RemoveLoadedMods();
 
-            var allLoaded = new Dictionary<string, (DowMod?, DowMod?)>();
+            foreach (var item in BaseGameItems.Concat(ModItems))
+            {
+                item.IsLoaded = false;
+            }
+
+            var memo = new LoadMemo();
 
             foreach (var item in BaseGameItems.Concat(ModItems))
             {
-                await LoadModAsync(item, allUnloaded, allLoaded);
+                DowMod mod = await Observable.Start(() =>
+                        dowModService.LoadMod(item.Module, allUnloaded, memo), RxApp.TaskpoolScheduler);
+
+                item.IsLoaded = true;
             }
-        }
-
-        private async Task<DowMod> LoadModAsync(ModItemViewModel modItem, Dictionary<string, UnloadedMod> allUnloaded,
-            Dictionary<string, (DowMod?, DowMod?)> allLoaded)
-        {
-            DowMod mod = await Observable.Start(() =>
-            {
-                return dowModService.LoadMod(modItem.Module, allUnloaded, allLoaded);
-            }, RxApp.TaskpoolScheduler);
-
-            modItem.IsLoaded = true;
-            return mod;
         }
     }
 }

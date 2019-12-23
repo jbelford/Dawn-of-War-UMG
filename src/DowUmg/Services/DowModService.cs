@@ -35,11 +35,6 @@ namespace DowUmg.Services
             this.mods.DropAll();
         }
 
-        public DowMod Load(DowMod mod)
-        {
-            return this.mods.Load(mod);
-        }
-
         public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
             var modules = new Dictionary<string, UnloadedMod>();
@@ -90,23 +85,12 @@ namespace DowUmg.Services
             }
         }
 
-        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded,
-            Dictionary<string, (DowMod? vanilla, DowMod? mod)> allLoaded)
+        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded, LoadMemo memo)
         {
-            if (allLoaded.ContainsKey(unloaded.File.ModFolder))
+            DowMod? existing = memo.Get(unloaded.File.ModFolder, unloaded.File.IsVanilla);
+            if (existing != null)
             {
-                var modules = allLoaded[unloaded.File.ModFolder];
-                if (unloaded.File.IsVanilla)
-                {
-                    if (modules.vanilla != null)
-                    {
-                        return modules.vanilla;
-                    }
-                }
-                else if (modules.mod != null)
-                {
-                    return modules.mod;
-                }
+                return existing;
             }
 
             var mod = new DowMod()
@@ -118,16 +102,20 @@ namespace DowUmg.Services
                 Playable = unloaded.File.Playable
             };
 
+            mod.Dependencies = new List<DowModDependency>();
+
             foreach (var dependency in unloaded.Dependencies)
             {
                 mod.Dependencies.Add(new DowModDependency()
                 {
                     MainMod = mod,
-                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, allLoaded)
+                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, memo)
                 });
             }
 
             using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
+
+            mod.Races = new List<DowRace>();
 
             foreach (RaceFile race in extractor.GetRaces().Where(race => race.Playable))
             {
@@ -137,6 +125,8 @@ namespace DowUmg.Services
                     Description = unloaded.Locales.Replace(race.Description)
                 });
             }
+
+            mod.Maps = new List<DowMap>();
 
             foreach (MapFile map in extractor.GetMaps())
             {
@@ -157,6 +147,8 @@ namespace DowUmg.Services
                 });
             }
 
+            mod.Rules = new List<GameRule>();
+
             foreach (GameRuleFile rule in extractor.GetGameRules())
             {
                 mod.Rules.Add(new GameRule()
@@ -169,26 +161,7 @@ namespace DowUmg.Services
 
             var newMod = this.mods.Upsert(mod);
 
-            if (allLoaded.ContainsKey(newMod.ModFolder))
-            {
-                var module = allLoaded[newMod.ModFolder];
-                if (newMod.IsVanilla)
-                {
-                    module.vanilla = newMod;
-                }
-                else
-                {
-                    module.mod = newMod;
-                }
-            }
-            else if (newMod.IsVanilla)
-            {
-                allLoaded[newMod.ModFolder] = (newMod, null);
-            }
-            else
-            {
-                allLoaded[newMod.ModFolder] = (null, newMod);
-            }
+            memo.Put(newMod);
 
             return newMod;
         }
@@ -250,5 +223,38 @@ namespace DowUmg.Services
         public DowModuleFile File { get; set; } = null!;
         public LocaleStore Locales { get; set; } = null!;
         public List<UnloadedMod> Dependencies { get; set; } = new List<UnloadedMod>();
+    }
+
+    public class LoadMemo
+    {
+        private Dictionary<string, (DowMod? vanilla, DowMod? mod)> dict = new Dictionary<string, (DowMod? vanilla, DowMod? mod)>();
+
+        public DowMod? Get(string modFolder, bool isVanilla)
+        {
+            if (this.dict.ContainsKey(modFolder))
+            {
+                var (vanilla, mod) = this.dict[modFolder];
+                return isVanilla ? vanilla : mod;
+            }
+
+            return null;
+        }
+
+        public void Put(DowMod newMod)
+        {
+            (DowMod? vanilla, DowMod? mod) value = (null, null);
+            if (this.dict.ContainsKey(newMod.ModFolder))
+            {
+                value = this.dict[newMod.ModFolder];
+            }
+            if (newMod.IsVanilla)
+            {
+                this.dict[newMod.ModFolder] = (newMod, value.mod);
+            }
+            else
+            {
+                this.dict[newMod.ModFolder] = (value.vanilla, newMod);
+            }
+        }
     }
 }

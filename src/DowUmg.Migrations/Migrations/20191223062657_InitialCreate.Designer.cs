@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DowUmg.Migrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191223001922_InitialCreate")]
+    [Migration("20191223062657_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

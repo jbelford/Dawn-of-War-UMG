@@ -12,7 +12,6 @@ namespace DowUmg.Repositories
         {
             using var context = new DataContext();
             return context.Mods
-                .Include(mod => mod.Dependencies)
                 .Select(mod => new DowMod()
                 {
                     Details = mod.Details,
@@ -21,17 +20,9 @@ namespace DowUmg.Repositories
                     Name = mod.Name,
                     MapsCount = mod.Maps.Count,
                     RacesCount = mod.Races.Count,
-                    RulesCount = mod.Rules.Count
+                    RulesCount = mod.Rules.Count,
+                    DependencyCount = mod.Dependencies.Count
                 }).ToList();
-        }
-
-        public DowMod Load(DowMod mod)
-        {
-            using var context = new DataContext();
-            return context.Mods.Include(x => x.Maps)
-                .Include(x => x.Rules)
-                .Include(x => x.Races)
-                .First(x => x.IsVanilla == mod.IsVanilla && string.Equals(x.ModFolder, mod.ModFolder));
         }
 
         public DowMod Upsert(DowMod mod)
@@ -46,20 +37,21 @@ namespace DowUmg.Repositories
                 context.SaveChanges();
             }
 
-            List<DowModDependency> dependencies = mod.Dependencies;
+            //ICollection<DowModDependency> dependencies = mod.Dependencies;
 
-            mod.Dependencies = null;
+            //mod.Dependencies = null;
 
-            context.Mods.Add(mod);
+            context.ChangeTracker.TrackGraph(mod, node =>
+                node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
             context.SaveChanges();
 
-            foreach (var dep in dependencies)
-            {
-                dep.MainMod = mod;
-                context.ChangeTracker.TrackGraph(dep, node =>
-                    node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
-                context.SaveChanges();
-            }
+            //foreach (var dep in dependencies)
+            //{
+            //    dep.MainMod = mod;
+            //    context.ChangeTracker.TrackGraph(dep, node =>
+            //        node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
+            //    context.SaveChanges();
+            //}
 
             transaction.Commit();
             return mod;
@@ -68,9 +60,8 @@ namespace DowUmg.Repositories
         public DowMod? Find(bool isVanilla, string modFolder)
         {
             using var context = new DataContext();
-            return context.Mods.Where(existing => existing.IsVanilla == isVanilla &&
-                    existing.ModFolder.Equals(modFolder, System.StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
+            return context.Mods.SingleOrDefault(existing => existing.IsVanilla == isVanilla &&
+                    existing.ModFolder.Equals(modFolder, System.StringComparison.OrdinalIgnoreCase));
         }
 
         public void DropAll()

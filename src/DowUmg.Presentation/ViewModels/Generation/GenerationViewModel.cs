@@ -28,7 +28,6 @@ namespace DowUmg.Presentation.ViewModels
             this.WhenAnyValue(x => x.Mod.SelectedItem)
                 .DistinctUntilChanged()
                 .Select(mod => mod.Content)
-                .Select(this.modService.Load)
                 .ToPropertyEx(this, x => x.LoadedMod);
         }
 

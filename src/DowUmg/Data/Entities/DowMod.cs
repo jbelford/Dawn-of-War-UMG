@@ -12,11 +12,11 @@ namespace DowUmg.Data.Entities
         public bool Playable { get; set; }
         public string Name { get; set; } = null!;
         public string Details { get; set; } = null!;
-        public List<DowMap> Maps { get; set; } = new List<DowMap>();
-        public List<GameRule> Rules { get; set; } = new List<GameRule>();
-        public List<DowRace> Races { get; set; } = new List<DowRace>();
-        public List<DowModDependency> Dependencies { get; set; } = new List<DowModDependency>();
-        public List<DowModDependency> Dependents { get; set; } = new List<DowModDependency>();
+        public virtual ICollection<DowMap> Maps { get; set; }
+        public virtual ICollection<GameRule> Rules { get; set; }
+        public virtual ICollection<DowRace> Races { get; set; }
+        public virtual ICollection<DowModDependency> Dependencies { get; set; }
+        public virtual ICollection<DowModDependency> Dependents { get; set; }
 
         [NotMapped]
         public int MapsCount { get; set; }
@@ -26,13 +26,16 @@ namespace DowUmg.Data.Entities
 
         [NotMapped]
         public int RacesCount { get; set; }
+
+        [NotMapped]
+        public int DependencyCount { get; set; }
     }
 
     public class DowModDependency
     {
         public int MainModId { get; set; }
-        public DowMod MainMod { get; set; } = null!;
+        public virtual DowMod MainMod { get; set; } = null!;
         public int DepModId { get; set; }
-        public DowMod DepMod { get; set; } = null!;
+        public virtual DowMod DepMod { get; set; } = null!;
     }
 }
