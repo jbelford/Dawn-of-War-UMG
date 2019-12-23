@@ -9,36 +9,42 @@
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d"
         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" d:DesignWidth="936.913" d:DesignHeight="558.5">
-    <StackPanel Margin="20">
-        <TextBlock Text="Dawn of War: Ultimate Matchup Generator" HorizontalAlignment="Center" FontSize="36"
-            Margin="0,0,0,20" FontWeight="SemiBold" />
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Width="200">
-            <StackPanel.Resources>
-                <Style TargetType="MenuItem">
-                    <Setter Property="Cursor" Value="Hand" />
-                </Style>
+        <TextBlock Text="Dawn of War: Ultimate Matchup Generator" Grid.Row="0" Grid.Column="1"
+            TextWrapping="WrapWithOverflow" FontSize="36" FontWeight="SemiBold" />
+
+        <Grid Grid.Row="2" Grid.Column="1" Width="200">
+            <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                     <Setter Property="Background" Value="White" />
-                    <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Margin" Value="0,0,0,15" />
                     <Setter Property="Padding" Value="15" />
                     <Setter Property="FontSize" Value="24" />
-                    <Setter Property="ContextMenuService.Placement" Value="Right" />
                 </Style>
-                <ContextMenu x:Key="contextMenu" StaysOpen="True">
-                    <MenuItem x:Name="newButton" Header="New" />
-                    <MenuItem x:Name="loadButton" Header="Load" />
-                    <MenuItem x:Name="exportButton" Header="Export" />
-                </ContextMenu>
-            </StackPanel.Resources>
+            </Grid.Resources>
 
-            <Button x:Name="campaignButton" Content="Campaign" ContextMenu="{StaticResource contextMenu}" />
-            <Button x:Name="matchupButton" Content="Matchup" />
-            <Button x:Name="importButton" Content="Import" />
-            <Button x:Name="modsButton" Content="Mods" />
-            <Button x:Name="settingsButton" Content="Settings" />
-            <Button x:Name="quitButton" Content="Quit" />
-        </StackPanel>
-    </StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" x:Name="matchupButton" Content="Matchup" />
+            <Button Grid.Row="1" x:Name="modsButton" Content="Mods" />
+            <Button Grid.Row="2" x:Name="settingsButton" Content="Settings" />
+            <Button Grid.Row="3" x:Name="quitButton" Content="Quit" />
+        </Grid>
+    </Grid>
 </rxui:ReactiveUserControl>

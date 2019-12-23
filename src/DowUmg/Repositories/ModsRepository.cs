@@ -37,21 +37,9 @@ namespace DowUmg.Repositories
                 context.SaveChanges();
             }
 
-            //ICollection<DowModDependency> dependencies = mod.Dependencies;
-
-            //mod.Dependencies = null;
-
             context.ChangeTracker.TrackGraph(mod, node =>
                 node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
             context.SaveChanges();
-
-            //foreach (var dep in dependencies)
-            //{
-            //    dep.MainMod = mod;
-            //    context.ChangeTracker.TrackGraph(dep, node =>
-            //        node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
-            //    context.SaveChanges();
-            //}
 
             transaction.Commit();
             return mod;
