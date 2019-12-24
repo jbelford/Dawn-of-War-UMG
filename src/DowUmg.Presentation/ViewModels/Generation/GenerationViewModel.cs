@@ -17,7 +17,7 @@ namespace DowUmg.Presentation.ViewModels
 
             using var store = new ModsDataStore();
 
-            DowMod[] mods = store.GetAll().Where(mod => mod.Playable).ToArray();
+            DowMod[] mods = store.GetPlayableMods().ToArray();
 
             Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, mods);
 

@@ -26,6 +26,10 @@ namespace DowUmg.Presentation.WPF.Views
 
                 this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.quitButton)
                     .DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.IsLoaded, v => v.WarningMessage.Visibility,
+                    loaded => loaded ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.IsLoaded, v => v.matchupButton.IsEnabled).DisposeWith(d);
             });
         }
     }

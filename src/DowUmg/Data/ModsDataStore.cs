@@ -25,6 +25,12 @@ namespace DowUmg.Data
             return this.context.Mods;
         }
 
+        public IQueryable<DowMod> GetPlayableMods()
+        {
+            return this.context.Mods.Where(mod => mod.Playable)
+                .Where(mod => mod.Maps.Count > 0 || mod.Rules.Count > 0 || mod.Races.Count > 0);
+        }
+
         public void DropAll()
         {
             this.context.Mods.RemoveRange(this.context.Mods);

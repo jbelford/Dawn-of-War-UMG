@@ -9,12 +9,23 @@
         xmlns:rxui="http://reactiveui.net"
         mc:Ignorable="d"
         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" d:DesignWidth="936.913" d:DesignHeight="558.5">
+    <UserControl.Resources>
+        <Style x:Key="MessageStyle" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="DarkRed" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Padding" Value="5" />
+        </Style>
+    </UserControl.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -25,7 +36,11 @@
         <TextBlock Text="Dawn of War: Ultimate Matchup Generator" Grid.Row="0" Grid.Column="1"
             TextWrapping="WrapWithOverflow" FontSize="36" FontWeight="SemiBold" />
 
-        <Grid Grid.Row="2" Grid.Column="1" Width="200">
+        <Border Grid.Row="2" Grid.Column="1" x:Name="WarningMessage" Style="{StaticResource MessageStyle}">
+            <TextBlock Text="Load mods first!" HorizontalAlignment="Center" FontSize="14" />
+        </Border>
+
+        <Grid Grid.Row="4" Grid.Column="1" Width="200">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                     <Setter Property="Background" Value="White" />
