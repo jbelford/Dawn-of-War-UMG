@@ -1,7 +1,6 @@
 ﻿using DowUmg.Data.Entities;
 using DowUmg.FileFormats;
 using DowUmg.Interfaces;
-using DowUmg.Repositories;
 using Splat;
 using System.Collections.Generic;
 using System.IO;
@@ -9,30 +8,16 @@ using System.Linq;
 
 namespace DowUmg.Services
 {
-    public class DowModService : IEnableLogger
+    public class DowModLoader : IEnableLogger
     {
         private readonly IFilePathProvider filePathProvider;
         private readonly ILogger logger;
-        private readonly ModsRepository mods;
         private readonly ModuleExtractorFactory moduleExtractorFactory = new ModuleExtractorFactory();
 
-        internal DowModService(IFilePathProvider? filePathProvider = null, ModsRepository? modsRepository = null)
+        public DowModLoader(IFilePathProvider? filePathProvider = null)
         {
             this.filePathProvider = filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
-            this.mods = modsRepository ?? Locator.Current.GetService<ModsRepository>();
             this.logger = this.Log();
-        }
-
-        public List<DowMod> GetLoadedMods()
-        {
-            List<DowMod> mods = this.mods.GetAll();
-            mods.Sort((a, b) => a.Name.CompareTo(b.Name));
-            return mods;
-        }
-
-        public void RemoveLoadedMods()
-        {
-            this.mods.DropAll();
         }
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()
@@ -159,11 +144,9 @@ namespace DowUmg.Services
                 });
             }
 
-            var newMod = this.mods.Upsert(mod);
+            memo.Put(mod);
 
-            memo.Put(newMod);
-
-            return newMod;
+            return mod;
         }
 
         private static DowModuleFile CreateAdditionsModule(DowModuleFile mod)

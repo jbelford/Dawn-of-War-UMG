@@ -4,7 +4,6 @@ namespace DowUmg.Constants
 {
     public enum GameSpeed
     {
-        ANY,
         VERY_SLOW,
         SLOW,
         NORMAL,
@@ -15,7 +14,6 @@ namespace DowUmg.Constants
     {
         public static string ToString(this GameSpeed val) => val switch
         {
-            GameSpeed.ANY => "Any",
             GameSpeed.VERY_SLOW => "Very Slow",
             GameSpeed.SLOW => "Slow",
             GameSpeed.NORMAL => "Normal",

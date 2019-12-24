@@ -5,11 +5,11 @@ using Splat;
 
 namespace DowUmg.Data
 {
-    public class DataContext : DbContext
+    public class ModsContext : DbContext
     {
         private readonly IFilePathProvider appDataProvider;
 
-        public DataContext(IFilePathProvider? appDataProvider = null)
+        public ModsContext(IFilePathProvider? appDataProvider = null)
         {
             this.appDataProvider = appDataProvider ?? Locator.Current.GetService<IFilePathProvider>();
         }

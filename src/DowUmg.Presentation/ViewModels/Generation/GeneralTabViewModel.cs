@@ -1,5 +1,10 @@
-﻿using ReactiveUI;
+﻿using DowUmg.Constants;
+using DowUmg.Data;
+using DowUmg.Data.Entities;
+using DynamicData;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -19,19 +24,19 @@ namespace DowUmg.Presentation.ViewModels
 
             foreach (var x in Enumerable.Range(2, 7))
             {
-                MapTypes.Add(new ToggleItemViewModel($"{x}p", true));
+                MapTypes.Add(new ToggleItemViewModel<int>($"{x}p", x, true));
             }
 
-            MapSizes.Add(new ToggleItemViewModel("129", true));
-            MapSizes.Add(new ToggleItemViewModel("257", true));
-            MapSizes.Add(new ToggleItemViewModel("513", true));
-            MapSizes.Add(new ToggleItemViewModel("1025", true));
+            foreach (int size in Enum.GetValues(typeof(MapSize)))
+            {
+                MapSizes.Add(new ToggleItemViewModel<int>(size.ToString(), size, true));
+            }
 
             RefreshMapsForRange = ReactiveCommand.Create(((OptionInputItem<int> min, OptionInputItem<int> max) minMax) =>
             {
                 for (int i = 0; i < MapTypes.Count; ++i)
                 {
-                    ToggleItemViewModel mapType = MapTypes[i];
+                    ToggleItemViewModel<int> mapType = MapTypes[i];
                     int mapPlayers = i + 2;
                     bool wasDisabled = !mapType.IsEnabled;
                     mapType.IsEnabled = mapPlayers >= minMax.min.Content && mapPlayers <= minMax.max.Content;
@@ -80,6 +85,24 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
+            RefreshForMod = ReactiveCommand.CreateFromTask(async (int id) =>
+            {
+                Races.Clear();
+                var (races, maps, rules) = await Observable.Start(() =>
+                {
+                    using var store = new ModsDataStore();
+                    return (store.GetRaces(id).ToList(), store.GetMaps(id).ToList(), store.GetRules(id).ToList());
+                }, RxApp.TaskpoolScheduler);
+
+                maps.Sort((a, b) => a.Players - b.Players);
+
+                Races.AddRange(races);
+
+                Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>($"{map.Name}", map, true)));
+                Rules = new ToggleItemListViewModel<GameRule>("Win Conditions", rules.Where(rule => rule.IsWinCondition)
+                        .Select(rule => new ToggleItemViewModel<GameRule>(rule.Name, rule, true)));
+            });
+
             this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem,
                     x => x.GlobalPlayerOptions.MinMax.MaxInput.SelectedItem)
                 .DistinctUntilChanged()
@@ -93,7 +116,24 @@ namespace DowUmg.Presentation.ViewModels
             this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
                 .DistinctUntilChanged()
                 .InvokeCommand(RefreshForMin);
+
+            this.WhenAnyValue(x => x.Mod)
+                .Where(mod => mod != null)
+                .Select(mod => mod.Id)
+                .DistinctUntilChanged()
+                .InvokeCommand(RefreshForMod);
         }
+
+        [Reactive]
+        public DowMod Mod { get; set; }
+
+        public ObservableCollection<DowRace> Races { get; } = new ObservableCollection<DowRace>();
+
+        [Reactive]
+        public ToggleItemListViewModel<DowMap> Maps { get; set; }
+
+        [Reactive]
+        public ToggleItemListViewModel<GameRule> Rules { get; set; }
 
         [Reactive]
         public bool TeamIsEven { get; set; } = true;
@@ -103,12 +143,13 @@ namespace DowUmg.Presentation.ViewModels
         public PlayersSelectViewModel GlobalPlayerOptions { get; }
         public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } = new ObservableCollection<PlayersSelectViewModel>();
 
-        public ObservableCollection<ToggleItemViewModel> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel>();
+        public ObservableCollection<ToggleItemViewModel<int>> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();
 
-        public ObservableCollection<ToggleItemViewModel> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel>();
+        public ObservableCollection<ToggleItemViewModel<int>> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();
 
         public ReactiveCommand<(OptionInputItem<int>, OptionInputItem<int>), Unit> RefreshMapsForRange { get; }
         public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMin { get; }
         public ReactiveCommand<int, Unit> RefreshTeamList { get; }
+        public ReactiveCommand<int, Unit> RefreshForMod { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DowUmg.Data.Entities;
+﻿using DowUmg.Data;
+using DowUmg.Data.Entities;
 using DowUmg.Services;
 using DynamicData;
 using DynamicData.Binding;
@@ -17,12 +18,12 @@ namespace DowUmg.Presentation.ViewModels
     public class ModsViewModel : RoutableReactiveObject, IEnableLogger
     {
         private readonly IFullLogger logger;
-        private readonly DowModService dowModService;
+        private readonly DowModLoader dowModService;
 
-        public ModsViewModel(IScreen screen, DowModService? dowModService = null) : base(screen, "mods")
+        public ModsViewModel(IScreen screen, DowModLoader? dowModService = null) : base(screen, "mods")
         {
             this.logger = this.Log();
-            this.dowModService = dowModService ?? Locator.Current.GetService<DowModService>();
+            this.dowModService = dowModService ?? Locator.Current.GetService<DowModLoader>();
 
             var whenNotLoading = this.WhenAnyValue(x => x.Loading).Select(loading => !loading).DistinctUntilChanged();
 
@@ -69,12 +70,12 @@ namespace DowUmg.Presentation.ViewModels
         {
             return await Observable.Start(() =>
                 {
-                    List<DowMod> mods = dowModService.GetLoadedMods();
+                    using var store = new ModsDataStore();
                     return dowModService.GetUnloadedMods()
                             .Select(unloaded => new ModItemViewModel()
                             {
                                 Module = unloaded,
-                                IsLoaded = mods.Exists(mod => unloaded.File.ModFolder.Equals(mod.ModFolder)
+                                IsLoaded = store.GetAll().Any(mod => unloaded.File.ModFolder.Equals(mod.ModFolder)
                                     && mod.IsVanilla == unloaded.File.IsVanilla)
                             }).ToList();
                 }, RxApp.TaskpoolScheduler);
@@ -82,11 +83,12 @@ namespace DowUmg.Presentation.ViewModels
 
         private async Task LoadAllMods()
         {
+            using var store = new ModsDataStore();
+            store.DropAll();
+
             Dictionary<string, UnloadedMod> allUnloaded = BaseGameItems.Concat(ModItems)
                 .GroupBy(item => item.Module.File.ModFolder, item => item.Module)
                 .ToDictionary(g => g.Key, g => g.First());
-
-            this.dowModService.RemoveLoadedMods();
 
             foreach (var item in BaseGameItems.Concat(ModItems))
             {
@@ -99,6 +101,8 @@ namespace DowUmg.Presentation.ViewModels
             {
                 DowMod mod = await Observable.Start(() =>
                         dowModService.LoadMod(item.Module, allUnloaded, memo), RxApp.TaskpoolScheduler);
+
+                store.Add(mod);
 
                 item.IsLoaded = true;
             }

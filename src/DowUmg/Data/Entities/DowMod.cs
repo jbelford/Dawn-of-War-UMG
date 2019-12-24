@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DowUmg.Data.Entities
 {
@@ -17,18 +16,6 @@ namespace DowUmg.Data.Entities
         public virtual ICollection<DowRace> Races { get; set; }
         public virtual ICollection<DowModDependency> Dependencies { get; set; }
         public virtual ICollection<DowModDependency> Dependents { get; set; }
-
-        [NotMapped]
-        public int MapsCount { get; set; }
-
-        [NotMapped]
-        public int RulesCount { get; set; }
-
-        [NotMapped]
-        public int RacesCount { get; set; }
-
-        [NotMapped]
-        public int DependencyCount { get; set; }
     }
 
     public class DowModDependency

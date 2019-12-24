@@ -1,5 +1,4 @@
-﻿using DowUmg.Repositories;
-using DowUmg.Services;
+﻿using DowUmg.Services;
 using Splat;
 
 namespace DowUmg
@@ -8,10 +7,8 @@ namespace DowUmg
     {
         public static void RegisterDefaults()
         {
-            Locator.CurrentMutable.RegisterLazySingleton(() => new AppSettingsService());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new DowModService());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new GenerationService());
-            Locator.CurrentMutable.RegisterLazySingleton(() => new ModsRepository());
+            Locator.CurrentMutable.Register(() => new AppSettingsService());
+            Locator.CurrentMutable.Register(() => new DowModLoader());
         }
     }
 }

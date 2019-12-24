@@ -1,34 +1,35 @@
-﻿using DowUmg.Data.Entities;
+﻿using DowUmg.Data;
+using DowUmg.Data.Entities;
 using DowUmg.Services;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using Splat;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationViewModel : RoutableReactiveObject
     {
-        private readonly DowModService modService;
-
-        public GenerationViewModel(IScreen screen, DowModService? modService = null) : base(screen, "matchup")
+        public GenerationViewModel(IScreen screen, DowModLoader? modService = null) : base(screen, "matchup")
         {
-            this.modService = modService ?? Locator.Current.GetService<DowModService>();
-
             GeneralTab = new GeneralTabViewModel();
             GameTab = new GameTabViewModel();
 
-            DowMod[] mods = this.modService.GetLoadedMods()
-                .Where(mod => mod.MapsCount > 0 || mod.RulesCount > 0 || mod.RacesCount > 0)
-                .ToArray();
+            using var store = new ModsDataStore();
+
+            DowMod[] mods = store.GetAll().Where(mod => mod.Playable).ToArray();
 
             Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, mods);
+
+            RefreshMod = ReactiveCommand.Create((DowMod mod) =>
+            {
+                GeneralTab.Mod = mod;
+            });
 
             this.WhenAnyValue(x => x.Mod.SelectedItem)
                 .DistinctUntilChanged()
                 .Select(mod => mod.Content)
-                .ToPropertyEx(this, x => x.LoadedMod);
+                .InvokeCommand(RefreshMod);
         }
 
         public GeneralTabViewModel GeneralTab { get; }
@@ -37,6 +38,6 @@ namespace DowUmg.Presentation.ViewModels
 
         public OptionInputViewModel<DowMod> Mod { get; }
 
-        public extern DowMod LoadedMod { [ObservableAsProperty] get; }
+        public ReactiveCommand<DowMod, Unit> RefreshMod { get; }
     }
 }

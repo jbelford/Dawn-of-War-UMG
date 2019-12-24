@@ -1,6 +1,5 @@
 ﻿using DowUmg.Data.Entities;
 using DowUmg.Models;
-using Splat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +8,19 @@ namespace DowUmg.Services
 {
     public class GenerationService
     {
-        private readonly DowModService modService;
+        private readonly List<DowMod> mods;
 
-        public GenerationService(DowModService? modService = null)
+        public GenerationService(IEnumerable<DowMod> mods)
         {
-            this.modService = modService ?? Locator.Current.GetService<DowModService>();
+            this.mods = mods.ToList();
         }
 
         public Matchup GenerateMatchup(int humans, int players)
         {
-            List<DowMod> mods = this.modService.GetLoadedMods().Where(mod => mod.IsVanilla).ToList();
+            List<DowMod> vanillaMods = this.mods.Where(mod => mod.IsVanilla).ToList();
 
-            List<DowMap> maps = mods.SelectMany(mod => mod.Maps).ToList();
-            List<DowRace> races = mods.SelectMany(mod => mod.Races).ToList();
+            List<DowMap> maps = vanillaMods.SelectMany(mod => mod.Maps).ToList();
+            List<DowRace> races = vanillaMods.SelectMany(mod => mod.Races).ToList();
 
             var rand = new Random();
 

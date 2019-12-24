@@ -58,6 +58,31 @@
                 </Grid>
             </GroupBox>
         </DataTemplate>
+
+        <DataTemplate x:Key="ToggleItemListTemplate" DataType="{x:Type vm:ToggleItemListViewModel}">
+            <GroupBox>
+                <GroupBox.Header>
+                    <Label FontStyle="Italic" Content="{Binding Path=Label, Mode=OneTime}" />
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ScrollViewer>
+                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneTime}" ItemTemplate="{StaticResource ToggleItemTemplate}">
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.Margin" Value="5" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <Button Grid.Row="2" Content="Toggle All" Command="{Binding Path=ToggleItems}" />
+                </Grid>
+            </GroupBox>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -109,7 +134,14 @@
             </StackPanel>
 
             <WrapPanel Grid.Row="0" Grid.Column="2">
-                <GroupBox Padding="5,0,5,5" Margin="0,0,10,10">
+                <WrapPanel.Resources>
+                    <Style TargetType="GroupBox">
+                        <Setter Property="Padding" Value="5,0,5,5" />
+                        <Setter Property="Margin" Value="0,0,10,10" />
+                        <Setter Property="Height" Value="250" />
+                    </Style>
+                </WrapPanel.Resources>
+                <GroupBox>
                     <GroupBox.Header>
                         <Label FontStyle="Italic">Maps</Label>
                     </GroupBox.Header>
@@ -143,6 +175,10 @@
                         </StackPanel>
                     </Grid>
                 </GroupBox>
+                <ContentControl x:Name="Maps"
+                        ContentTemplate="{StaticResource ToggleItemListTemplate}" />
+                <ContentControl x:Name="WinConditions"
+                        ContentTemplate="{StaticResource ToggleItemListTemplate}" />
             </WrapPanel>
         </Grid>
 

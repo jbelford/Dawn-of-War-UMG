@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191223062657_InitialCreate.cs" />
+    <Compile Remove="Migrations\20191223062657_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DowUmg\DowUmg.csproj" />
   </ItemGroup>
 </Project>

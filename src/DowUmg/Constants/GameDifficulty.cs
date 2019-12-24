@@ -4,7 +4,6 @@ namespace DowUmg.Constants
 {
     public enum GameDifficulty
     {
-        ANY,
         EASY,
         STANDARD,
         HARD,
@@ -16,7 +15,6 @@ namespace DowUmg.Constants
     {
         public static string ToString(this GameDifficulty val) => val switch
         {
-            GameDifficulty.ANY => "Any",
             GameDifficulty.EASY => "Easy",
             GameDifficulty.STANDARD => "Standard",
             GameDifficulty.HARD => "Hard",

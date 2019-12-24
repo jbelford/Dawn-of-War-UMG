@@ -41,7 +41,7 @@ namespace DowUmg.Presentation.WPF
 
         private void MigrateDatabase()
         {
-            using var context = new DataContext();
+            using var context = new ModsContext();
             context.Database.Migrate();
         }
     }

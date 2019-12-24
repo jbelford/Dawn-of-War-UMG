@@ -24,6 +24,9 @@ namespace DowUmg.Presentation.WPF.Views
 
                 this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Rules, v => v.WinConditions.Content).DisposeWith(d);
             });
         }
     }

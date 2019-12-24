@@ -4,7 +4,6 @@ namespace DowUmg.Constants
 {
     public enum GameResourceRate
     {
-        ANY,
         LOW,
         STANDARD,
         HIGH
@@ -14,7 +13,6 @@ namespace DowUmg.Constants
     {
         public static string ToString(this GameResourceRate val) => val switch
         {
-            GameResourceRate.ANY => "Any",
             GameResourceRate.LOW => "Low",
             GameResourceRate.STANDARD => "Standard",
             GameResourceRate.HIGH => "High",
