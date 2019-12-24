@@ -2,17 +2,17 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF
 {
     /// <summary>
     /// Interaction logic for RoutingWindow.xaml
     /// </summary>
-    public partial class RoutingWindow : ReactiveWindow<RoutingViewModel>
+    public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
-        public RoutingWindow()
+        public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new RoutingViewModel();
+            ViewModel = new MainViewModel();
 
             this.WhenActivated(d =>
             {

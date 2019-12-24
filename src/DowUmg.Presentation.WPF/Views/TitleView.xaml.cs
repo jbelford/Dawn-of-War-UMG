@@ -5,11 +5,11 @@ using System.Reactive.Disposables;
 namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for TitleView.xaml
     /// </summary>
-    public partial class MainView : ReactiveUserControl<MainViewModel>
+    public partial class TitleView : ReactiveUserControl<TitleViewModel>
     {
-        public MainView()
+        public TitleView()
         {
             InitializeComponent();
 

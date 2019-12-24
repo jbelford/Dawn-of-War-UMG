@@ -2,7 +2,6 @@
 using DowUmg.Interfaces;
 using DowUmg.Presentation.Handlers;
 using DowUmg.Presentation.WPF.Services;
-using DowUmg.Presentation.WPF.Views;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using Splat;
@@ -27,7 +26,7 @@ namespace DowUmg.Presentation.WPF
 
         private void OnApplicationStartup(object sender, StartupEventArgs args)
         {
-            var window = new RoutingWindow();
+            var window = new MainWindow();
             window.Closed += delegate { Shutdown(); };
             window.Show();
         }

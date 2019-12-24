@@ -4,22 +4,24 @@ using System.Reactive;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class MainViewModel : RoutableReactiveObject
+    public class MainViewModel : ReactiveObject, IScreen
     {
-        public MainViewModel(IScreen screen) : base(screen, "main")
+        public MainViewModel()
         {
-            SettingsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen)));
-            ModsAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new ModsViewModel(HostScreen)));
-            MatchupAction = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.Navigate.Execute(new GenerationViewModel(HostScreen)));
+            Router = new RoutingState();
 
-            CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
+            GoHome = ReactiveCommand.CreateFromObservable(() => Router.NavigateAndReset.Execute(new TitleViewModel(this)));
+
+            GoBack = Router.NavigateBack;
+
+            GoHome.Execute().Subscribe();
         }
 
-        public ReactiveCommand<Unit, Unit> CloseApp { get; }
-        public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
-        public ReactiveCommand<Unit, IRoutableViewModel> ModsAction { get; }
-        public ReactiveCommand<Unit, IRoutableViewModel> MatchupAction { get; }
+        public ReactiveCommand<Unit, Unit> GoBack { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoHome { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GotToMods { get; }
 
-        public enum MenuType { Campaign, None };
+        public RoutingState Router { get; }
     }
 }

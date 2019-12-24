@@ -1,6 +1,6 @@
 ﻿<rxui:ReactiveUserControl
-        x:Class="DowUmg.Presentation.WPF.Views.MainView"
-        x:TypeArguments="viewmodels:MainViewModel"
+        x:Class="DowUmg.Presentation.WPF.Views.TitleView"
+        x:TypeArguments="viewmodels:TitleViewModel"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
