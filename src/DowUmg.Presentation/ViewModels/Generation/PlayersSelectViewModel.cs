@@ -18,7 +18,7 @@ namespace DowUmg.Presentation.ViewModels
                 OptionInputViewModel<int> minInput = MinMax.MinInput;
                 foreach (var minItem in minInput.Items)
                 {
-                    minItem.IsEnabled = minItem.Content >= item.Content;
+                    minItem.IsEnabled = minItem.Item >= item.Item;
                 }
                 if (!minInput.SelectedItem.IsEnabled)
                 {

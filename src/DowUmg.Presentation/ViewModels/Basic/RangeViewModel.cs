@@ -18,7 +18,7 @@ namespace DowUmg.Presentation.ViewModels
             {
                 foreach (var maxItem in MaxInput.Items)
                 {
-                    maxItem.IsEnabled = maxItem.Content >= item.Content;
+                    maxItem.IsEnabled = maxItem.Item >= item.Item;
                 }
                 if (!MaxInput.SelectedItem.IsEnabled)
                 {

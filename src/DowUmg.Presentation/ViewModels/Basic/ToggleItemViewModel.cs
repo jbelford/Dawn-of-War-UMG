@@ -2,25 +2,24 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemViewModel<T> : DisableableReactiveObject
+    public class ToggleItemViewModel<T> : ItemViewModel<T>
     {
-        public ToggleItemViewModel(string label, T item, bool toggled = false)
+        public ToggleItemViewModel(bool toggled = false, bool enabled = true)
         {
-            Label = label;
             IsToggled = toggled;
+            IsEnabled = enabled;
         }
-
-        public string Label { get; }
-
-        public T Item { get; }
 
         [Reactive]
         public bool IsToggled { get; set; }
+
+        [Reactive]
+        public bool IsEnabled { get; set; }
     }
 
     public class ToggleItemViewModel : ToggleItemViewModel<object>
     {
-        public ToggleItemViewModel(string label, object item, bool toggled = false) : base(label, item, toggled)
+        public ToggleItemViewModel(bool toggled = false) : base(toggled)
         {
         }
     }

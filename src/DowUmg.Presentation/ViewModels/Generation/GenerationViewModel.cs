@@ -28,7 +28,7 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenAnyValue(x => x.Mod.SelectedItem)
                 .DistinctUntilChanged()
-                .Select(mod => mod.Content)
+                .Select(mod => mod.Item)
                 .InvokeCommand(RefreshMod);
         }
 

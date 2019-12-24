@@ -11,7 +11,7 @@ namespace DowUmg.Presentation.ViewModels
         {
             foreach (var item in items)
             {
-                Items.Add(new OptionInputItem<T>(item, toString.Invoke(item)));
+                Items.Add(new OptionInputItem<T>() { Label = toString.Invoke(item), Item = item });
             }
             if (Items.Count > 0)
             {
@@ -29,17 +29,15 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<OptionInputItem<T>> Items { get; } = new ObservableCollection<OptionInputItem<T>>();
     }
 
-    public class OptionInputItem<T> : DisableableReactiveObject
+    public class OptionInputItem<T> : ItemViewModel<T>
     {
-        public OptionInputItem(T content, string display)
+        public OptionInputItem(bool enabled = true)
         {
-            Content = content;
-            Display = display;
+            IsEnabled = enabled;
         }
 
-        public T Content { get; set; }
-
-        public string Display { get; set; }
+        [Reactive]
+        public bool IsEnabled { get; set; }
     }
 
     public class OptionInputViewModel : OptionInputViewModel<object>
@@ -51,8 +49,5 @@ namespace DowUmg.Presentation.ViewModels
 
     public class OptionInputItem : OptionInputItem<object>
     {
-        public OptionInputItem(object content, string display) : base(content, display)
-        {
-        }
     }
 }

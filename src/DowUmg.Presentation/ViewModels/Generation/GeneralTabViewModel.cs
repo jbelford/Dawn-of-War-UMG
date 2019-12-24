@@ -24,12 +24,12 @@ namespace DowUmg.Presentation.ViewModels
 
             foreach (var x in Enumerable.Range(2, 7))
             {
-                MapTypes.Add(new ToggleItemViewModel<int>($"{x}p", x, true));
+                MapTypes.Add(new ToggleItemViewModel<int>(true) { Label = $"{x}p", Item = x });
             }
 
             foreach (int size in Enum.GetValues(typeof(MapSize)))
             {
-                MapSizes.Add(new ToggleItemViewModel<int>(size.ToString(), size, true));
+                MapSizes.Add(new ToggleItemViewModel<int>(true) { Label = size.ToString(), Item = size });
             }
 
             RefreshMapsForRange = ReactiveCommand.Create(((OptionInputItem<int> min, OptionInputItem<int> max) minMax) =>
@@ -39,7 +39,7 @@ namespace DowUmg.Presentation.ViewModels
                     ToggleItemViewModel<int> mapType = MapTypes[i];
                     int mapPlayers = i + 2;
                     bool wasDisabled = !mapType.IsEnabled;
-                    mapType.IsEnabled = mapPlayers >= minMax.min.Content && mapPlayers <= minMax.max.Content;
+                    mapType.IsEnabled = mapPlayers >= minMax.min.Item && mapPlayers <= minMax.max.Item;
                     if (!mapType.IsEnabled)
                     {
                         mapType.IsToggled = false;
@@ -55,7 +55,7 @@ namespace DowUmg.Presentation.ViewModels
             {
                 foreach (var teamItem in TeamNum.Items)
                 {
-                    teamItem.IsEnabled = teamItem.Content <= min.Content;
+                    teamItem.IsEnabled = teamItem.Item <= min.Item;
                 }
                 if (!TeamNum.SelectedItem.IsEnabled)
                 {
@@ -98,9 +98,9 @@ namespace DowUmg.Presentation.ViewModels
 
                 Races.AddRange(races);
 
-                Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>($"{map.Name}", map, true)));
+                Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
                 Rules = new ToggleItemListViewModel<GameRule>("Win Conditions", rules.Where(rule => rule.IsWinCondition)
-                        .Select(rule => new ToggleItemViewModel<GameRule>(rule.Name, rule, true)));
+                        .Select(rule => new ToggleItemViewModel<GameRule>(true) { Label = rule.Name, Item = rule }));
             });
 
             this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem,
@@ -110,7 +110,7 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenAnyValue(x => x.TeamNum.SelectedItem)
                 .DistinctUntilChanged()
-                .Select(item => item.Content)
+                .Select(item => item.Item)
                 .InvokeCommand(RefreshTeamList);
 
             this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
