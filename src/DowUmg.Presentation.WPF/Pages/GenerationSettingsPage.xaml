@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Generation Settings" FontSize="18" />
+            <TextBlock Grid.Column="0" Text="Generation Settings" FontSize="{StaticResource FontSizeXLarge}" />
             <StackPanel Orientation="Horizontal" Grid.Column="2">
                 <Label Content="Mod" />
                 <ContentControl x:Name="ModOption" Width="200" ContentTemplate="{StaticResource OptionInputTemplate}" />

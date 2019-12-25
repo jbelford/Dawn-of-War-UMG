@@ -24,7 +24,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Mods" HorizontalAlignment="Center" FontSize="36" Margin="0,0,0,20" />
+        <TextBlock Grid.Row="0" Text="Mods" HorizontalAlignment="Center" FontSize="{StaticResource FontSizeXXLarge}" Margin="0,0,0,20" />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -58,7 +58,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <Button x:Name="loadModsButton" Grid.Column="1" FontSize="16" Content="Reload All Mods" />
+            <Button x:Name="loadModsButton" Grid.Column="1" FontSize="{StaticResource FontSizeRegular}" Content="Reload All Mods" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

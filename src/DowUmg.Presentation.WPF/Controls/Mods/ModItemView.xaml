@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock x:Name="Text" Grid.Row="1" FontSize="16">
+        <TextBlock x:Name="Text" Grid.Row="1" FontSize="{StaticResource FontSizeRegular}">
             <StackPanel x:Name="ItemContent">
                 <TextBlock x:Name="ModName" Text="My Mod" />
                 <TextBlock x:Name="ModDesc" Text="This is a description" />

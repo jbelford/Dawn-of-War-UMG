@@ -33,10 +33,10 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="Dawn of War: Ultimate Matchup Generator" Grid.Row="0" Grid.Column="1"
-            TextWrapping="WrapWithOverflow" FontSize="36" FontWeight="SemiBold" />
+            TextWrapping="WrapWithOverflow" FontSize="{StaticResource FontSizeXXLarge}" FontWeight="SemiBold" />
 
         <Border Grid.Row="2" Grid.Column="1" x:Name="WarningMessage" Style="{StaticResource MessageStyle}">
-            <TextBlock Text="Load mods first!" HorizontalAlignment="Center" FontSize="14" />
+            <TextBlock Text="Load mods first!" HorizontalAlignment="Center" FontSize="{StaticResource FontSizeRegular}" />
         </Border>
 
         <Grid Grid.Row="4" Grid.Column="1" Width="200">
@@ -45,7 +45,7 @@
                     <Setter Property="Background" Value="White" />
                     <Setter Property="Margin" Value="0,0,0,15" />
                     <Setter Property="Padding" Value="15" />
-                    <Setter Property="FontSize" Value="24" />
+                    <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
                 </Style>
             </Grid.Resources>
 

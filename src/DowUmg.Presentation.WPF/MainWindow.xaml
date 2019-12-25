@@ -19,7 +19,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Button x:Name="HomeButton" Background="Transparent" BorderThickness="0"
-                        FontSize="16" Padding="10,5" Grid.Column="0" Content="Home" />
+                        FontSize="{StaticResource FontSizeRegular}" Padding="10,5" Grid.Column="0" Content="Home" />
             </Grid>
         </Border>
         <rxui:RoutedViewHost x:Name="RoutedViewHost"

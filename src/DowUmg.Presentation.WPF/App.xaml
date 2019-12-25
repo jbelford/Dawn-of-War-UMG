@@ -6,43 +6,46 @@
              Startup="OnApplicationStartup"
              x:Name="DowUmgApp">
     <Application.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Cursor" Value="Hand" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Fonts.xaml" />
+                <ResourceDictionary Source="Styles/Buttons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-            <ComboBox ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:OptionInputItem}">
-                        <TextBlock Text="{Binding Path=Label, Mode=OneTime}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-                <ComboBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ComboBoxItem}">
-                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
-                    </Style>
-                </ComboBox.ItemContainerStyle>
-            </ComboBox>
-        </DataTemplate>
+            <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
+                <ComboBox ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:OptionInputItem}">
+                            <TextBlock Text="{Binding Path=Label, Mode=OneTime}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+            </DataTemplate>
 
-        <DataTemplate x:Key="NumberInputSliderTemplate" DataType="{x:Type vm:NumberInputViewModel}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Content="{Binding Path=Label, Mode=OneTime}"
-                    Margin="0,0,5,0"
-                    HorizontalContentAlignment="Right" />
-                <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="{Binding Path=Input}" />
-                <TextBlock Grid.Column="3" Text="{Binding Path=Input, StringFormat={}{0:F0}%}" />
-            </Grid>
-        </DataTemplate>
+            <DataTemplate x:Key="NumberInputSliderTemplate" DataType="{x:Type vm:NumberInputViewModel}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="1" Content="{Binding Path=Label, Mode=OneTime}"
+                        Margin="0,0,5,0"
+                        HorizontalContentAlignment="Right" />
+                    <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="{Binding Path=Input}" />
+                    <TextBlock Grid.Column="3" Text="{Binding Path=Input, StringFormat={}{0:F0}%}" />
+                </Grid>
+            </DataTemplate>
 
-        <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
-            <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}" IsEnabled="{Binding IsEnabled}" />
-        </DataTemplate>
+            <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
+                <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}" IsEnabled="{Binding IsEnabled}" />
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
