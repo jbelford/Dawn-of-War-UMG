@@ -1,13 +1,13 @@
-﻿<rxui:ReactiveUserControl x:Class="DowUmg.Presentation.WPF.Views.GenerationSettingsView"
+﻿<rxui:ReactiveUserControl x:Class="DowUmg.Presentation.WPF.Pages.GenerationSettingsPage"
             x:TypeArguments="vm:GenerationViewModel"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+            xmlns:c="clr-namespace:DowUmg.Presentation.WPF.Controls"
             xmlns:rxui="http://reactiveui.net"
             mc:Ignorable="d"
-            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
             d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -30,12 +30,12 @@
         <TabControl Grid.Row="1" Margin="0,20">
             <TabItem Header="General">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <rxui:ViewModelViewHost x:Name="GeneralTab" HorizontalContentAlignment="Stretch"
+                    <c:GeneralTabControl x:Name="GeneralTab" HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Game">
-                <rxui:ViewModelViewHost x:Name="GameTab" HorizontalContentAlignment="Stretch" />
+                <c:GameTabControl x:Name="GameTab" HorizontalContentAlignment="Stretch" />
             </TabItem>
         </TabControl>
         <Grid Grid.Row="2">

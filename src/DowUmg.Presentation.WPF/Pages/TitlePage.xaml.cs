@@ -2,14 +2,11 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Pages
 {
-    /// <summary>
-    /// Interaction logic for TitleView.xaml
-    /// </summary>
-    public partial class TitleView : ReactiveUserControl<TitleViewModel>
+    public partial class TitlePage : ReactiveUserControl<TitleViewModel>
     {
-        public TitleView()
+        public TitlePage()
         {
             InitializeComponent();
 

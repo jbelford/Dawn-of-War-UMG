@@ -1,5 +1,5 @@
 ﻿<rxui:ReactiveUserControl
-      x:Class="DowUmg.Presentation.WPF.Views.SettingsView"
+      x:Class="DowUmg.Presentation.WPF.Pages.SettingsPage"
       x:TypeArguments="viewmodels:SettingsViewModel"
       xmlns:rxui="http://reactiveui.net"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

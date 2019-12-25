@@ -2,14 +2,14 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Controls
 {
     /// <summary>
     /// Interaction logic for GameTabView.xaml
     /// </summary>
-    public partial class GameTabView : ReactiveUserControl<GameTabViewModel>
+    public partial class GameTabControl : ReactiveUserControl<GameTabViewModel>
     {
-        public GameTabView()
+        public GameTabControl()
         {
             InitializeComponent();
 

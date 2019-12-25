@@ -1,5 +1,5 @@
 ﻿<rxui:ReactiveUserControl
-            x:Class="DowUmg.Presentation.WPF.Views.GeneralTabItem"
+            x:Class="DowUmg.Presentation.WPF.Controls.GeneralTabControl"
             x:TypeArguments="vm:GeneralTabViewModel"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

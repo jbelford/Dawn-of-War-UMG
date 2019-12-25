@@ -3,14 +3,14 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Pages
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml
     /// </summary>
-    public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
+    public partial class SettingsPage : ReactiveUserControl<SettingsViewModel>
     {
-        public SettingsView()
+        public SettingsPage()
         {
             InitializeComponent();
 

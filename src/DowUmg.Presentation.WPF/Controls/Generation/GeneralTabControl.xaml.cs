@@ -2,14 +2,14 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Controls
 {
     /// <summary>
-    /// Interaction logic for GeneralTabItem.xaml
+    /// Interaction logic for GeneralTabView.xaml
     /// </summary>
-    public partial class GeneralTabItem : ReactiveUserControl<GeneralTabViewModel>
+    public partial class GeneralTabControl : ReactiveUserControl<GeneralTabViewModel>
     {
-        public GeneralTabItem()
+        public GeneralTabControl()
         {
             InitializeComponent();
 

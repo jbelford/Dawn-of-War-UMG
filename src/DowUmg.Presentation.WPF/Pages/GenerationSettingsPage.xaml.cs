@@ -2,14 +2,14 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Pages
 {
     /// <summary>
     /// Interaction logic for GenerationSettingsView.xaml
     /// </summary>
-    public partial class GenerationSettingsView : ReactiveUserControl<GenerationViewModel>
+    public partial class GenerationSettingsPage : ReactiveUserControl<GenerationViewModel>
     {
-        public GenerationSettingsView()
+        public GenerationSettingsPage()
         {
             InitializeComponent();
 

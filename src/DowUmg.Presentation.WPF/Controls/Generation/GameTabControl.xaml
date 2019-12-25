@@ -1,5 +1,5 @@
 ﻿<rxui:ReactiveUserControl
-        x:Class="DowUmg.Presentation.WPF.Views.GameTabView"
+        x:Class="DowUmg.Presentation.WPF.Controls.GameTabControl"
         x:TypeArguments="vm:GameTabViewModel"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

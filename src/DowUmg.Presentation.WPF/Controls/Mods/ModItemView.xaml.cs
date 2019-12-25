@@ -3,7 +3,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Windows.Media;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Controls
 {
     /// <summary>
     /// Interaction logic for ModListControl.xaml

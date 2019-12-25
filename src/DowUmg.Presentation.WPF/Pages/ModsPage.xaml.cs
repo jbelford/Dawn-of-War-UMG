@@ -2,14 +2,14 @@
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace DowUmg.Presentation.WPF.Views
+namespace DowUmg.Presentation.WPF.Pages
 {
     /// <summary>
     /// Interaction logic for ModsView.xaml
     /// </summary>
-    public partial class ModsView : ReactiveUserControl<ModsViewModel>
+    public partial class ModsPage : ReactiveUserControl<ModsViewModel>
     {
-        public ModsView()
+        public ModsPage()
         {
             InitializeComponent();
 
