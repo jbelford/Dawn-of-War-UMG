@@ -17,8 +17,7 @@ namespace DowUmg.Presentation.ViewModels
         public GeneralTabViewModel()
         {
             GlobalPlayerOptions = new PlayersSelectViewModel("Players",
-                new OptionInputViewModel<int>(Enumerable.Range(1, 8).ToArray()),
-                new RangeViewModel(2, 8));
+                Enumerable.Range(1, 8), new RangeViewModel(2, 8));
 
             TeamNum = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
 
@@ -70,8 +69,7 @@ namespace DowUmg.Presentation.ViewModels
                     for (int i = TeamPlayerOptions.Count; i < teams; ++i)
                     {
                         var teamOptions = new PlayersSelectViewModel($"Team {i + 1}",
-                            new OptionInputViewModel<int>(Enumerable.Range(0, 7).ToArray()),
-                            new RangeViewModel(1, 7));
+                            Enumerable.Range(0, 7).ToArray(), new RangeViewModel(1, 7));
 
                         TeamPlayerOptions.Add(teamOptions);
                     }
@@ -97,6 +95,13 @@ namespace DowUmg.Presentation.ViewModels
                 maps.Sort((a, b) => a.Players - b.Players);
 
                 Races.AddRange(races);
+
+                await GlobalPlayerOptions.RefreshForRaces.Execute(races);
+
+                foreach (var team in TeamPlayerOptions)
+                {
+                    await team.RefreshForRaces.Execute(races);
+                }
 
                 Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
                 Rules = new ToggleItemListViewModel<GameRule>("Win Conditions", rules.Where(rule => rule.IsWinCondition)

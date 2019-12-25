@@ -70,13 +70,21 @@ namespace DowUmg.Services
             }
         }
 
-        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded, LoadMemo memo)
+        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded, LoadMemo memo,
+            LocaleStore? parentLocales = null)
         {
             DowMod? existing = memo.Get(unloaded.File.ModFolder, unloaded.File.IsVanilla);
             if (existing != null)
             {
                 return existing;
             }
+
+            LocaleStore newLocales = new LocaleStore();
+            if (parentLocales != null)
+            {
+                newLocales.Dependencies.Add(parentLocales);
+            }
+            newLocales.Dependencies.Add(unloaded.Locales);
 
             var mod = new DowMod()
             {
@@ -94,7 +102,7 @@ namespace DowUmg.Services
                 mod.Dependencies.Add(new DowModDependency()
                 {
                     MainMod = mod,
-                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, memo)
+                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, memo, unloaded.Locales)
                 });
             }
 
@@ -106,8 +114,8 @@ namespace DowUmg.Services
             {
                 mod.Races.Add(new DowRace()
                 {
-                    Name = unloaded.Locales.Replace(race.Name),
-                    Description = unloaded.Locales.Replace(race.Description)
+                    Name = newLocales.Replace(race.Name),
+                    Description = newLocales.Replace(race.Description)
                 });
             }
 
@@ -124,8 +132,8 @@ namespace DowUmg.Services
 
                 mod.Maps.Add(new DowMap()
                 {
-                    Name = unloaded.Locales.Replace(map.Name),
-                    Details = unloaded.Locales.Replace(map.Description),
+                    Name = newLocales.Replace(map.Name),
+                    Details = newLocales.Replace(map.Description),
                     Players = map.Players,
                     Size = map.Size,
                     Image = image
@@ -138,8 +146,8 @@ namespace DowUmg.Services
             {
                 mod.Rules.Add(new GameRule()
                 {
-                    Name = unloaded.Locales.Replace(rule.Title),
-                    Details = unloaded.Locales.Replace(rule.Description),
+                    Name = newLocales.Replace(rule.Title),
+                    Details = newLocales.Replace(rule.Description),
                     IsWinCondition = rule.VictoryCondition
                 });
             }

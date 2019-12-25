@@ -1,4 +1,7 @@
-﻿using ReactiveUI;
+﻿using DowUmg.Data.Entities;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -7,10 +10,10 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class PlayersSelectViewModel : ReactiveObject
     {
-        public PlayersSelectViewModel(string label, OptionInputViewModel<int> humans, RangeViewModel minMax)
+        public PlayersSelectViewModel(string label, IEnumerable<int> humans, RangeViewModel minMax)
         {
             Label = label;
-            Humans = humans;
+            Humans = new OptionInputViewModel<int>(humans.ToArray());
             MinMax = minMax;
 
             RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
@@ -26,6 +29,11 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
+            RefreshForRaces = ReactiveCommand.Create((IEnumerable<DowRace> races) =>
+            {
+                Races = new ProportionalOptionsViewModel<DowRace>("Races", race => race.Name, races.ToArray());
+            });
+
             this.WhenAnyValue(x => x.Humans.SelectedItem)
                 .DistinctUntilChanged()
                 .InvokeCommand(RefreshForHumanPlayers);
@@ -37,6 +45,11 @@ namespace DowUmg.Presentation.ViewModels
 
         public RangeViewModel MinMax { get; }
 
+        [Reactive]
+        public ProportionalOptionsViewModel<DowRace> Races { get; set; }
+
         public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
+
+        public ReactiveCommand<IEnumerable<DowRace>, Unit> RefreshForRaces { get; }
     }
 }

@@ -30,7 +30,7 @@ namespace DowUmg.FileFormats
 
         public string Replace(string input)
         {
-            return this.reg.Replace(input, (Match match) => GetValue(int.Parse(match.Groups[1].Value)) ?? "");
+            return this.reg.Replace(input, (Match match) => GetValue(int.Parse(match.Groups[1].Value)) ?? "<NOT FOUND>");
         }
 
         private string? GetValue(int num)

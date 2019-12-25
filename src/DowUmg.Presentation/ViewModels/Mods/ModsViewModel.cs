@@ -97,10 +97,24 @@ namespace DowUmg.Presentation.ViewModels
 
             var memo = new LoadMemo();
 
-            foreach (var item in BaseGameItems.Concat(ModItems))
+            foreach (var item in BaseGameItems.Concat(ModItems).Where(mod => mod.Module.File.Playable))
             {
                 DowMod mod = await Observable.Start(() =>
                         dowModService.LoadMod(item.Module, allUnloaded, memo), RxApp.TaskpoolScheduler);
+
+                store.Add(mod);
+
+                item.IsLoaded = true;
+            }
+
+            // Yeah this is kind of weird. But essentially we want to load the playable mods first.
+            // This is because they likely depend on the non-playable mods. Non-playable mods may be
+            // sub-modules for playable mods. As such they might have Locales that reference the parent mod
+            // for this reason we want to ensure that we load from the root.
+
+            foreach (var item in BaseGameItems.Concat(ModItems).Where(mod => !mod.Module.File.Playable))
+            {
+                DowMod mod = dowModService.LoadMod(item.Module, allUnloaded, memo);
 
                 store.Add(mod);
 
