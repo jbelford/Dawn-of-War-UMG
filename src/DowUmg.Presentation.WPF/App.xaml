@@ -13,7 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-                <ComboBox ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
+                <ComboBox VerticalContentAlignment="Center" ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:OptionInputItem}">
                             <TextBlock Text="{Binding Path=Label, Mode=OneTime}" />

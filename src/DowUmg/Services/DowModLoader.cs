@@ -66,7 +66,12 @@ namespace DowUmg.Services
             // This data would include custom maps that were installed elsewhere
             foreach (var mod in modules.Values.Where(unloaded => unloaded.File.IsVanilla))
             {
-                yield return new UnloadedMod() { File = CreateAdditionsModule(mod.File), Locales = mod.Locales };
+                yield return new UnloadedMod()
+                {
+                    File = CreateAdditionsModule(mod.File),
+                    Locales = mod.Locales,
+                    Dependencies = mod.Dependencies
+                };
             }
         }
 

@@ -23,8 +23,9 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Generation Settings" FontSize="{StaticResource FontSizeXLarge}" />
             <StackPanel Orientation="Horizontal" Grid.Column="2">
-                <Label Content="Mod" />
-                <ContentControl x:Name="ModOption" Width="200" ContentTemplate="{StaticResource OptionInputTemplate}" />
+                <Label Content="Mod" VerticalContentAlignment="Center" />
+                <ContentControl x:Name="ModOption"
+                        ContentTemplate="{StaticResource OptionInputTemplate}" />
             </StackPanel>
         </Grid>
         <TabControl Grid.Row="1" Margin="0,20">
