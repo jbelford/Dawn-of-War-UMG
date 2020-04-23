@@ -1,7 +1,9 @@
-﻿using DowUmg.Data;
+﻿using DowUmg.Constants;
+using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using ReactiveUI;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -12,7 +14,6 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GenerationViewModel(IScreen screen, DowModLoader? modService = null) : base(screen, "matchup")
         {
-            GeneralTab = new GeneralTabViewModel();
             GameTab = new GameTabViewModel();
             TeamTab = new TeamTabViewModel();
 
@@ -20,7 +21,12 @@ namespace DowUmg.Presentation.ViewModels
 
             DowMod[] mods = store.GetPlayableMods().ToArray();
 
-            Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, mods);
+            IEnumerable<DowMod> addonMods = mods.Where(mod => !mod.IsVanilla && DowConstants.IsVanilla(mod.ModFolder));
+            IEnumerable<DowMod> baseMods = mods.Where(mod => mod.IsVanilla || !DowConstants.IsVanilla(mod.ModFolder));
+
+            GeneralTab = new GeneralTabViewModel(addonMods.SelectMany(mod => mod.Maps).ToList());
+
+            Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, baseMods.ToArray());
 
             RefreshMod = ReactiveCommand.Create((DowMod mod) =>
             {

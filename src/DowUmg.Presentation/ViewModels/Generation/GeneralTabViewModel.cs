@@ -4,6 +4,7 @@ using DowUmg.Data.Entities;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -13,8 +14,13 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class GeneralTabViewModel : ReactiveObject
     {
-        public GeneralTabViewModel()
+        public GeneralTabViewModel(List<DowMap> addonMaps)
         {
+            addonMaps.Sort((a, b) => a.Players - b.Players);
+
+            AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps",
+                addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+
             foreach (var x in Enumerable.Range(2, 7))
             {
                 MapTypes.Add(new ToggleItemViewModel<int>(true) { Label = $"{x}p", Item = x });
@@ -54,6 +60,9 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public ToggleItemListViewModel<DowMap> Maps { get; set; }
+
+        [Reactive]
+        public ToggleItemListViewModel<DowMap> AddonMaps { get; set; }
 
         [Reactive]
         public ToggleItemListViewModel<GameRule> Rules { get; set; }

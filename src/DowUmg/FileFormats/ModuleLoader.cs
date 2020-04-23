@@ -46,12 +46,8 @@ namespace DowUmg.FileFormats
                 ModFolder = modFolder,
                 ModVersion = global["ModVersion"],
                 RequiredMods = global.Where(x => reg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
-                IsVanilla = IsVanilla(modFolder)
+                IsVanilla = DowConstants.IsVanilla(modFolder)
             };
         }
-
-        private static bool IsVanilla(string str) =>
-            DowConstants.DXP2Folder.Equals(str, System.StringComparison.OrdinalIgnoreCase)
-            || DowConstants.W40kFolder.Equals(str, System.StringComparison.OrdinalIgnoreCase);
     }
 }

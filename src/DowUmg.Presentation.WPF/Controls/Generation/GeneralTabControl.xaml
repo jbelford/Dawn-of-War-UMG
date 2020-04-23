@@ -53,7 +53,8 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" MinWidth="50" />
+            <ColumnDefinition Width="*" MinWidth="100" />
+            <ColumnDefinition Width="*" MinWidth="100" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
@@ -91,9 +92,12 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <ContentControl x:Name="Maps" Grid.Column="1" Grid.Row="1"
+
+        <ContentControl x:Name="Maps" Grid.Row="1" Grid.Column="1"
                         ContentTemplate="{StaticResource ToggleItemListTemplate}" />
-        <ContentControl x:Name="WinConditions" Grid.Column="2" Grid.Row="1"
+        <ContentControl x:Name="AddonMaps" Grid.Row="1" Grid.Column="2"
+                        ContentTemplate="{StaticResource ToggleItemListTemplate}" />
+        <ContentControl x:Name="WinConditions" Grid.Column="3" Grid.Row="1"
                         ContentTemplate="{StaticResource ToggleItemListTemplate}" />
     </Grid>
 </rxui:ReactiveUserControl>

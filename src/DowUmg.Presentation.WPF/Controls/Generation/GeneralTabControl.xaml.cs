@@ -19,7 +19,11 @@ namespace DowUmg.Presentation.WPF.Controls
                 this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.Content).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Rules, v => v.WinConditions.Content).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.IsVisible,
+                    maps => maps.Items.Count > 0).DisposeWith(d);
             });
         }
     }
