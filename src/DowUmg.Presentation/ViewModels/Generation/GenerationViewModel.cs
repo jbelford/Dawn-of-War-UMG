@@ -14,6 +14,7 @@ namespace DowUmg.Presentation.ViewModels
         {
             GeneralTab = new GeneralTabViewModel();
             GameTab = new GameTabViewModel();
+            TeamTab = new TeamTabViewModel();
 
             using var store = new ModsDataStore();
 
@@ -35,6 +36,8 @@ namespace DowUmg.Presentation.ViewModels
         public GeneralTabViewModel GeneralTab { get; }
 
         public GameTabViewModel GameTab { get; }
+
+        public TeamTabViewModel TeamTab { get; }
 
         public OptionInputViewModel<DowMod> Mod { get; }
 

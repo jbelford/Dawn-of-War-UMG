@@ -8,4 +8,9 @@
     <Style TargetType="{x:Type Button}">
         <Setter Property="Cursor" Value="Hand" />
     </Style>
+
+    <Style x:Key="RegularButton" TargetType="{x:Type Button}">
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="Padding" Value="5" />
+    </Style>
 </ResourceDictionary>

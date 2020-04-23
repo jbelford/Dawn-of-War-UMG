@@ -30,10 +30,10 @@
         </Grid>
         <TabControl Grid.Row="1" Margin="0,20">
             <TabItem Header="General">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <c:GeneralTabControl x:Name="GeneralTab" HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch" />
-                </ScrollViewer>
+                <c:GeneralTabControl x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
+            </TabItem>
+            <TabItem Header="Team">
+                <c:TeamTabControl x:Name="TeamTab" HorizontalContentAlignment="Stretch" />
             </TabItem>
             <TabItem Header="Game">
                 <c:GameTabControl x:Name="GameTab" HorizontalContentAlignment="Stretch" />

@@ -15,13 +15,6 @@ namespace DowUmg.Presentation.WPF.Controls
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.GlobalPlayerOptions, v => v.GlobalPlayerOptions.Content).DisposeWith(d);
-
-                this.Bind(ViewModel, vm => vm.TeamIsEven, v => v.EvenRadio.IsChecked).DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.TeamNum, v => v.TeamNum.Content).DisposeWith(d);
-
-                this.OneWayBind(ViewModel, vm => vm.TeamPlayerOptions, v => v.Teams.ItemsSource).DisposeWith(d);
-
                 this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
 
