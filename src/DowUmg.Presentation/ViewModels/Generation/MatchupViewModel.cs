@@ -3,6 +3,7 @@ using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
+using System;
 using System.Reactive;
 
 namespace DowUmg.Presentation.ViewModels
@@ -11,19 +12,22 @@ namespace DowUmg.Presentation.ViewModels
     {
         private readonly GenerationSettings settings;
         private readonly GenerationService generationService;
+        private readonly DowModLoader modLoader;
 
-        public MatchupViewModel(IScreen screen, GenerationSettings settings, GenerationService? generationService = null)
+        public MatchupViewModel(IScreen screen, GenerationSettings settings, DowModLoader? modLoader = null, GenerationService? generationService = null)
             : base(screen, "matchup")
         {
             this.generationService = generationService ?? Locator.Current.GetService<GenerationService>();
+            this.modLoader = modLoader ?? Locator.Current.GetService<DowModLoader>();
             this.settings = settings;
-
-            Matchup = this.generationService.GenerateMatchup(this.settings);
 
             GenerateMatchup = ReactiveCommand.Create(() =>
             {
                 Matchup = this.generationService.GenerateMatchup(this.settings);
+                MapImagePath = this.modLoader.GetMapImagePath(Matchup.Map);
             });
+
+            GenerateMatchup.Execute().Subscribe();
 
             GoBack = HostScreen.Router.NavigateBack;
         }
@@ -34,5 +38,8 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public Matchup Matchup { get; set; }
+
+        [Reactive]
+        public string MapImagePath { get; set; }
     }
 }

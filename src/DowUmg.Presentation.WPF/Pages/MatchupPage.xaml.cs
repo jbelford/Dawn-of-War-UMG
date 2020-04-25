@@ -1,8 +1,11 @@
 ﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using TgaLib;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -40,6 +43,15 @@ namespace DowUmg.Presentation.WPF.Pages
 
                 this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.StartingResources.Text,
                     m => m.GameInfo.Options.StartingResources.ToString()).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.MapImagePath, v => v.MapImage.Source,
+                    path =>
+                    {
+                        // this is bad but YOLO
+                        using var fs = File.OpenRead(path);
+                        using var br = new BinaryReader(fs);
+                        return new TgaImage(br).GetBitmap();
+                    }).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.GenerateMatchup, v => v.RegenerateButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.GoBack, v => v.BackButton).DisposeWith(d);

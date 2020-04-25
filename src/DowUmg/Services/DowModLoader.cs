@@ -20,6 +20,12 @@ namespace DowUmg.Services
             this.logger = this.Log();
         }
 
+        public string GetMapImagePath(DowMap map)
+        {
+            string root = map.Mod.IsVanilla ? filePathProvider.AppDataLocation : filePathProvider.SoulstormLocation;
+            return Path.Combine(root, map.Mod.ModFolder, "data", "scenarios", "mp", map.Image);
+        }
+
         public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
             var modules = new Dictionary<string, UnloadedMod>();
