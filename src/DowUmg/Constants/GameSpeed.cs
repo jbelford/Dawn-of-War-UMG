@@ -2,7 +2,7 @@
 
 namespace DowUmg.Constants
 {
-    public enum GameSpeed
+    public enum GameSpeed : int
     {
         VERY_SLOW,
         SLOW,

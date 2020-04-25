@@ -1,6 +1,6 @@
 ﻿namespace DowUmg.Constants
 {
-    public enum MapSize
+    public enum MapSize : int
     {
         TINY = 129,
         SMALL = 257,

@@ -2,7 +2,7 @@
 
 namespace DowUmg.Constants
 {
-    public enum GameDifficulty
+    public enum GameDifficulty : int
     {
         EASY,
         STANDARD,

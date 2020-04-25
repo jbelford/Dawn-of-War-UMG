@@ -1,5 +1,8 @@
 ﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Disposables;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -14,6 +17,29 @@ namespace DowUmg.Presentation.WPF.Pages
 
             this.WhenActivated(d =>
             {
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.ModName.Text,
+                    m => m.Map.Mod.Name).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.MapName.Text,
+                    m => m.Map.Name).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.MapDesc.Text,
+                    m => m.Map.Details).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.WinConditions.ItemsSource,
+                    m => new ObservableCollection<string>(m.GameInfo.Rules.Select(rule => rule.Name))).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.Difficulty.Text,
+                    m => m.GameInfo.Options.Difficulty.ToString()).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.GameSpeed.Text,
+                    m => m.GameInfo.Options.Speed.ToString()).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.ResourceRate.Text,
+                    m => m.GameInfo.Options.ResourceRate.ToString()).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.StartingResources.Text,
+                    m => m.GameInfo.Options.StartingResources.ToString()).DisposeWith(d);
             });
         }
     }

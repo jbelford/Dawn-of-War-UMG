@@ -1,6 +1,7 @@
 ﻿using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
+using DowUmg.Models;
 using DowUmg.Services;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationViewModel : RoutableReactiveObject
     {
-        public GenerationViewModel(IScreen screen, DowModLoader? modService = null) : base(screen, "matchup")
+        public GenerationViewModel(IScreen screen, DowModLoader? modService = null) : base(screen, "generation")
         {
             GameTab = new GameTabViewModel();
             TeamTab = new TeamTabViewModel();
@@ -33,6 +34,38 @@ namespace DowUmg.Presentation.ViewModels
                 GeneralTab.Mod = mod;
             });
 
+            GenerateMatchupAction = ReactiveCommand.CreateFromObservable(() =>
+            {
+                var settings = new GenerationSettings()
+                {
+                    Mod = Mod.SelectedItem.Item,
+                    Maps = GeneralTab.Maps.Items.Concat(GeneralTab.AddonMaps.Items).Select(map => map.Item).ToList(),
+                    Rules = GeneralTab.Rules.Items.Select(rule => rule.Item).ToList()
+                };
+
+                foreach (var diff in GameTab.DiffOption.Items)
+                {
+                    settings.GameDifficultyTickets[(int)diff.Item] = diff.Input;
+                }
+
+                foreach (var speed in GameTab.SpeedOption.Items)
+                {
+                    settings.GameSpeedTickets[(int)speed.Item] = speed.Input;
+                }
+
+                foreach (var rate in GameTab.RateOption.Items)
+                {
+                    settings.ResourceRateTickets[(int)rate.Item] = rate.Input;
+                }
+
+                foreach (var start in GameTab.StartingOption.Items)
+                {
+                    settings.StartResourceTickets[(int)start.Item] = start.Input;
+                }
+
+                return HostScreen.Router.Navigate.Execute(new MatchupViewModel(HostScreen, settings));
+            });
+
             this.WhenAnyValue(x => x.Mod.SelectedItem)
                 .DistinctUntilChanged()
                 .Select(mod => mod.Item)
@@ -48,5 +81,7 @@ namespace DowUmg.Presentation.ViewModels
         public OptionInputViewModel<DowMod> Mod { get; }
 
         public ReactiveCommand<DowMod, Unit> RefreshMod { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GenerateMatchupAction { get; }
     }
 }

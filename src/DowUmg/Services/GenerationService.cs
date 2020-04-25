@@ -1,38 +1,56 @@
-﻿using DowUmg.Data.Entities;
+﻿using DowUmg.Constants;
+using DowUmg.Data.Entities;
 using DowUmg.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DowUmg.Services
 {
     public class GenerationService
     {
-        private readonly List<DowMod> mods;
-
-        public GenerationService(IEnumerable<DowMod> mods)
+        public GenerationService()
         {
-            this.mods = mods.ToList();
         }
 
-        public Matchup GenerateMatchup(int humans, int players)
+        public Matchup GenerateMatchup(GenerationSettings settings)
         {
-            List<DowMod> vanillaMods = this.mods.Where(mod => mod.IsVanilla).ToList();
+            var random = new Random();
 
-            List<DowMap> maps = vanillaMods.SelectMany(mod => mod.Maps).ToList();
-            List<DowRace> races = vanillaMods.SelectMany(mod => mod.Races).ToList();
+            DowMap map = settings.Maps[random.Next(settings.Maps.Count)];
 
-            var rand = new Random();
-
-            DowMap randomMap = maps[rand.Next(0, maps.Count)];
-
-            var randomRaces = new DowRace[players];
-            for (int i = 0; i < players; ++i)
+            var info = new GameInfo()
             {
-                randomRaces[i] = races[rand.Next(0, races.Count)];
+                Options = new GameOptions()
+                {
+                    Difficulty = (GameDifficulty)RandomOption(settings.GameDifficultyTickets, random),
+                    Speed = (GameSpeed)RandomOption(settings.GameSpeedTickets, random),
+                    ResourceRate = (GameResourceRate)RandomOption(settings.ResourceRateTickets, random),
+                    StartingResources = (GameStartResource)RandomOption(settings.StartResourceTickets, random)
+                }
+            };
+
+            info.Rules.Add(settings.Rules[random.Next(settings.Rules.Count)]);
+
+            var matchup = new Matchup(map, info);
+
+            if (settings.Teams != null)
+            {
+                // TODO generate the team compositions
             }
 
-            return null;
+            return matchup;
+        }
+
+        private int RandomOption(int[] enumeration, Random random)
+        {
+            int idx = random.Next(enumeration.Sum() + 1);
+
+            int i = 0;
+            while (idx > 0)
+            {
+                idx -= enumeration[i++];
+            }
+            return i;
         }
     }
 }

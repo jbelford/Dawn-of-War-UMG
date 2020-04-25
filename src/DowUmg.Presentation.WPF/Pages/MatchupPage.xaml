@@ -60,13 +60,13 @@
                                 Text="*This is a description about the modffffffffffffffffffffffffffffffffffffffg ffffffffffffffffffffffffffffff*" />
                     </StackPanel>
 
-                    <ListBox x:Name="WinConditions" Grid.Column="2">
-                        <ListBox.ItemTemplate>
+                    <ItemsControl x:Name="WinConditions" Grid.Column="2">
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Mode=OneTime}" />
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -76,10 +76,10 @@
                         </Style>
                     </StackPanel.Resources>
 
-                    <TextBlock x:Name="Difficulty" Text="D: Standard" Padding="0,0,15,0" />
-                    <TextBlock x:Name="GameSpeed" Text="GS: Fast" Padding="0,0,15,0" />
-                    <TextBlock x:Name="ResourceRate" Text="RR: Fast" Padding="0,0,15,0" />
-                    <TextBlock x:Name="StartingResources" Text="SR: Quick" />
+                    <TextBlock Padding="0,0,15,0">D: <TextBlock x:Name="Difficulty" Text="Standard" /></TextBlock>
+                    <TextBlock Padding="0,0,15,0">GS: <TextBlock x:Name="GameSpeed" Text="Fast" /></TextBlock>
+                    <TextBlock Padding="0,0,15,0">RR: <TextBlock x:Name="ResourceRate" Text="Fast" /></TextBlock>
+                    <TextBlock>SR: <TextBlock x:Name="StartingResources" Text="Quick" /></TextBlock>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -2,7 +2,7 @@
 
 namespace DowUmg.Constants
 {
-    public enum GameStartResource
+    public enum GameStartResource : int
     {
         STANDARD,
         QUICK

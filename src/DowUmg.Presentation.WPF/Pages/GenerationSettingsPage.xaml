@@ -44,7 +44,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Content="Generate!" Padding="10,5" />
+            <Button x:Name="GenerateButton" Grid.Column="1" Content="Generate!" Padding="10,5" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

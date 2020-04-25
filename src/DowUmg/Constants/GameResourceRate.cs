@@ -2,7 +2,7 @@
 
 namespace DowUmg.Constants
 {
-    public enum GameResourceRate
+    public enum GameResourceRate : int
     {
         LOW,
         STANDARD,

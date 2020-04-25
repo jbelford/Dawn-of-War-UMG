@@ -9,6 +9,7 @@ namespace DowUmg
         {
             Locator.CurrentMutable.Register(() => new AppSettingsService());
             Locator.CurrentMutable.Register(() => new DowModLoader());
+            Locator.CurrentMutable.Register(() => new GenerationService());
         }
     }
 }

@@ -46,6 +46,7 @@ namespace DowUmg.Presentation.WPF
             Locator.CurrentMutable.Register<IViewFor<SettingsViewModel>>(() => new SettingsPage());
             Locator.CurrentMutable.Register<IViewFor<ModsViewModel>>(() => new ModsPage());
             Locator.CurrentMutable.Register<IViewFor<GenerationViewModel>>(() => new GenerationSettingsPage());
+            Locator.CurrentMutable.Register<IViewFor<MatchupViewModel>>(() => new MatchupPage());
         }
 
         private void MigrateDatabase()

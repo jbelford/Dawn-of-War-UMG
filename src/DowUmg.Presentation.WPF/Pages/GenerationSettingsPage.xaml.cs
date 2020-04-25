@@ -19,6 +19,8 @@ namespace DowUmg.Presentation.WPF.Pages
                 this.OneWayBind(ViewModel, vm => vm.GeneralTab, v => v.GeneralTab.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.GameTab, v => v.GameTab.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.TeamTab, v => v.TeamTab.ViewModel).DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.GenerateMatchupAction, v => v.GenerateButton).DisposeWith(d);
             });
         }
     }
