@@ -50,7 +50,7 @@ namespace DowUmg.Services
             {
                 idx -= enumeration[i++];
             }
-            return i;
+            return --i;
         }
     }
 }

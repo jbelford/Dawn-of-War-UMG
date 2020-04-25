@@ -2,7 +2,6 @@
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
-using DowUmg.Services;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationViewModel : RoutableReactiveObject
     {
-        public GenerationViewModel(IScreen screen, DowModLoader? modService = null) : base(screen, "generation")
+        public GenerationViewModel(IScreen screen) : base(screen, "generation")
         {
             GameTab = new GameTabViewModel();
             TeamTab = new TeamTabViewModel();
@@ -39,8 +38,12 @@ namespace DowUmg.Presentation.ViewModels
                 var settings = new GenerationSettings()
                 {
                     Mod = Mod.SelectedItem.Item,
-                    Maps = GeneralTab.Maps.Items.Concat(GeneralTab.AddonMaps.Items).Select(map => map.Item).ToList(),
-                    Rules = GeneralTab.Rules.Items.Select(rule => rule.Item).ToList()
+                    Maps = GeneralTab.Maps.Items.Concat(GeneralTab.AddonMaps.Items)
+                        .Where(map => map.IsToggled)
+                        .Select(map => map.Item).ToList(),
+                    Rules = GeneralTab.Rules.Items
+                        .Where(rule => rule.IsToggled)
+                        .Select(rule => rule.Item).ToList()
                 };
 
                 foreach (var diff in GameTab.DiffOption.Items)

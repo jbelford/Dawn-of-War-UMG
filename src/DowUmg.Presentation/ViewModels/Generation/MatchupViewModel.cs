@@ -24,9 +24,13 @@ namespace DowUmg.Presentation.ViewModels
             {
                 Matchup = this.generationService.GenerateMatchup(this.settings);
             });
+
+            GoBack = HostScreen.Router.NavigateBack;
         }
 
         public ReactiveCommand<Unit, Unit> GenerateMatchup { get; }
+
+        public ReactiveCommand<Unit, Unit> GoBack { get; }
 
         [Reactive]
         public Matchup Matchup { get; set; }

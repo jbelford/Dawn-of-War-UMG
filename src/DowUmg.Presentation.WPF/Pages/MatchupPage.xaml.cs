@@ -40,6 +40,9 @@ namespace DowUmg.Presentation.WPF.Pages
 
                 this.OneWayBind(ViewModel, vm => vm.Matchup, v => v.StartingResources.Text,
                     m => m.GameInfo.Options.StartingResources.ToString()).DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.GenerateMatchup, v => v.RegenerateButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.GoBack, v => v.BackButton).DisposeWith(d);
             });
         }
     }
