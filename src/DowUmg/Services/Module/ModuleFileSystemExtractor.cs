@@ -58,21 +58,21 @@ namespace DowUmg.Services
         {
             string fileNoExt = Path.GetFileNameWithoutExtension(fileName).ToLower();
             string? image = null;
-            if (images.Value.Contains(fileNoExt + "_mm_custom.tga"))
-            {
-                image = fileNoExt + "_mm_custom.tga";
-            }
-            else if (images.Value.Contains(fileNoExt + "_mm.tga"))
-            {
-                image = fileNoExt + "_mm.tga";
-            }
-            else if (images.Value.Contains(fileNoExt + "_icon_custom.tga"))
+            if (images.Value.Contains(fileNoExt + "_icon_custom.tga"))
             {
                 image = fileNoExt + "_icon_custom.tga";
             }
             else if (images.Value.Contains(fileNoExt + "_icon.tga"))
             {
                 image = fileNoExt + "_icon.tga";
+            }
+            else if (images.Value.Contains(fileNoExt + "_mm_custom.tga"))
+            {
+                image = fileNoExt + "_mm_custom.tga";
+            }
+            else if (images.Value.Contains(fileNoExt + "_mm.tga"))
+            {
+                image = fileNoExt + "_mm.tga";
             }
             return image;
         }
