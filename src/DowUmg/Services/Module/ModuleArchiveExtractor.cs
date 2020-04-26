@@ -90,7 +90,7 @@ namespace DowUmg.Services
             }
             catch (IOException ex)
             {
-                logger.Write(ex, $"Failed to load {scenario.Name}", LogLevel.Error);
+                logger.Write(ex, $"Failed to load {scenario.Name}", LogLevel.Warn);
             }
 
             return mapFile;

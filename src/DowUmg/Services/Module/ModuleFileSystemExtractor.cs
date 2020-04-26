@@ -96,7 +96,7 @@ namespace DowUmg.Services
             }
             catch (IOException ex)
             {
-                logger.Write(ex, $"Failed to load {file}", LogLevel.Error);
+                logger.Write(ex, $"Failed to load {file}", LogLevel.Warn);
             }
 
             return mapFile;

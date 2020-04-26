@@ -134,10 +134,17 @@ namespace DowUmg.Services
 
             foreach (MapFile map in extractor.GetMaps())
             {
+                if (map.Players < 2 || map.Players > 8)
+                {
+                    this.logger.Write($"({mod.Name}) Probably not a valid map {map.FileName} as it does not contain a valid player size: '{map.Players}'",
+                            LogLevel.Info);
+                    continue;
+                }
+
                 string? image = extractor.GetMapImage(map.FileName);
                 if (image == null)
                 {
-                    this.logger.Write($"{mod.Name} Probably not valid map {map.FileName}", LogLevel.Info);
+                    this.logger.Write($"({mod.Name}) Probably not valid map {map.FileName} as it does not have an image", LogLevel.Info);
                     continue;
                 }
 
