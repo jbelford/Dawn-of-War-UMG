@@ -23,11 +23,12 @@ namespace DowUmg.Presentation.WPF
 
         private void OnApplicationStartup(object sender, StartupEventArgs args)
         {
+            RxApp.DefaultExceptionHandler = new DefaultExceptionHandler();
+
             RegisterDependencies();
             RegisterViews();
-            MigrateDatabase();
 
-            RxApp.DefaultExceptionHandler = new DefaultExceptionHandler();
+            MigrateDatabase();
 
             var window = new MainWindow();
             window.Closed += delegate { Shutdown(); };

@@ -1,6 +1,8 @@
 ﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
+using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Media;
 
 namespace DowUmg.Presentation.WPF.Controls
@@ -16,8 +18,13 @@ namespace DowUmg.Presentation.WPF.Controls
 
             this.WhenActivated(d =>
             {
-                this.ModName.Text = ViewModel.Module.File.UIName;
-                this.ModDesc.Text = ViewModel.Module.File.Description;
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Where(x => x != null)
+                    .Do(vm =>
+                    {
+                        ModName.Text = vm.Module.File.UIName;
+                        ModDesc.Text = vm.Module.File.Description;
+                    }).Subscribe().DisposeWith(d);
 
                 this.OneWayBind(ViewModel,
                     viewModel => viewModel.IsLoaded,

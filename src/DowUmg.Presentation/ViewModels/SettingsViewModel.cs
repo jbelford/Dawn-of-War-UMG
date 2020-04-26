@@ -46,6 +46,6 @@ namespace DowUmg.Presentation.ViewModels
         public extern string SoulstormDirectory { [ObservableAsProperty] get; }
 
         [Reactive]
-        public AppSettings SavedSettings { get; private set; }
+        public AppSettings SavedSettings { get; set; }
     }
 }

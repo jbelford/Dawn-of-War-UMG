@@ -1,6 +1,8 @@
 ﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
+using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -12,21 +14,27 @@ namespace DowUmg.Presentation.WPF.Pages
 
             this.WhenActivated(d =>
             {
-                this.BindCommand(ViewModel, x => x.SettingsAction, x => x.settingsButton)
+                this.BindCommand(ViewModel, x => x.SettingsAction, x => x.SettingsButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, x => x.ModsAction, x => x.modsButton)
+                this.BindCommand(ViewModel, x => x.ModsAction, x => x.ModsButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.MatchupAction, v => v.matchupButton)
+                this.BindCommand(ViewModel, vm => vm.MatchupAction, v => v.MatchupButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.quitButton)
+                this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.QuitButton)
                     .DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.IsLoaded, v => v.WarningMessage.Visibility,
-                    loaded => loaded ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.IsLoaded, v => v.matchupButton.IsEnabled).DisposeWith(d);
+                this.WhenAnyValue(x => x.ViewModel.IsLoaded)
+                    .Do(isLoaded =>
+                    {
+                        WarningMessage.Visibility = isLoaded
+                            ? System.Windows.Visibility.Collapsed
+                            : System.Windows.Visibility.Visible;
+
+                        MatchupButton.IsEnabled = isLoaded;
+                    }).Subscribe().DisposeWith(d);
             });
         }
     }

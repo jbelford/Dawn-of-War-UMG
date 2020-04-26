@@ -7,7 +7,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class ToggleItemListViewModel<T> : ReactiveObject
     {
-        public ToggleItemListViewModel(string label, IEnumerable<ToggleItemViewModel<T>> items)
+        public ToggleItemListViewModel(string label)
         {
             Label = label;
             ToggleItems = ReactiveCommand.Create(() =>
@@ -21,11 +21,6 @@ namespace DowUmg.Presentation.ViewModels
                     }
                 }
             });
-
-            foreach (var item in items)
-            {
-                Items.Add(item);
-            }
         }
 
         public string Label { get; }
@@ -33,11 +28,20 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<ToggleItemViewModel<T>> Items { get; } = new ObservableCollection<ToggleItemViewModel<T>>();
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }
+
+        public void SetItems(IEnumerable<ToggleItemViewModel<T>> items)
+        {
+            Items.Clear();
+            foreach (var item in items)
+            {
+                Items.Add(item);
+            }
+        }
     }
 
     public class ToggleItemListViewModel : ToggleItemListViewModel<object>
     {
-        public ToggleItemListViewModel(string label, IEnumerable<ToggleItemViewModel> items) : base(label, items)
+        public ToggleItemListViewModel(string label) : base(label)
         {
         }
     }

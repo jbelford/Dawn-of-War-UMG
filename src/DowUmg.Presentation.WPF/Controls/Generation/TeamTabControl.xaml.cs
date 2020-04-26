@@ -27,5 +27,10 @@ namespace DowUmg.Presentation.WPF.Controls
                 this.OneWayBind(ViewModel, vm => vm.Enabled, v => v.MainContent.IsEnabled).DisposeWith(d);
             });
         }
+
+        private void SetViewModels(TeamTabViewModel vm)
+        {
+            GlobalPlayerOptions.Content = vm.GlobalPlayerOptions;
+        }
     }
 }

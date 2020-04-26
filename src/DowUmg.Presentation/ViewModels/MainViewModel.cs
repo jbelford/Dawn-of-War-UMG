@@ -19,7 +19,6 @@ namespace DowUmg.Presentation.ViewModels
 
         public ReactiveCommand<Unit, Unit> GoBack { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoHome { get; }
-
-        public RoutingState Router { get; }
+        public RoutingState Router { get; set; }
     }
 }

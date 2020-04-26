@@ -1,6 +1,8 @@
 ﻿using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
+using System;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.WPF
 {
@@ -16,11 +18,20 @@ namespace DowUmg.Presentation.WPF
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router)
+                // More efficient than binding.
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Where(x => x != null)
+                    .Do(SetRoutedViewHost)
+                    .Subscribe()
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.GoHome, v => v.HomeButton).DisposeWith(d);
             });
+        }
+
+        private void SetRoutedViewHost(MainViewModel vm)
+        {
+            RoutedViewHost.Router = vm.Router;
         }
     }
 }

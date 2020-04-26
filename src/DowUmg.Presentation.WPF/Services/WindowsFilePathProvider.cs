@@ -18,6 +18,8 @@ namespace DowUmg.Presentation.WPF.Services
             AppDataLocation = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "DowUmg");
+
+            Directory.CreateDirectory(AppDataLocation);
         }
 
         public string AppDataLocation { get; }

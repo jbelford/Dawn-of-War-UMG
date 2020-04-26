@@ -16,37 +16,38 @@ namespace DowUmg.Presentation.WPF.Pages
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.SoulstormDirectory, view => view.directoryTextBox.Text)
+                this.OneWayBind(ViewModel, vm => vm.SoulstormDirectory, v => v.DirectoryTextBox.Text)
                     .DisposeWith(d);
 
-                this.ViewModel.GetDirectory
-                    .RegisterHandler(interaction =>
-                    {
-                        using var openFileDialog = new CommonOpenFileDialog()
-                        {
-                            InitialDirectory = interaction.Input ?? "C:\\",
-                            IsFolderPicker = true
-                        };
-
-                        switch (openFileDialog.ShowDialog())
-                        {
-                            case CommonFileDialogResult.Ok:
-                                interaction.SetOutput(openFileDialog.FileName);
-                                break;
-
-                            default:
-                                interaction.SetOutput(null);
-                                break;
-                        }
-                    })
+                ViewModel.GetDirectory.RegisterHandler(GetDirectoryHandler)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, x => x.SelectDirectory, x => x.selectDirectoryButton)
+                this.BindCommand(ViewModel, vm => vm.SelectDirectory, v => v.SelectDirectoryButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, x => x.SaveSettings, x => x.saveButton)
+                this.BindCommand(ViewModel, vm => vm.SaveSettings, v => v.SaveButton)
                     .DisposeWith(d);
             });
+        }
+
+        private void GetDirectoryHandler(InteractionContext<string, string?> interaction)
+        {
+            using var openFileDialog = new CommonOpenFileDialog()
+            {
+                InitialDirectory = interaction.Input ?? "C:\\",
+                IsFolderPicker = true
+            };
+
+            switch (openFileDialog.ShowDialog())
+            {
+                case CommonFileDialogResult.Ok:
+                    interaction.SetOutput(openFileDialog.FileName);
+                    break;
+
+                default:
+                    interaction.SetOutput(null);
+                    break;
+            }
         }
     }
 }

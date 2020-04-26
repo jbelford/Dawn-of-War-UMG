@@ -35,8 +35,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Name="directoryTextBox" Grid.Column="0" IsEnabled="False" Background="#FF979797" BorderBrush="Black" />
-                    <Button Name="selectDirectoryButton" Content="Select" HorizontalAlignment="Right" Padding="10,0" Grid.Column="1" />
+                    <TextBox x:Name="DirectoryTextBox" Grid.Column="0" IsEnabled="False" Background="#FF979797" BorderBrush="Black" />
+                    <Button x:Name="SelectDirectoryButton" Content="Select" HorizontalAlignment="Right" Padding="10,0" Grid.Column="1" />
                 </Grid>
             </StackPanel>
         </StackPanel>
@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="saveButton" Content="Save" Grid.Column="1" Width="100" />
+            <Button x:Name="SaveButton" Content="Save" Grid.Column="1" Width="100" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

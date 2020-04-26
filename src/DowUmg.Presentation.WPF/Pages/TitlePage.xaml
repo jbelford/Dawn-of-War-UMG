@@ -55,10 +55,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" x:Name="matchupButton" Content="Matchup" />
-            <Button Grid.Row="1" x:Name="modsButton" Content="Mods" />
-            <Button Grid.Row="2" x:Name="settingsButton" Content="Settings" />
-            <Button Grid.Row="3" x:Name="quitButton" Content="Quit" />
+            <Button Grid.Row="0" x:Name="MatchupButton" Content="Matchup" />
+            <Button Grid.Row="1" x:Name="ModsButton" Content="Mods" />
+            <Button Grid.Row="2" x:Name="SettingsButton" Content="Settings" />
+            <Button Grid.Row="3" x:Name="QuitButton" Content="Quit" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

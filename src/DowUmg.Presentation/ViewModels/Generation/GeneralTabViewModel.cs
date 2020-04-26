@@ -18,8 +18,11 @@ namespace DowUmg.Presentation.ViewModels
         {
             addonMaps.Sort((a, b) => a.Players - b.Players);
 
-            AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps",
-                addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+            AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
+            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+
+            Maps = new ToggleItemListViewModel<DowMap>("Maps");
+            Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
 
             foreach (var x in Enumerable.Range(2, 7))
             {
@@ -41,8 +44,8 @@ namespace DowUmg.Presentation.ViewModels
 
                 maps.Sort((a, b) => a.Players - b.Players);
 
-                Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
-                Rules = new ToggleItemListViewModel<GameRule>("Win Conditions", rules.Where(rule => rule.IsWinCondition)
+                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+                Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
                         .Select(rule => new ToggleItemViewModel<GameRule>(true) { Label = rule.Name, Item = rule }));
             });
 
@@ -58,13 +61,10 @@ namespace DowUmg.Presentation.ViewModels
 
         public ObservableCollection<DowRace> Races { get; } = new ObservableCollection<DowRace>();
 
-        [Reactive]
         public ToggleItemListViewModel<DowMap> Maps { get; set; }
 
-        [Reactive]
         public ToggleItemListViewModel<DowMap> AddonMaps { get; set; }
 
-        [Reactive]
         public ToggleItemListViewModel<GameRule> Rules { get; set; }
 
         public ObservableCollection<ToggleItemViewModel<int>> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();

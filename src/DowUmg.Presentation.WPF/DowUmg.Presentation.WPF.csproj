@@ -4,6 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <PublisherName>Jack Belford</PublisherName>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="ReactiveUI" Version="10.5.31" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="10.5.31" />
     <PackageReference Include="ReactiveUI.WPF" Version="10.5.31" />
     <PackageReference Include="TgaLib" Version="1.0.2" />
