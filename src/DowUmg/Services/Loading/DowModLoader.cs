@@ -8,6 +8,13 @@ using System.Linq;
 
 namespace DowUmg.Services
 {
+    public class UnloadedMod
+    {
+        public DowModuleFile File { get; set; } = null!;
+        public LocaleStore Locales { get; set; } = null!;
+        public List<UnloadedMod> Dependencies { get; set; } = new List<UnloadedMod>();
+    }
+
     public class DowModLoader : IEnableLogger
     {
         private readonly IFilePathProvider filePathProvider;
@@ -223,46 +230,6 @@ namespace DowUmg.Services
             catch (DirectoryNotFoundException)
             {
                 return new string[0];
-            }
-        }
-    }
-
-    public class UnloadedMod
-    {
-        public DowModuleFile File { get; set; } = null!;
-        public LocaleStore Locales { get; set; } = null!;
-        public List<UnloadedMod> Dependencies { get; set; } = new List<UnloadedMod>();
-    }
-
-    public class LoadMemo
-    {
-        private Dictionary<string, (DowMod? vanilla, DowMod? mod)> dict = new Dictionary<string, (DowMod? vanilla, DowMod? mod)>();
-
-        public DowMod? Get(string modFolder, bool isVanilla)
-        {
-            if (this.dict.ContainsKey(modFolder))
-            {
-                var (vanilla, mod) = this.dict[modFolder];
-                return isVanilla ? vanilla : mod;
-            }
-
-            return null;
-        }
-
-        public void Put(DowMod newMod)
-        {
-            (DowMod? vanilla, DowMod? mod) value = (null, null);
-            if (this.dict.ContainsKey(newMod.ModFolder))
-            {
-                value = this.dict[newMod.ModFolder];
-            }
-            if (newMod.IsVanilla)
-            {
-                this.dict[newMod.ModFolder] = (newMod, value.mod);
-            }
-            else
-            {
-                this.dict[newMod.ModFolder] = (value.vanilla, newMod);
             }
         }
     }

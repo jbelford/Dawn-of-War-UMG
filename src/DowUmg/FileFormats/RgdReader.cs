@@ -55,22 +55,6 @@ namespace DowUmg.FileFormats
      *
      */
 
-    internal interface IRgdEntry
-    {
-        public uint Hash { get; }
-    }
-
-    internal enum RgdDataType : int
-    {
-        Float = 0,
-        Integer = 1,
-        Bool = 2,
-        String = 3,
-        WString = 4,
-        Table = 100,
-        NoData = 254
-    }
-
     internal class RgdFile
     {
         public RgdFile(Dictionary<uint, IRgdEntry> entries)
@@ -79,19 +63,6 @@ namespace DowUmg.FileFormats
         }
 
         public Dictionary<uint, IRgdEntry> Entries { get; }
-    }
-
-    internal class RgdEntry<T> : IRgdEntry
-    {
-        public RgdEntry(uint hash, T value)
-        {
-            Hash = hash;
-            Value = value;
-        }
-
-        public T Value { get; }
-
-        public uint Hash { get; }
     }
 
     internal class RgdReader
@@ -142,13 +113,13 @@ namespace DowUmg.FileFormats
         {
             int keyCount = BitConverter.ToInt32(data, pos);
             int newPos = pos + 4;
-            int dataOffset = newPos + keyCount * (3 * 4);
+            int dataOffset = newPos + keyCount * 12;
 
             var entries = new Dictionary<uint, IRgdEntry>(keyCount);
 
             for (int i = 0; i < keyCount; ++i)
             {
-                IRgdEntry entry = ReadEntry(data, newPos + (i * 3 * 4), dataOffset);
+                IRgdEntry entry = ReadEntry(data, newPos + (i * 12), dataOffset);
                 entries[entry.Hash] = entry;
             }
 
@@ -172,6 +143,17 @@ namespace DowUmg.FileFormats
                 RgdDataType.Table => new RgdEntry<Dictionary<uint, IRgdEntry>>(hash, ReadEntries(data, startIndex)),
                 _ => throw new Exception($"Unknown data type encountered {type}"),
             };
+        }
+
+        private enum RgdDataType : int
+        {
+            Float = 0,
+            Integer = 1,
+            Bool = 2,
+            String = 3,
+            WString = 4,
+            Table = 100,
+            NoData = 254
         }
     }
 }

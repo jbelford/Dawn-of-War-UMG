@@ -1,45 +1,4 @@
-﻿//===== SGA File Format =====
-//0x000000 - Identifier ASCII String(8)
-//0x000008 - Version(4)
-//0x00000C - Unknown(16) (First MD5 hash)
-//0x00001C - Archive Type UNICODE String(128)
-//0x00009C - Majorly Unknown(16) (Second MD5 hash)
-//0x0000AC - Data Header Size(4)
-//0x0000B0 - Data Offset(4)
-//0x0000B4 - Platform (ONLY if Version V4)
-
-//0x0000B4 - TOC Offset(4) (Offset from B4)
-//0x0000B8 - TOC Count(2)
-//0x0000BA - Dir Offset(4) (Offset from B4) - Points to an array of Directory Info
-//0x0000BE - Dir Count(2)
-//0x0000C0 - File Offset(4) (Offset from B4) - Points to an array of File Info
-//0x0000C4 - File Count(2)
-//0x0000C6 - Item Offset(4) (Offset from B4)
-//0x0000CA - Item Count(2)
-
-//0x0000CC - TOC Alias ASCII String(64) (Addr: B4 + TOC Offset)
-//0x00010C - TOC Start Name ASCII String(64)
-//0x00014C - TOC Start Dir(2)
-//0x00014E - TOC End Dir(2)
-//0x000150 - TOC Start File(2)
-//0x000152 - TOC End File(2)
-//0x000154 - TOC Folder Offset(4)
-
-//"Directory Info"
-//0x000 - Name Offset(4) (+180+ItemOffset)
-//0x004 - Sub Dir ID Begin(2)
-//0x006 - Sub Dir ID End(2) (Begin->End-1)
-//0x008 - File ID Begin(2)
-//0x010 - File ID End(2) (Begin+1->End)=8
-
-//"File Info"
-//0x000 - Name Offset(4) (+181+ItemOffset)
-//0x004 - Unknown(4)
-//0x008 - Data Offset(4) (+ B0 Data Offset)
-//0x00C - Unknown(4)
-//0x010 - Data Len(4)
-
-using DowUmg.Extensions;
+﻿using DowUmg.Extensions;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System;
 using System.Collections.Generic;
@@ -52,6 +11,47 @@ using System.Text.RegularExpressions;
 
 namespace DowUmg.FileFormats
 {
+    //===== SGA File Format =====
+    //0x000000 - Identifier ASCII String(8)
+    //0x000008 - Version(4)
+    //0x00000C - Unknown(16) (First MD5 hash)
+    //0x00001C - Archive Type UNICODE String(128)
+    //0x00009C - Majorly Unknown(16) (Second MD5 hash)
+    //0x0000AC - Data Header Size(4)
+    //0x0000B0 - Data Offset(4)
+    //0x0000B4 - Platform (ONLY if Version V4)
+
+    //0x0000B4 - TOC Offset(4) (Offset from B4)
+    //0x0000B8 - TOC Count(2)
+    //0x0000BA - Dir Offset(4) (Offset from B4) - Points to an array of Directory Info
+    //0x0000BE - Dir Count(2)
+    //0x0000C0 - File Offset(4) (Offset from B4) - Points to an array of File Info
+    //0x0000C4 - File Count(2)
+    //0x0000C6 - Item Offset(4) (Offset from B4)
+    //0x0000CA - Item Count(2)
+
+    //0x0000CC - TOC Alias ASCII String(64) (Addr: B4 + TOC Offset)
+    //0x00010C - TOC Start Name ASCII String(64)
+    //0x00014C - TOC Start Dir(2)
+    //0x00014E - TOC End Dir(2)
+    //0x000150 - TOC Start File(2)
+    //0x000152 - TOC End File(2)
+    //0x000154 - TOC Folder Offset(4)
+
+    //"Directory Info"
+    //0x000 - Name Offset(4) (+180+ItemOffset)
+    //0x004 - Sub Dir ID Begin(2)
+    //0x006 - Sub Dir ID End(2) (Begin->End-1)
+    //0x008 - File ID Begin(2)
+    //0x010 - File ID End(2) (Begin+1->End)=8
+
+    //"File Info"
+    //0x000 - Name Offset(4) (+181+ItemOffset)
+    //0x004 - Unknown(4)
+    //0x008 - Data Offset(4) (+ B0 Data Offset)
+    //0x00C - Unknown(4)
+    //0x010 - Data Len(4)
+
     /// <summary>
     /// Header for SGA file
     /// <para>0x000000 - Identifier ASCII String(8)</para>
@@ -159,18 +159,6 @@ namespace DowUmg.FileFormats
         public uint DataLength;
     }
 
-    public class SgaRawFile
-    {
-        public SgaRawFile(string name, byte[] data)
-        {
-            Name = name;
-            Data = data;
-        }
-
-        public string Name { get; }
-        public byte[] Data { get; }
-    }
-
     internal class SgaFileReader : IDisposable
     {
         private readonly BinaryReader reader;
@@ -193,7 +181,7 @@ namespace DowUmg.FileFormats
                 byte[] dataHeaderBuffer = ReadDataHeader(header);
                 SgaDataHeaderInfo dataHeaderInfo = ReadDataHeaderInfo(dataHeaderBuffer);
 
-                SgaFile[] files = ReadFiles(header, dataHeaderInfo, dataHeaderBuffer);
+                SgaFileEntry[] files = ReadFiles(header, dataHeaderInfo, dataHeaderBuffer);
                 SgaDirectory[] directories = ReadDirs(files, dataHeaderInfo, dataHeaderBuffer);
 
                 var tocs = ReadTocs(directories, dataHeaderInfo, dataHeaderBuffer);
@@ -253,7 +241,7 @@ namespace DowUmg.FileFormats
                 .Select(file => ReadFile(file));
         }
 
-        private SgaRawFile ReadFile(SgaFile file)
+        private SgaRawFile ReadFile(SgaFileEntry file)
         {
             byte[] data;
 
@@ -388,8 +376,9 @@ namespace DowUmg.FileFormats
             return tocs;
         }
 
-        private SgaDirectory[] ReadDirs(in SgaFile[] files, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
+        private SgaDirectory[] ReadDirs(in SgaFileEntry[] files, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
         {
+            var dirInfo = new SgaDirInfo[dataHeaderInfo.DirCount];
             var dirs = new SgaDirectory[dataHeaderInfo.DirCount];
 
             for (int i = 0; i < dirs.Length; ++i)
@@ -407,20 +396,22 @@ namespace DowUmg.FileFormats
 
                 string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
 
-                var dir = new SgaDirectory(name, info);
+                var dir = new SgaDirectory(name);
 
                 for (int j = info.FileBegin; j < info.FileEnd; ++j)
                 {
                     dir.Files.Add(files[j]);
                 }
 
+                dirInfo[i] = info;
                 dirs[i] = dir;
             }
 
             for (int i = 0; i < dirs.Length; ++i)
             {
                 SgaDirectory dir = dirs[i];
-                for (int j = dir.Info.SubDirBegin; j < dir.Info.SubDirEnd; ++j)
+                SgaDirInfo info = dirInfo[i];
+                for (int j = info.SubDirBegin; j < info.SubDirEnd; ++j)
                 {
                     dir.Directories.Add(dirs[j]);
                 }
@@ -429,9 +420,9 @@ namespace DowUmg.FileFormats
             return dirs;
         }
 
-        private SgaFile[] ReadFiles(SgaFileHeader header, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
+        private SgaFileEntry[] ReadFiles(SgaFileHeader header, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
         {
-            var files = new SgaFile[dataHeaderInfo.FileCount];
+            var files = new SgaFileEntry[dataHeaderInfo.FileCount];
 
             int infoSize = header.Version == 2 ? 20 : 22;
 
@@ -466,11 +457,23 @@ namespace DowUmg.FileFormats
 
                 string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
 
-                files[i] = new SgaFile(name, info);
+                files[i] = new SgaFileEntry(name, info);
             }
 
             return files;
         }
+    }
+
+    internal class SgaRawFile
+    {
+        public SgaRawFile(string name, byte[] data)
+        {
+            Name = name;
+            Data = data;
+        }
+
+        public string Name { get; }
+        public byte[] Data { get; }
     }
 
     internal class InvalidSgaException : IOException
@@ -494,15 +497,13 @@ namespace DowUmg.FileFormats
 
     internal class SgaDirectory
     {
-        public SgaDirectory(string name, SgaDirInfo info)
+        public SgaDirectory(string name)
         {
             Name = name;
-            Info = info;
         }
 
-        public SgaDirInfo Info { get; }
         public List<SgaDirectory> Directories { get; } = new List<SgaDirectory>();
-        public List<SgaFile> Files { get; } = new List<SgaFile>();
+        public List<SgaFileEntry> Files { get; } = new List<SgaFileEntry>();
         public string Name { get; }
 
         public override string ToString()
@@ -511,9 +512,9 @@ namespace DowUmg.FileFormats
         }
     }
 
-    internal class SgaFile
+    internal class SgaFileEntry
     {
-        public SgaFile(string name, SgaFileInfo info)
+        public SgaFileEntry(string name, SgaFileInfo info)
         {
             Name = name;
             Info = info;
