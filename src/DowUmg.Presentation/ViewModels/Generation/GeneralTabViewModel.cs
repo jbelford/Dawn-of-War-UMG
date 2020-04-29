@@ -16,7 +16,7 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GeneralTabViewModel(List<DowMap> addonMaps)
         {
-            addonMaps.Sort((a, b) => a.Players - b.Players);
+            addonMaps.Sort(MapSort);
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
             AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
@@ -32,7 +32,7 @@ namespace DowUmg.Presentation.ViewModels
                     return (store.GetMaps(id).ToList(), store.GetRules(id).ToList());
                 }, RxApp.TaskpoolScheduler);
 
-                maps.Sort((a, b) => a.Players - b.Players);
+                maps.Sort(MapSort);
 
                 Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
                 Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
@@ -115,6 +115,16 @@ namespace DowUmg.Presentation.ViewModels
         public ReactiveCommand<int, Unit> RefreshForMod { get; }
 
         public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapPlayerFilter { get; }
+
         public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapSizeFilter { get; }
+
+        private int MapSort(DowMap a, DowMap b)
+        {
+            return a.Players != b.Players
+                ? a.Players - b.Players
+                : a.Size != b.Size
+                    ? a.Size - b.Size
+                    : string.Compare(a.Name, b.Name);
+        }
     }
 }
