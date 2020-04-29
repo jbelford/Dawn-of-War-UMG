@@ -10,15 +10,9 @@
         mc:Ignorable="d"  d:DesignWidth="936.913" d:DesignHeight="558.5">
     <UserControl.Resources>
         <DataTemplate x:Key="GameOptionTemplate" DataType="{x:Type vm:ProportionalOptionsViewModel}">
-            <DataTemplate.Resources>
-                <Style TargetType="CheckBox">
-                    <Setter Property="FontStyle" Value="Italic" />
-                </Style>
-            </DataTemplate.Resources>
-
             <GroupBox Padding="5">
                 <GroupBox.Header>
-                    <CheckBox IsChecked="{Binding Path=IsEnabled}" Content="{Binding Path=Name, Mode=OneTime}" />
+                    <Label Content="{Binding Path=Name, Mode=OneTime}" />
                 </GroupBox.Header>
 
                 <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource NumberInputSliderTemplate}">
