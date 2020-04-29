@@ -1,7 +1,7 @@
 ﻿using DowUmg.Presentation.ViewModels;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ReactiveUI;
 using System.Reactive.Disposables;
+using System.Windows.Forms;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -32,16 +32,14 @@ namespace DowUmg.Presentation.WPF.Pages
 
         private void GetDirectoryHandler(InteractionContext<string, string?> interaction)
         {
-            using var openFileDialog = new CommonOpenFileDialog()
+            using var folderDialog = new FolderBrowserDialog
             {
-                InitialDirectory = interaction.Input ?? "C:\\",
-                IsFolderPicker = true
+                RootFolder = System.Environment.SpecialFolder.ProgramFilesX86
             };
-
-            switch (openFileDialog.ShowDialog())
+            switch (folderDialog.ShowDialog())
             {
-                case CommonFileDialogResult.Ok:
-                    interaction.SetOutput(openFileDialog.FileName);
+                case DialogResult.OK:
+                    interaction.SetOutput(folderDialog.SelectedPath);
                     break;
 
                 default:

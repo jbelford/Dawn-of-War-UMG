@@ -15,12 +15,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Pfim" Version="0.9.1" />
     <PackageReference Include="ReactiveUI" Version="10.5.31" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="10.5.31" />
     <PackageReference Include="ReactiveUI.WPF" Version="10.5.31" />
-    <PackageReference Include="TgaLib" Version="1.0.2" />
-    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
