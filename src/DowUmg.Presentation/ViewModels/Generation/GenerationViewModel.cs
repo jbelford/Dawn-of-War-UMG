@@ -39,7 +39,7 @@ namespace DowUmg.Presentation.ViewModels
                 {
                     Mod = Mod.SelectedItem.Item,
                     Maps = GeneralTab.Maps.Items.Concat(GeneralTab.AddonMaps.Items)
-                        .Where(map => map.IsToggled)
+                        .Where(map => map.IsEnabled && map.IsToggled)
                         .Select(map => map.Item).ToList(),
                     Rules = GeneralTab.Rules.Items
                         .Where(rule => rule.IsToggled)

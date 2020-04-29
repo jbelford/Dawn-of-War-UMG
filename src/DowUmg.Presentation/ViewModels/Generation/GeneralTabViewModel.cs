@@ -19,20 +19,10 @@ namespace DowUmg.Presentation.ViewModels
             addonMaps.Sort((a, b) => a.Players - b.Players);
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
 
             Maps = new ToggleItemListViewModel<DowMap>("Maps");
             Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
-
-            foreach (var x in Enumerable.Range(2, 7))
-            {
-                MapTypes.Add(new ToggleItemViewModel<int>(true) { Label = $"{x}p", Item = x });
-            }
-
-            foreach (int size in Enum.GetValues(typeof(MapSize)))
-            {
-                MapSizes.Add(new ToggleItemViewModel<int>(true) { Label = size.ToString(), Item = size });
-            }
 
             RefreshForMod = ReactiveCommand.CreateFromTask(async (int id) =>
             {
@@ -44,10 +34,61 @@ namespace DowUmg.Presentation.ViewModels
 
                 maps.Sort((a, b) => a.Players - b.Players);
 
-                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
+                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
                 Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
                         .Select(rule => new ToggleItemViewModel<GameRule>(true) { Label = rule.Name, Item = rule }));
             });
+
+            var sizeToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
+            var playerToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
+
+            ToggleMapPlayerFilter = ReactiveCommand.Create((ToggleItemViewModel<int> player) =>
+            {
+                foreach (var map in Maps.Items.Concat(AddonMaps.Items))
+                {
+                    if (map.Item.Players == player.Item
+                        && sizeToToggle.GetValueOrDefault(map.Item.Size) is ToggleItemViewModel<int> size
+                        && size.IsToggled)
+                    {
+                        map.IsEnabled = player.IsToggled;
+                    }
+                }
+            });
+
+            ToggleMapSizeFilter = ReactiveCommand.Create((ToggleItemViewModel<int> size) =>
+            {
+                foreach (var map in Maps.Items.Concat(AddonMaps.Items))
+                {
+                    if (map.Item.Size == size.Item
+                        && playerToToggle.GetValueOrDefault(map.Item.Players) is ToggleItemViewModel<int> players
+                        && players.IsToggled)
+                    {
+                        map.IsEnabled = size.IsToggled;
+                    }
+                }
+            });
+
+            foreach (var players in Enumerable.Range(2, 7))
+            {
+                var item = new ToggleItemViewModel<int>(true) { Label = $"{players}p", Item = players };
+                MapTypes.Add(item);
+                playerToToggle.Add(players, item);
+                item.WhenAnyValue(x => x.IsToggled)
+                    .DistinctUntilChanged()
+                    .Select(x => item)
+                    .InvokeCommand(ToggleMapPlayerFilter);
+            }
+
+            foreach (int size in Enum.GetValues(typeof(MapSize)))
+            {
+                var item = new ToggleItemViewModel<int>(true) { Label = size.ToString(), Item = size };
+                MapSizes.Add(item);
+                sizeToToggle.Add(size, item);
+                item.WhenAnyValue(x => x.IsToggled)
+                    .DistinctUntilChanged()
+                    .Select(x => item)
+                    .InvokeCommand(ToggleMapSizeFilter);
+            }
 
             this.WhenAnyValue(x => x.Mod)
                 .Where(mod => mod != null)
@@ -72,5 +113,8 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<ToggleItemViewModel<int>> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();
 
         public ReactiveCommand<int, Unit> RefreshForMod { get; }
+
+        public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapPlayerFilter { get; }
+        public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapSizeFilter { get; }
     }
 }

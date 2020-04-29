@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 
 namespace DowUmg.Presentation.ViewModels
@@ -12,10 +13,12 @@ namespace DowUmg.Presentation.ViewModels
             Label = label;
             ToggleItems = ReactiveCommand.Create(() =>
             {
-                if (Items.Count > 0)
+                IEnumerable<ToggleItemViewModel<T>> items = Items.Where(x => x.IsEnabled);
+                ToggleItemViewModel<T> first = items.FirstOrDefault();
+                if (first != null)
                 {
-                    bool isToggled = Items[0].IsToggled;
-                    foreach (var item in Items)
+                    bool isToggled = first.IsToggled;
+                    foreach (var item in items)
                     {
                         item.IsToggled = !isToggled;
                     }

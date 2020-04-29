@@ -22,14 +22,14 @@
                         <RowDefinition Height="5" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="Margin" Value="5" />
+                        </Style>
+                    </Grid.Resources>
                     <ScrollViewer Grid.Row="0">
-                        <ItemsControl ItemsSource="{Binding Path=Items, Mode=OneTime}" ItemTemplate="{StaticResource ToggleItemTemplate}">
-                            <ItemsControl.ItemContainerStyle>
-                                <Style>
-                                    <Setter Property="FrameworkElement.Margin" Value="5" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding Path=Items, Mode=OneTime}"
+                            ItemTemplate="{StaticResource ToggleItemTemplate}" />
                     </ScrollViewer>
                     <Button Grid.Row="2" Content="Toggle All" Command="{Binding Path=ToggleItems}" />
                 </Grid>
