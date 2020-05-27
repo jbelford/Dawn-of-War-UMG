@@ -7,7 +7,7 @@
     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
     <PublisherName>Jack Belford</PublisherName>
     <PublishSingleFile>true</PublishSingleFile>
-    <PublishTrimmed>true</PublishTrimmed>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
