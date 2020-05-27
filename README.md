@@ -12,13 +12,13 @@ Still a work in progress as a lot of the functionality isn't even fully implemen
 ## Some pics
 
 > Home Page
-![](https://github.com/jbelford/Dawn-of-War-UMG/pics/home.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/home.png)
 
 > Mods Page
-![](https://github.com/jbelford/Dawn-of-War-UMG/pics/mods.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/mods.png)
 
 > Generation Configuration
-![](https://github.com/jbelford/Dawn-of-War-UMG/pics/generation.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation.png)
 
 > Matchup
-![](https://github.com/jbelford/Dawn-of-War-UMG/pics/generation.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation.png)
