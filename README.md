@@ -21,4 +21,4 @@ Still a work in progress as a lot of the functionality isn't even fully implemen
 ![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation.png)
 
 > Matchup
-![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/matchup.png)
