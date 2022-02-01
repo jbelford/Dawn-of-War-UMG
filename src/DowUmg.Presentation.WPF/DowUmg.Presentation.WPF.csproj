@@ -8,6 +8,7 @@
     <PublisherName>Jack Belford</PublisherName>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
+    <AssemblyName>DawnOfWarUMG</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
