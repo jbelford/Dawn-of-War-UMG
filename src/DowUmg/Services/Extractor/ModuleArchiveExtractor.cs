@@ -54,9 +54,7 @@ namespace DowUmg.Services
 
         public string? GetMapImage(string fileName)
         {
-            string noExt = Path.GetFileNameWithoutExtension(fileName);
-            List<SgaRawFile> images = sgaFileReader.GetFiles(@"scenarios\mp", $@"{noExt}_(icon)(_custom)?\.tga$")
-                    .ToList();
+            List<SgaRawFile> images = sgaFileReader.GetScenarioImage(fileName).ToList();
             if (images.Count == 0)
             {
                 return null;

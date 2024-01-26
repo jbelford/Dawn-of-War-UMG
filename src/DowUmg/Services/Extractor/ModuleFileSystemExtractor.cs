@@ -15,6 +15,8 @@ namespace DowUmg.Services
         private readonly string mapsPath;
         private readonly Lazy<ISet<string>> images;
 
+        public IEnumerable<IModuleDataExtractor> ArchiveExtractors { get; set; } = null!;
+
         public ModuleFileSystemExtractor(string rootDir)
         {
             this.rootDir = rootDir;
@@ -29,6 +31,10 @@ namespace DowUmg.Services
 
         public void Dispose()
         {
+            foreach (var extractor in ArchiveExtractors)
+            {
+                extractor.Dispose();
+            }
         }
 
         public IEnumerable<GameRuleFile> GetGameRules()
@@ -44,14 +50,10 @@ namespace DowUmg.Services
         public IEnumerable<MapFile> GetMaps()
         {
             var mapsLoader = new MapLoader();
-            foreach (string file in GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly))
-            {
-                MapFile? mapFile = LoadMap(mapsLoader, file);
-                if (mapFile != null)
-                {
-                    yield return mapFile;
-                }
-            }
+            return GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly)
+                .Select(file => LoadMap(mapsLoader, file))
+                .Where(map => map != null)
+                .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetMaps())) as IEnumerable<MapFile>;
         }
 
         public string? GetMapImage(string fileName)
@@ -74,6 +76,12 @@ namespace DowUmg.Services
             {
                 image = fileNoExt + "_mm.tga";
             }
+            else if (image == null)
+            {
+                image = ArchiveExtractors.Select(extractor => extractor.GetMapImage(fileName))
+                    .Where(image => image != null)
+                    .FirstOrDefault();
+            }
             return image;
         }
 
@@ -81,10 +89,9 @@ namespace DowUmg.Services
         {
             var raceLoader = new RaceLoader();
             string path = Path.Combine(rootDir, "Data", "attrib", "racebps");
-            foreach (string file in GetFiles(path, "*.rgd", SearchOption.TopDirectoryOnly))
-            {
-                yield return raceLoader.Load(file);
-            }
+            return GetFiles(path, "*.rgd", SearchOption.TopDirectoryOnly)
+                .Select(file => raceLoader.Load(file))
+                .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetRaces()));
         }
 
         private MapFile? LoadMap(MapLoader mapsLoader, string file)

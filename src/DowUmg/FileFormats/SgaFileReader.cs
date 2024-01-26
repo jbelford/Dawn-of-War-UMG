@@ -228,6 +228,19 @@ namespace DowUmg.FileFormats
             return GetFiles(@"attrib\racebps", @"\.rgd");
         }
 
+        public IEnumerable<SgaRawFile> GetScenarioImage(string scenarioFileName)
+        {
+            if (!directories.ContainsKey(@"scenarios\mp"))
+            {
+                return Enumerable.Empty<SgaRawFile>();
+            }
+
+            var nameNoExt = Path.GetFileNameWithoutExtension(scenarioFileName);
+            return directories[@"scenarios\mp"].Files
+                .Where(x => x.Name.StartsWith($"{nameNoExt}_icon", StringComparison.OrdinalIgnoreCase) && x.Name.EndsWith(".tga"))
+                .Select(file => ReadFile(file));
+        }
+
         public IEnumerable<SgaRawFile> GetFiles(string directoryPath, string filePattern)
         {
             if (!this.directories.ContainsKey(directoryPath))
@@ -235,7 +248,7 @@ namespace DowUmg.FileFormats
                 return Enumerable.Empty<SgaRawFile>();
             }
 
-            var reg = new Regex(filePattern);
+            var reg = new Regex(filePattern, RegexOptions.IgnoreCase);
             return this.directories[directoryPath].Files
                 .Where(x => reg.IsMatch(x.Name))
                 .Select(file => ReadFile(file));

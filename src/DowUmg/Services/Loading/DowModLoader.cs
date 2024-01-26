@@ -29,8 +29,10 @@ namespace DowUmg.Services
 
         public string GetMapImagePath(DowMap map)
         {
-            string root = map.Mod.IsVanilla ? filePathProvider.AppDataLocation : filePathProvider.SoulstormLocation;
-            return Path.Combine(root, map.Mod.ModFolder, "data", "scenarios", "mp", map.Image);
+            string subPath = Path.Combine(map.Mod.ModFolder, "data", "scenarios", "mp", map.Image);
+            return File.Exists(Path.Combine(filePathProvider.SoulstormLocation, subPath))
+                ? Path.Combine(filePathProvider.SoulstormLocation, subPath)
+                : Path.Combine(filePathProvider.AppDataLocation, subPath);
         }
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()
@@ -191,6 +193,7 @@ namespace DowUmg.Services
                 ModFolder = mod.ModFolder,
                 ModVersion = mod.ModVersion,
                 Playable = mod.Playable,
+                ArchiveFiles = new string[] { },
                 RequiredMods = mod.RequiredMods,
                 UIName = $"{mod.UIName} - Additions",
                 IsVanilla = false

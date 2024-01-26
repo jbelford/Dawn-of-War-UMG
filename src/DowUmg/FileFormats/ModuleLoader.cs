@@ -15,6 +15,7 @@ namespace DowUmg.FileFormats
         public bool Playable { get; set; }
         public string ModFolder { get; set; } = null!;
         public string ModVersion { get; set; } = null!;
+        public string[] ArchiveFiles { get; set; } = null!;
         public string[] RequiredMods { get; set; } = null!;
         public bool IsVanilla { get; set; }
     }
@@ -34,7 +35,8 @@ namespace DowUmg.FileFormats
             IniData data = this.parser.ReadFile(filePath);
             KeyDataCollection global = data["global"];
 
-            var reg = new Regex(@"^RequiredMod\.\d+$");
+            var archiveFileReg = new Regex(@"^ArchiveFile\.\d+$");
+            var requireModReg = new Regex(@"^RequiredMod\.\d+$");
             string modFolder = global["ModFolder"];
 
             return new DowModuleFile()
@@ -45,7 +47,8 @@ namespace DowUmg.FileFormats
                 Playable = "1".Equals(global["Playable"]),
                 ModFolder = modFolder,
                 ModVersion = global["ModVersion"],
-                RequiredMods = global.Where(x => reg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
+                ArchiveFiles = global.Where(x => archiveFileReg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
+                RequiredMods = global.Where(x => requireModReg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
                 IsVanilla = DowConstants.IsVanilla(modFolder)
             };
         }
