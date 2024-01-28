@@ -19,7 +19,7 @@ namespace DowUmg.Presentation.ViewModels
             addonMaps.Sort(MapSort);
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
+            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map }));
 
             Maps = new ToggleItemListViewModel<DowMap>("Maps");
             Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
@@ -34,9 +34,9 @@ namespace DowUmg.Presentation.ViewModels
 
                 maps.Sort(MapSort);
 
-                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name} [{map.Size}]", Item = map }));
+                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map }));
                 Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
-                        .Select(rule => new ToggleItemViewModel<GameRule>(true) { Label = rule.Name, Item = rule }));
+                        .Select(rule => new ToggleItemViewModel<GameRule>() { Label = rule.Name, Item = rule }));
             });
 
             var sizeToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
@@ -70,7 +70,7 @@ namespace DowUmg.Presentation.ViewModels
 
             foreach (var players in Enumerable.Range(2, 7))
             {
-                var item = new ToggleItemViewModel<int>(true) { Label = $"{players}p", Item = players };
+                var item = new ToggleItemViewModel<int>() { Label = $"{players}p", Item = players };
                 MapTypes.Add(item);
                 playerToToggle.Add(players, item);
                 item.WhenAnyValue(x => x.IsToggled)
@@ -81,7 +81,7 @@ namespace DowUmg.Presentation.ViewModels
 
             foreach (int size in Enum.GetValues(typeof(MapSize)))
             {
-                var item = new ToggleItemViewModel<int>(true) { Label = size.ToString(), Item = size };
+                var item = new ToggleItemViewModel<int>() { Label = size.ToString(), Item = size };
                 MapSizes.Add(item);
                 sizeToToggle.Add(size, item);
                 item.WhenAnyValue(x => x.IsToggled)
@@ -122,9 +122,7 @@ namespace DowUmg.Presentation.ViewModels
         {
             return a.Players != b.Players
                 ? a.Players - b.Players
-                : a.Size != b.Size
-                    ? a.Size - b.Size
-                    : string.Compare(a.Name, b.Name);
+                : string.Compare(a.Name, b.Name);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -24,13 +26,31 @@ namespace DowUmg.Presentation.ViewModels
                     }
                 }
             });
+
+            FilterItems = ReactiveCommand.Create((string search) =>
+            {
+                foreach (var item in Items)
+                {
+                    item.IsFiltered = !string.IsNullOrEmpty(search) && !item.Label.Contains(search, System.StringComparison.OrdinalIgnoreCase);
+                }
+            });
+
+            this.WhenAnyValue(x => x.Search)
+                .DistinctUntilChanged()
+                .InvokeCommand(FilterItems);
+
         }
 
         public string Label { get; }
 
+        [Reactive]
+        public string Search { get; set; }
+
         public ObservableCollection<ToggleItemViewModel<T>> Items { get; } = new ObservableCollection<ToggleItemViewModel<T>>();
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }
+
+        public ReactiveCommand<string, Unit> FilterItems { get; }
 
         public void SetItems(IEnumerable<ToggleItemViewModel<T>> items)
         {
