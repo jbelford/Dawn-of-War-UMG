@@ -3,4 +3,5 @@
                     xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Converters">
 
     <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <local:MapPathToSourceConverter x:Key="MapPathToSourceConverter" />
 </ResourceDictionary>

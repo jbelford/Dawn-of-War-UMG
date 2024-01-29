@@ -27,6 +27,12 @@ namespace DowUmg.Presentation.ViewModels
         public bool IsFiltered { get; set; }
 
         public bool IsShown => _isShown.Value;
+
+        [Reactive]
+        public string ToolTip { get; set; }
+
+        [Reactive]
+        public string MapPath { get; set; }
     }
 
     public class ToggleItemViewModel : ToggleItemViewModel<object>

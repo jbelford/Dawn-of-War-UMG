@@ -1,4 +1,5 @@
 ﻿using DowUmg.Presentation.ViewModels;
+using DowUmg.Presentation.WPF.Converters;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -45,41 +46,11 @@ namespace DowUmg.Presentation.WPF.Pages
                     m => m.GameInfo.Options.StartingResources.ToString()).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.MapImagePath, v => v.MapImage.Source,
-                    path =>
-                    {
-                        using Pfim.IImage image = Pfim.Pfim.FromFile(path);
-                        return BitmapSource.Create(image.Width, image.Height, 96.0, 96.0, PixelFormat(image),
-                            null, image.Data, image.Stride);
-                    }).DisposeWith(d);
+                    vmToViewConverterOverride: new MapPathToSourceConverter()).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.GenerateMatchup, v => v.RegenerateButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.GoBack, v => v.BackButton).DisposeWith(d);
             });
-        }
-
-        private PixelFormat PixelFormat(Pfim.IImage image)
-        {
-            switch (image.Format)
-            {
-                case Pfim.ImageFormat.Rgb24:
-                    return PixelFormats.Bgr24;
-
-                case Pfim.ImageFormat.Rgba32:
-                    return PixelFormats.Bgr32;
-
-                case Pfim.ImageFormat.Rgb8:
-                    return PixelFormats.Gray8;
-
-                case Pfim.ImageFormat.R5g5b5a1:
-                case Pfim.ImageFormat.R5g5b5:
-                    return PixelFormats.Bgr555;
-
-                case Pfim.ImageFormat.R5g6b5:
-                    return PixelFormats.Bgr565;
-
-                default:
-                    throw new System.Exception($"Unable to convert {image.Format} to WPF PixelFormat");
-            }
         }
     }
 }

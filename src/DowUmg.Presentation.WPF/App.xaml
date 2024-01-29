@@ -46,7 +46,35 @@
 
             <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
                 <CheckBox IsChecked="{Binding IsToggled}" Content="{Binding Label, Mode=OneTime}"
-                          Visibility="{Binding IsShown, Converter={StaticResource BoolToVisibilityConverter}}" />
+                          Visibility="{Binding IsShown, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <CheckBox.ToolTip>
+                        <ToolTip>
+                            <ToolTip.Style>
+                                <Style TargetType="ToolTip">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ToolTip, Mode=OneTime}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToolTip.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding MapPath, Converter={StaticResource MapPathToSourceConverter}, Mode=OneTime}" Width="150" Margin="5">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MapPath, Mode=OneTime}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <TextBlock Text="{Binding ToolTip, Mode=OneTime}" TextWrapping="WrapWithOverflow" MaxWidth="250" />
+                            </StackPanel>
+                        </ToolTip>
+                    </CheckBox.ToolTip>
+                </CheckBox>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

@@ -1,8 +1,10 @@
 ﻿using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
+using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,8 +20,10 @@ namespace DowUmg.Presentation.ViewModels
         {
             addonMaps.Sort(MapSort);
 
+            var modLoader = Locator.Current.GetService<DowModLoader>();
+
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map }));
+            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }));
 
             Maps = new ToggleItemListViewModel<DowMap>("Maps");
             Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
@@ -34,9 +38,9 @@ namespace DowUmg.Presentation.ViewModels
 
                 maps.Sort(MapSort);
 
-                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map }));
+                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }));
                 Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
-                        .Select(rule => new ToggleItemViewModel<GameRule>() { Label = rule.Name, Item = rule }));
+                        .Select(rule => new ToggleItemViewModel<GameRule>() { Label = rule.Name, Item = rule, ToolTip = rule.Details }));
             });
 
             var sizeToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
