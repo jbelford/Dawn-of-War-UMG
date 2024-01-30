@@ -12,6 +12,7 @@ namespace DowUmg.Presentation.ViewModels
     {
         public ToggleItemListViewModel(string label)
         {
+            Items = new ObservableCollection<ToggleItemViewModel<T>>();
             Label = label;
             ToggleItems = ReactiveCommand.Create(() =>
             {
@@ -46,7 +47,7 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public string Search { get; set; }
 
-        public ObservableCollection<ToggleItemViewModel<T>> Items { get; } = new ObservableCollection<ToggleItemViewModel<T>>();
+        public ObservableCollection<ToggleItemViewModel<T>> Items { get; set; }
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }
 

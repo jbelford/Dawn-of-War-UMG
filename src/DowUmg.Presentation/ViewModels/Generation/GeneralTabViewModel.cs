@@ -18,12 +18,15 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GeneralTabViewModel(List<DowMap> addonMaps)
         {
+            MapTypes = new ObservableCollection<ToggleItemViewModel<int>>();
+            MapSizes = new ObservableCollection<ToggleItemViewModel<int>>();
+
             addonMaps.Sort(MapSort);
 
             var modLoader = Locator.Current.GetService<DowModLoader>();
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }));
+            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }).ToArray());
 
             Maps = new ToggleItemListViewModel<DowMap>("Maps");
             Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
@@ -112,9 +115,9 @@ namespace DowUmg.Presentation.ViewModels
 
         public ToggleItemListViewModel<GameRule> Rules { get; set; }
 
-        public ObservableCollection<ToggleItemViewModel<int>> MapTypes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();
+        public ObservableCollection<ToggleItemViewModel<int>> MapTypes { get; set; }
 
-        public ObservableCollection<ToggleItemViewModel<int>> MapSizes { get; } = new ObservableCollection<ToggleItemViewModel<int>>();
+        public ObservableCollection<ToggleItemViewModel<int>> MapSizes { get; set; }
 
         public ReactiveCommand<int, Unit> RefreshForMod { get; }
 

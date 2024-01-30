@@ -17,30 +17,20 @@ namespace DowUmg.Presentation.WPF.Controls
 
             this.WhenActivated(d =>
             {
-                this.WhenAnyValue(x => x.ViewModel)
-                    .Where(x => x != null)
-                    .Do(SetViewModels)
-                    .Subscribe()
-                    .DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Rules, v => v.WinConditions.Content).DisposeWith(d);
+
+                this.OneWayBind(ViewModel,
+                    vm => vm.AddonMaps.Items,
+                    v => v.AddonMaps.Visibility,
+                    items => items.Count > 0
+                        ? System.Windows.Visibility.Visible
+                        : System.Windows.Visibility.Hidden
+                    ).DisposeWith(d);
             });
-        }
-
-        private void SetViewModels(GeneralTabViewModel vm)
-        {
-            MapSizes.ItemsSource = vm.MapSizes;
-            MapTypes.ItemsSource = vm.MapTypes;
-            Maps.Content = vm.Maps;
-            AddonMaps.Content = vm.AddonMaps;
-            WinConditions.Content = vm.Rules;
-
-            if (vm.AddonMaps.Items.Count > 0)
-            {
-                AddonMaps.Content = vm.AddonMaps;
-            }
-            else
-            {
-                AddonMaps.Visibility = System.Windows.Visibility.Collapsed;
-            }
         }
     }
 }
