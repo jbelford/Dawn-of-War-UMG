@@ -1,6 +1,6 @@
-﻿using DowUmg.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
 {
@@ -36,10 +36,12 @@ namespace DowUmg.FileFormats
             RgdFile file = rgd.Read(stream);
             try
             {
-                if (file.Entries[RaceDetailsHash] is RgdEntry<Dictionary<uint, IRgdEntry>> details
+                if (
+                    file.Entries[RaceDetailsHash] is RgdEntry<Dictionary<uint, IRgdEntry>> details
                     && details.Value[NameHash] is RgdEntry<string> name
                     && details.Value[DescHash] is RgdEntry<string> desc
-                    && details.Value[PlayableHash] is RgdEntry<bool> playable)
+                    && details.Value[PlayableHash] is RgdEntry<bool> playable
+                )
                 {
                     return new RaceFile(name.Value, desc.Value, playable.Value);
                 }

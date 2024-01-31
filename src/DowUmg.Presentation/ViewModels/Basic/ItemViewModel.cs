@@ -12,7 +12,5 @@ namespace DowUmg.Presentation.ViewModels
         public string Label { get; set; }
     }
 
-    public class ItemViewModel : ItemViewModel<object>
-    {
-    }
+    public class ItemViewModel : ItemViewModel<object> { }
 }

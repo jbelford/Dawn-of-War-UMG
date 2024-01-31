@@ -1,10 +1,10 @@
-﻿using DowUmg.Data.Entities;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using DowUmg.Data.Entities;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -16,23 +16,31 @@ namespace DowUmg.Presentation.ViewModels
             Humans = new OptionInputViewModel<int>(humans.ToArray());
             MinMax = minMax;
 
-            RefreshForHumanPlayers = ReactiveCommand.Create((OptionInputItem<int> item) =>
-            {
-                OptionInputViewModel<int> minInput = MinMax.MinInput;
-                foreach (var minItem in minInput.Items)
+            RefreshForHumanPlayers = ReactiveCommand.Create(
+                (OptionInputItem<int> item) =>
                 {
-                    minItem.IsEnabled = minItem.Item >= item.Item;
+                    OptionInputViewModel<int> minInput = MinMax.MinInput;
+                    foreach (var minItem in minInput.Items)
+                    {
+                        minItem.IsEnabled = minItem.Item >= item.Item;
+                    }
+                    if (!minInput.SelectedItem.IsEnabled)
+                    {
+                        minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
+                    }
                 }
-                if (!minInput.SelectedItem.IsEnabled)
-                {
-                    minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
-                }
-            });
+            );
 
-            RefreshForRaces = ReactiveCommand.Create((IEnumerable<DowRace> races) =>
-            {
-                Races = new ProportionalOptionsViewModel<DowRace>("Races", race => race.Name, races.ToArray());
-            });
+            RefreshForRaces = ReactiveCommand.Create(
+                (IEnumerable<DowRace> races) =>
+                {
+                    Races = new ProportionalOptionsViewModel<DowRace>(
+                        "Races",
+                        race => race.Name,
+                        races.ToArray()
+                    );
+                }
+            );
 
             this.WhenAnyValue(x => x.Humans.SelectedItem)
                 .DistinctUntilChanged()

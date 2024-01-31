@@ -15,7 +15,12 @@ namespace DowUmg.Presentation.WPF.Converters
             };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture
+        )
         {
             return ((System.Windows.Visibility)value) switch
             {

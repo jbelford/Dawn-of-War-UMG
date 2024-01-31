@@ -1,9 +1,9 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Controls
 {
@@ -13,8 +13,8 @@ namespace DowUmg.Presentation.WPF.Controls
         {
             this.WhenActivated(d =>
             {
-                this.Events().PreviewTextInput
-                    .Subscribe(e =>
+                this.Events()
+                    .PreviewTextInput.Subscribe(e =>
                     {
                         if (SelectionStart == 0 && Text.Length > 0)
                         {
@@ -24,7 +24,8 @@ namespace DowUmg.Presentation.WPF.Controls
                         {
                             e.Handled = !Regex.IsMatch(e.Text, @"^[0-9]+$");
                         }
-                    }).DisposeWith(d);
+                    })
+                    .DisposeWith(d);
             });
         }
     }

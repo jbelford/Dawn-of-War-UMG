@@ -1,5 +1,5 @@
-﻿using DowUmg.Data.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DowUmg.Data.Entities;
 
 namespace DowUmg.Models
 {

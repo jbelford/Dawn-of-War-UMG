@@ -22,7 +22,11 @@ namespace DowUmg.FileFormats
 
         public string Replace(string input)
         {
-            return this.reg.Replace(input, (Match match) => GetValue(int.Parse(match.Groups[1].Value)) ?? "<NOT FOUND>");
+            return this.reg.Replace(
+                input,
+                (Match match) =>
+                    GetValue(int.Parse(match.Groups[1].Value)) ?? $"<NOT FOUND - {input}>"
+            );
         }
 
         private string? GetValue(int num)
@@ -48,7 +52,5 @@ namespace DowUmg.FileFormats
         }
     }
 
-    public class Locales : Dictionary<int, string>
-    {
-    }
+    public class Locales : Dictionary<int, string> { }
 }

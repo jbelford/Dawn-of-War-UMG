@@ -1,11 +1,11 @@
-﻿using DowUmg.Data.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DowUmg.Data.Entities;
 
 namespace DowUmg.Services
 {
     public class LoadMemo
     {
-        private Dictionary<string, (DowMod? vanilla, DowMod? mod)> dict = new Dictionary<string, (DowMod? vanilla, DowMod? mod)>();
+        private Dictionary<string, (DowMod? vanilla, DowMod? mod)> dict = new();
 
         public DowMod? Get(string modFolder, bool isVanilla)
         {

@@ -1,18 +1,19 @@
-﻿using DowUmg.Constants;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
 using ReactiveUI;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationViewModel : RoutableReactiveObject
     {
-        public GenerationViewModel(IScreen screen) : base(screen, "generation")
+        public GenerationViewModel(IScreen screen)
+            : base(screen, "generation")
         {
             GameTab = new GameTabViewModel();
             TeamTab = new TeamTabViewModel();
@@ -21,29 +22,38 @@ namespace DowUmg.Presentation.ViewModels
 
             DowMod[] mods = store.GetPlayableMods().ToArray();
 
-            IEnumerable<DowMod> addonMods = mods.Where(mod => !mod.IsVanilla && DowConstants.IsVanilla(mod.ModFolder));
-            IEnumerable<DowMod> baseMods = mods.Where(mod => mod.IsVanilla || !DowConstants.IsVanilla(mod.ModFolder));
+            IEnumerable<DowMod> addonMods = mods.Where(mod =>
+                !mod.IsVanilla && DowConstants.IsVanilla(mod.ModFolder)
+            );
+            IEnumerable<DowMod> baseMods = mods.Where(mod =>
+                mod.IsVanilla || !DowConstants.IsVanilla(mod.ModFolder)
+            );
 
             GeneralTab = new GeneralTabViewModel(addonMods.SelectMany(mod => mod.Maps).ToList());
 
             Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, baseMods.ToArray());
 
-            RefreshMod = ReactiveCommand.Create((DowMod mod) =>
-            {
-                GeneralTab.Mod = mod;
-            });
+            RefreshMod = ReactiveCommand.Create(
+                (DowMod mod) =>
+                {
+                    GeneralTab.Mod = mod;
+                }
+            );
 
             GenerateMatchupAction = ReactiveCommand.CreateFromObservable(() =>
             {
                 var settings = new GenerationSettings()
                 {
                     Mod = Mod.SelectedItem.Item,
-                    Maps = GeneralTab.Maps.Items.Concat(GeneralTab.AddonMaps.Items)
+                    Maps = GeneralTab
+                        .Maps.Items.Concat(GeneralTab.AddonMaps.Items)
                         .Where(map => map.IsEnabled && map.IsToggled)
-                        .Select(map => map.Item).ToList(),
-                    Rules = GeneralTab.Rules.Items
-                        .Where(rule => rule.IsToggled)
-                        .Select(rule => rule.Item).ToList()
+                        .Select(map => map.Item)
+                        .ToList(),
+                    Rules = GeneralTab
+                        .Rules.Items.Where(rule => rule.IsToggled)
+                        .Select(rule => rule.Item)
+                        .ToList()
                 };
 
                 foreach (var diff in GameTab.DiffOption.Items)
@@ -66,7 +76,9 @@ namespace DowUmg.Presentation.ViewModels
                     settings.StartResourceTickets[(int)start.Item] = start.Input;
                 }
 
-                return HostScreen.Router.Navigate.Execute(new MatchupViewModel(HostScreen, settings));
+                return HostScreen.Router.Navigate.Execute(
+                    new MatchupViewModel(HostScreen, settings)
+                );
             });
 
             this.WhenAnyValue(x => x.Mod.SelectedItem)

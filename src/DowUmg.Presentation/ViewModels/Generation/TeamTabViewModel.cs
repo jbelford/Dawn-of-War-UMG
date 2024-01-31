@@ -1,10 +1,10 @@
-﻿using DowUmg.Data.Entities;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using DowUmg.Data.Entities;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -12,43 +12,53 @@ namespace DowUmg.Presentation.ViewModels
     {
         public TeamTabViewModel()
         {
-            GlobalPlayerOptions = new PlayersSelectViewModel("Players",
-                Enumerable.Range(1, 8), new RangeViewModel(2, 8));
+            GlobalPlayerOptions = new PlayersSelectViewModel(
+                "Players",
+                Enumerable.Range(1, 8),
+                new RangeViewModel(2, 8)
+            );
 
             TeamNum = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
 
-            RefreshForMin = ReactiveCommand.Create((OptionInputItem<int> min) =>
-            {
-                foreach (var teamItem in TeamNum.Items)
+            RefreshForMin = ReactiveCommand.Create(
+                (OptionInputItem<int> min) =>
                 {
-                    teamItem.IsEnabled = teamItem.Item <= min.Item;
-                }
-                if (!TeamNum.SelectedItem.IsEnabled)
-                {
-                    TeamNum.SelectedItem = TeamNum.Items.Last(x => x.IsEnabled);
-                }
-            });
-
-            RefreshTeamList = ReactiveCommand.Create((int teams) =>
-            {
-                if (TeamPlayerOptions.Count < teams)
-                {
-                    for (int i = TeamPlayerOptions.Count; i < teams; ++i)
+                    foreach (var teamItem in TeamNum.Items)
                     {
-                        var teamOptions = new PlayersSelectViewModel($"Team {i + 1}",
-                            Enumerable.Range(0, 7).ToArray(), new RangeViewModel(1, 7));
-
-                        TeamPlayerOptions.Add(teamOptions);
+                        teamItem.IsEnabled = teamItem.Item <= min.Item;
+                    }
+                    if (!TeamNum.SelectedItem.IsEnabled)
+                    {
+                        TeamNum.SelectedItem = TeamNum.Items.Last(x => x.IsEnabled);
                     }
                 }
-                else
+            );
+
+            RefreshTeamList = ReactiveCommand.Create(
+                (int teams) =>
                 {
-                    for (int i = TeamPlayerOptions.Count - 1; i >= teams; --i)
+                    if (TeamPlayerOptions.Count < teams)
                     {
-                        TeamPlayerOptions.RemoveAt(i);
+                        for (int i = TeamPlayerOptions.Count; i < teams; ++i)
+                        {
+                            var teamOptions = new PlayersSelectViewModel(
+                                $"Team {i + 1}",
+                                Enumerable.Range(0, 7).ToArray(),
+                                new RangeViewModel(1, 7)
+                            );
+
+                            TeamPlayerOptions.Add(teamOptions);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = TeamPlayerOptions.Count - 1; i >= teams; --i)
+                        {
+                            TeamPlayerOptions.RemoveAt(i);
+                        }
                     }
                 }
-            });
+            );
 
             //RefreshForMod = ReactiveCommand.CreateFromTask(async (int id) =>
             //{
@@ -126,7 +136,8 @@ namespace DowUmg.Presentation.ViewModels
         public OptionInputViewModel<int> TeamNum { get; }
 
         public PlayersSelectViewModel GlobalPlayerOptions { get; }
-        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } = new ObservableCollection<PlayersSelectViewModel>();
+        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } =
+            new ObservableCollection<PlayersSelectViewModel>();
         public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMin { get; }
         public ReactiveCommand<int, Unit> RefreshTeamList { get; }
         public ReactiveCommand<int, Unit> RefreshForMod { get; }

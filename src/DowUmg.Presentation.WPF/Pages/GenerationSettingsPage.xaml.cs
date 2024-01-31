@@ -1,8 +1,8 @@
-﻿using DowUmg.Presentation.ViewModels;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DowUmg.Presentation.ViewModels;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -23,7 +23,8 @@ namespace DowUmg.Presentation.WPF.Pages
                     .Subscribe()
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.GenerateMatchupAction, v => v.GenerateButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.GenerateMatchupAction, v => v.GenerateButton)
+                    .DisposeWith(d);
             });
         }
 

@@ -1,6 +1,6 @@
+using System.Reactive.Linq;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -12,7 +12,11 @@ namespace DowUmg.Presentation.ViewModels
         {
             IsToggled = true;
             IsEnabled = true;
-            this.WhenAnyValue(x => x.IsEnabled, x => x.IsFiltered, (enabled, filtered) => enabled && !filtered)
+            this.WhenAnyValue(
+                    x => x.IsEnabled,
+                    x => x.IsFiltered,
+                    (enabled, filtered) => enabled && !filtered
+                )
                 .DistinctUntilChanged()
                 .ToProperty(this, x => x.IsShown, out _isShown);
         }
@@ -37,8 +41,6 @@ namespace DowUmg.Presentation.ViewModels
 
     public class ToggleItemViewModel : ToggleItemViewModel<object>
     {
-        public ToggleItemViewModel()
-        {
-        }
+        public ToggleItemViewModel() { }
     }
 }

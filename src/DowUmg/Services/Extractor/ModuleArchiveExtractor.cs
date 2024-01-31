@@ -1,9 +1,9 @@
-﻿using DowUmg.FileFormats;
-using DowUmg.Interfaces;
-using Splat;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DowUmg.FileFormats;
+using DowUmg.Interfaces;
+using Splat;
 
 namespace DowUmg.Services
 {
@@ -74,7 +74,8 @@ namespace DowUmg.Services
         public IEnumerable<RaceFile> GetRaces()
         {
             var raceLoader = new RaceLoader();
-            return sgaFileReader.GetRaces()
+            return sgaFileReader
+                .GetRaces()
                 .Select(x => new MemoryStream(x.Data))
                 .Select(x => raceLoader.Load(x));
         }

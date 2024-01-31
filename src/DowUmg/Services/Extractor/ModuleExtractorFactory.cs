@@ -1,8 +1,8 @@
-﻿using DowUmg.FileFormats;
+﻿using System.IO;
+using System.Linq;
+using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using Splat;
-using System.IO;
-using System.Linq;
 
 namespace DowUmg.Services
 {
@@ -12,7 +12,8 @@ namespace DowUmg.Services
 
         internal ModuleExtractorFactory(IFilePathProvider? filePathProvider = null)
         {
-            this.filePathProvider = filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
+            this.filePathProvider =
+                filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
         }
 
         internal IModuleDataExtractor Create(DowModuleFile file)
@@ -22,12 +23,18 @@ namespace DowUmg.Services
 
             if (file.IsVanilla)
             {
-                return new ModuleArchiveExtractor(Path.Combine(folder, $"{file.ModFolder}Data.sga"), cacheFolder);
+                return new ModuleArchiveExtractor(
+                    Path.Combine(folder, $"{file.ModFolder}Data.sga"),
+                    cacheFolder
+                );
             }
 
             return new ModuleFileSystemExtractor(folder)
             {
-                ArchiveExtractors = file.ArchiveFiles.Select((archive, index) => new ModuleArchiveExtractor(Path.Combine(folder, archive), cacheFolder))
+                ArchiveExtractors = file.ArchiveFiles.Select(
+                    (archive, index) =>
+                        new ModuleArchiveExtractor(Path.Combine(folder, archive), cacheFolder)
+                )
             };
         }
     }

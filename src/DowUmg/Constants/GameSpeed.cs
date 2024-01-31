@@ -12,13 +12,18 @@ namespace DowUmg.Constants
 
     public static class GameSpeedEx
     {
-        public static string ToString(this GameSpeed val) => val switch
-        {
-            GameSpeed.VERY_SLOW => "Very Slow",
-            GameSpeed.SLOW => "Slow",
-            GameSpeed.NORMAL => "Normal",
-            GameSpeed.FAST => "Fast",
-            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
-        };
+        public static string ToString(this GameSpeed val) =>
+            val switch
+            {
+                GameSpeed.VERY_SLOW => "Very Slow",
+                GameSpeed.SLOW => "Slow",
+                GameSpeed.NORMAL => "Normal",
+                GameSpeed.FAST => "Fast",
+                _
+                    => throw new ArgumentException(
+                        message: "invalid enum value",
+                        paramName: nameof(val)
+                    )
+            };
     }
 }

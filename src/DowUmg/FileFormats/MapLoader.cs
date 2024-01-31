@@ -1,6 +1,6 @@
-﻿using DowUmg.Interfaces;
-using System.IO;
+﻿using System.IO;
 using System.Text;
+using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
 {

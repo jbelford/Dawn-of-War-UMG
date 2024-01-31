@@ -1,7 +1,7 @@
-﻿using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -19,14 +19,14 @@ namespace DowUmg.Presentation.ViewModels
             }
         }
 
-        public OptionInputViewModel(params T[] items) : this((T item) => item!.ToString(), items)
-        {
-        }
+        public OptionInputViewModel(params T[] items)
+            : this((T item) => item!.ToString(), items) { }
 
         [Reactive]
         public OptionInputItem<T> SelectedItem { get; set; }
 
-        public ObservableCollection<OptionInputItem<T>> Items { get; } = new ObservableCollection<OptionInputItem<T>>();
+        public ObservableCollection<OptionInputItem<T>> Items { get; } =
+            new ObservableCollection<OptionInputItem<T>>();
     }
 
     public class OptionInputItem<T> : ItemViewModel<T>
@@ -42,12 +42,9 @@ namespace DowUmg.Presentation.ViewModels
 
     public class OptionInputViewModel : OptionInputViewModel<object>
     {
-        public OptionInputViewModel(params object[] items) : base(items)
-        {
-        }
+        public OptionInputViewModel(params object[] items)
+            : base(items) { }
     }
 
-    public class OptionInputItem : OptionInputItem<object>
-    {
-    }
+    public class OptionInputItem : OptionInputItem<object> { }
 }

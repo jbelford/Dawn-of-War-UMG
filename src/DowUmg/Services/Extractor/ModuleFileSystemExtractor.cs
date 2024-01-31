@@ -1,10 +1,10 @@
-﻿using DowUmg.FileFormats;
-using DowUmg.Interfaces;
-using Splat;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DowUmg.FileFormats;
+using DowUmg.Interfaces;
+using Splat;
 
 namespace DowUmg.Services
 {
@@ -24,9 +24,11 @@ namespace DowUmg.Services
             mapsPath = Path.Combine(this.rootDir, "Data", "Scenarios", "mp");
 
             images = new Lazy<ISet<string>>(
-                () => GetFiles(mapsPath, "*.tga", SearchOption.TopDirectoryOnly)
-                    .Select(x => Path.GetFileName(x).ToLower())
-                    .ToHashSet());
+                () =>
+                    GetFiles(mapsPath, "*.tga", SearchOption.TopDirectoryOnly)
+                        .Select(x => Path.GetFileName(x).ToLower())
+                        .ToHashSet()
+            );
         }
 
         public void Dispose()
@@ -43,17 +45,18 @@ namespace DowUmg.Services
 
             var loader = new GameRuleLoader();
             return GetFiles(rulesPath, "*_local.lua", SearchOption.TopDirectoryOnly)
-                .Select(file => loader.Load(file))
-                .Where(rule => rule != null) as IEnumerable<GameRuleFile>;
+                    .Select(file => loader.Load(file))
+                    .Where(rule => rule != null) as IEnumerable<GameRuleFile>;
         }
 
         public IEnumerable<MapFile> GetMaps()
         {
             var mapsLoader = new MapLoader();
             return GetFiles(mapsPath, "*.sgb", SearchOption.TopDirectoryOnly)
-                .Select(file => LoadMap(mapsLoader, file))
-                .Where(map => map != null)
-                .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetMaps())) as IEnumerable<MapFile>;
+                    .Select(file => LoadMap(mapsLoader, file))
+                    .Where(map => map != null)
+                    .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetMaps()))
+                as IEnumerable<MapFile>;
         }
 
         public string? GetMapImage(string fileName)
@@ -78,7 +81,8 @@ namespace DowUmg.Services
             }
             else if (image == null)
             {
-                image = ArchiveExtractors.Select(extractor => extractor.GetMapImage(fileName))
+                image = ArchiveExtractors
+                    .Select(extractor => extractor.GetMapImage(fileName))
                     .Where(image => image != null)
                     .FirstOrDefault();
             }

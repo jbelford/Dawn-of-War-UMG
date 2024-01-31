@@ -15,8 +15,7 @@ namespace DowUmg.Presentation.ViewModels
 
     public class NumberInputViewModel : NumberInputViewModel<object>
     {
-        public NumberInputViewModel(int defaultValue = 0) : base(defaultValue)
-        {
-        }
+        public NumberInputViewModel(int defaultValue = 0)
+            : base(defaultValue) { }
     }
 }

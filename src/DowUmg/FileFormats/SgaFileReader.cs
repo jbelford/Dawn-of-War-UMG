@@ -1,6 +1,4 @@
-﻿using DowUmg.Extensions;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +6,8 @@ using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using DowUmg.Extensions;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace DowUmg.FileFormats
 {
@@ -236,8 +236,11 @@ namespace DowUmg.FileFormats
             }
 
             var nameNoExt = Path.GetFileNameWithoutExtension(scenarioFileName);
-            return directories[@"scenarios\mp"].Files
-                .Where(x => x.Name.StartsWith($"{nameNoExt}_icon", StringComparison.OrdinalIgnoreCase) && x.Name.EndsWith(".tga"))
+            return directories[@"scenarios\mp"]
+                .Files.Where(x =>
+                    x.Name.StartsWith($"{nameNoExt}_icon", StringComparison.OrdinalIgnoreCase)
+                    && x.Name.EndsWith(".tga")
+                )
                 .Select(file => ReadFile(file));
         }
 
@@ -249,8 +252,8 @@ namespace DowUmg.FileFormats
             }
 
             var reg = new Regex(filePattern, RegexOptions.IgnoreCase);
-            return this.directories[directoryPath].Files
-                .Where(x => reg.IsMatch(x.Name))
+            return this.directories[directoryPath]
+                .Files.Where(x => reg.IsMatch(x.Name))
                 .Select(file => ReadFile(file));
         }
 
@@ -260,7 +263,10 @@ namespace DowUmg.FileFormats
 
             lock (this.reader)
             {
-                this.reader.BaseStream.Seek(Convert.ToInt32(this.header.DataOffset) + file.Info.DataOffset, SeekOrigin.Begin);
+                this.reader.BaseStream.Seek(
+                    Convert.ToInt32(this.header.DataOffset) + file.Info.DataOffset,
+                    SeekOrigin.Begin
+                );
 
                 data = this.reader.ReadBytes(Convert.ToInt32(file.Info.DataLengthCompressed));
             }
@@ -288,7 +294,9 @@ namespace DowUmg.FileFormats
             string identifier = Encoding.ASCII.GetString(this.reader.ReadBytes(8));
             if (!"_ARCHIVE".Equals(identifier))
             {
-                throw new InvalidSgaException($"File Identifier '{identifier}' should be '_ARCHIVE'");
+                throw new InvalidSgaException(
+                    $"File Identifier '{identifier}' should be '_ARCHIVE'"
+                );
             }
 
             var header = new SgaFileHeader
@@ -364,7 +372,11 @@ namespace DowUmg.FileFormats
         }
 
         // This method is not really needed anymore but will leave here for future reference
-        private SgaToc[] ReadTocs(in SgaDirectory[] directories, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
+        private SgaToc[] ReadTocs(
+            in SgaDirectory[] directories,
+            SgaDataHeaderInfo dataHeaderInfo,
+            in byte[] dataHeaderBuffer
+        )
         {
             var tocs = new SgaToc[dataHeaderInfo.ToCCount];
 
@@ -375,7 +387,9 @@ namespace DowUmg.FileFormats
                 SgaToCInfo info = new SgaToCInfo
                 {
                     Alias = Encoding.ASCII.GetString(dataHeaderBuffer, offset, 64).TrimEnd('\0'),
-                    BaseDirName = Encoding.ASCII.GetString(dataHeaderBuffer, offset + 64, 64).TrimEnd('\0'),
+                    BaseDirName = Encoding
+                        .ASCII.GetString(dataHeaderBuffer, offset + 64, 64)
+                        .TrimEnd('\0'),
                     StartDir = BitConverter.ToUInt16(dataHeaderBuffer, offset + 128),
                     EndDir = BitConverter.ToUInt16(dataHeaderBuffer, offset + 130),
                     StartFile = BitConverter.ToUInt16(dataHeaderBuffer, offset + 132),
@@ -389,7 +403,11 @@ namespace DowUmg.FileFormats
             return tocs;
         }
 
-        private SgaDirectory[] ReadDirs(in SgaFileEntry[] files, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
+        private SgaDirectory[] ReadDirs(
+            in SgaFileEntry[] files,
+            SgaDataHeaderInfo dataHeaderInfo,
+            in byte[] dataHeaderBuffer
+        )
         {
             var dirInfo = new SgaDirInfo[dataHeaderInfo.DirCount];
             var dirs = new SgaDirectory[dataHeaderInfo.DirCount];
@@ -407,7 +425,10 @@ namespace DowUmg.FileFormats
                     FileEnd = BitConverter.ToUInt16(dataHeaderBuffer, offset + 10)
                 };
 
-                string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
+                string name = Parsing.GetAsciiString(
+                    dataHeaderBuffer,
+                    Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset)
+                );
 
                 var dir = new SgaDirectory(name);
 
@@ -433,7 +454,11 @@ namespace DowUmg.FileFormats
             return dirs;
         }
 
-        private SgaFileEntry[] ReadFiles(SgaFileHeader header, SgaDataHeaderInfo dataHeaderInfo, in byte[] dataHeaderBuffer)
+        private SgaFileEntry[] ReadFiles(
+            SgaFileHeader header,
+            SgaDataHeaderInfo dataHeaderInfo,
+            in byte[] dataHeaderBuffer
+        )
         {
             var files = new SgaFileEntry[dataHeaderInfo.FileCount];
 
@@ -468,7 +493,10 @@ namespace DowUmg.FileFormats
                     };
                 }
 
-                string name = Parsing.GetAsciiString(dataHeaderBuffer, Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset));
+                string name = Parsing.GetAsciiString(
+                    dataHeaderBuffer,
+                    Convert.ToInt32(dataHeaderInfo.ItemOffset + info.NameOffset)
+                );
 
                 files[i] = new SgaFileEntry(name, info);
             }
@@ -491,9 +519,8 @@ namespace DowUmg.FileFormats
 
     internal class InvalidSgaException : IOException
     {
-        public InvalidSgaException(string message) : base(message)
-        {
-        }
+        public InvalidSgaException(string message)
+            : base(message) { }
     }
 
     internal class SgaToc

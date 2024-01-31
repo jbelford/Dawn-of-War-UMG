@@ -1,16 +1,16 @@
-﻿using DowUmg.Constants;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -26,54 +26,95 @@ namespace DowUmg.Presentation.ViewModels
             var modLoader = Locator.Current.GetService<DowModLoader>();
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(addonMaps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }).ToArray());
+            AddonMaps.SetItems(
+                addonMaps
+                    .Select(map => new ToggleItemViewModel<DowMap>()
+                    {
+                        Label = $"{map.Name} [{map.Size}]",
+                        Item = map,
+                        ToolTip = map.Details,
+                        MapPath = modLoader.GetMapImagePath(map)
+                    })
+                    .ToArray()
+            );
 
             Maps = new ToggleItemListViewModel<DowMap>("Maps");
             Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
 
-            RefreshForMod = ReactiveCommand.CreateFromTask(async (int id) =>
-            {
-                var (maps, rules) = await Observable.Start(() =>
+            RefreshForMod = ReactiveCommand.CreateFromTask(
+                async (int id) =>
                 {
-                    using var store = new ModsDataStore();
-                    return (store.GetMaps(id).ToList(), store.GetRules(id).ToList());
-                }, RxApp.TaskpoolScheduler);
+                    var (maps, rules) = await Observable.Start(
+                        () =>
+                        {
+                            using var store = new ModsDataStore();
+                            return (store.GetMaps(id).ToList(), store.GetRules(id).ToList());
+                        },
+                        RxApp.TaskpoolScheduler
+                    );
 
-                maps.Sort(MapSort);
+                    maps.Sort(MapSort);
 
-                Maps.SetItems(maps.Select(map => new ToggleItemViewModel<DowMap>() { Label = $"{map.Name} [{map.Size}]", Item = map, ToolTip = map.Details, MapPath = modLoader.GetMapImagePath(map) }));
-                Rules.SetItems(rules.Where(rule => rule.IsWinCondition)
-                        .Select(rule => new ToggleItemViewModel<GameRule>() { Label = rule.Name, Item = rule, ToolTip = rule.Details }));
-            });
+                    Maps.SetItems(
+                        maps.Select(map => new ToggleItemViewModel<DowMap>()
+                        {
+                            Label = $"{map.Name} [{map.Size}]",
+                            Item = map,
+                            ToolTip = map.Details,
+                            MapPath = modLoader.GetMapImagePath(map)
+                        })
+                    );
+                    Rules.SetItems(
+                        rules
+                            .Where(rule => rule.IsWinCondition)
+                            .Select(rule => new ToggleItemViewModel<GameRule>()
+                            {
+                                Label = rule.Name,
+                                Item = rule,
+                                ToolTip = rule.Details
+                            })
+                    );
+                }
+            );
 
             var sizeToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
             var playerToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
 
-            ToggleMapPlayerFilter = ReactiveCommand.Create((ToggleItemViewModel<int> player) =>
-            {
-                foreach (var map in Maps.Items.Concat(AddonMaps.Items))
+            ToggleMapPlayerFilter = ReactiveCommand.Create(
+                (ToggleItemViewModel<int> player) =>
                 {
-                    if (map.Item.Players == player.Item
-                        && sizeToToggle.GetValueOrDefault(map.Item.Size) is ToggleItemViewModel<int> size
-                        && size.IsToggled)
+                    foreach (var map in Maps.Items.Concat(AddonMaps.Items))
                     {
-                        map.IsEnabled = player.IsToggled;
+                        if (
+                            map.Item.Players == player.Item
+                            && sizeToToggle.GetValueOrDefault(map.Item.Size)
+                                is ToggleItemViewModel<int> size
+                            && size.IsToggled
+                        )
+                        {
+                            map.IsEnabled = player.IsToggled;
+                        }
                     }
                 }
-            });
+            );
 
-            ToggleMapSizeFilter = ReactiveCommand.Create((ToggleItemViewModel<int> size) =>
-            {
-                foreach (var map in Maps.Items.Concat(AddonMaps.Items))
+            ToggleMapSizeFilter = ReactiveCommand.Create(
+                (ToggleItemViewModel<int> size) =>
                 {
-                    if (map.Item.Size == size.Item
-                        && playerToToggle.GetValueOrDefault(map.Item.Players) is ToggleItemViewModel<int> players
-                        && players.IsToggled)
+                    foreach (var map in Maps.Items.Concat(AddonMaps.Items))
                     {
-                        map.IsEnabled = size.IsToggled;
+                        if (
+                            map.Item.Size == size.Item
+                            && playerToToggle.GetValueOrDefault(map.Item.Players)
+                                is ToggleItemViewModel<int> players
+                            && players.IsToggled
+                        )
+                        {
+                            map.IsEnabled = size.IsToggled;
+                        }
                     }
                 }
-            });
+            );
 
             foreach (var players in Enumerable.Range(2, 7))
             {
@@ -127,9 +168,7 @@ namespace DowUmg.Presentation.ViewModels
 
         private int MapSort(DowMap a, DowMap b)
         {
-            return a.Players != b.Players
-                ? a.Players - b.Players
-                : string.Compare(a.Name, b.Name);
+            return a.Players != b.Players ? a.Players - b.Players : string.Compare(a.Name, b.Name);
         }
     }
 }

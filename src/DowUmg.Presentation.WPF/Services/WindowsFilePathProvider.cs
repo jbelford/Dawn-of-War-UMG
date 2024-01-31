@@ -1,7 +1,7 @@
-﻿using DowUmg.Interfaces;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
+using DowUmg.Interfaces;
+using Microsoft.Win32;
 
 namespace DowUmg.Presentation.WPF.Services
 {
@@ -10,14 +10,17 @@ namespace DowUmg.Presentation.WPF.Services
         public WindowsFilePathProvider()
         {
             RegistryKey key = Environment.Is64BitOperatingSystem
-                ? Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm")
+                ? Registry.LocalMachine.OpenSubKey(
+                    "SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm"
+                )
                 : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
 
             SoulstormLocation = key.GetValue("InstallLocation") as string;
 
             AppDataLocation = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "DowUmg");
+                "DowUmg"
+            );
 
             Directory.CreateDirectory(AppDataLocation);
         }

@@ -1,8 +1,8 @@
-﻿using DowUmg.FileFormats;
+﻿using System.IO;
+using DowUmg.FileFormats;
 using DowUmg.Interfaces;
 using DowUmg.Models;
 using Splat;
-using System.IO;
 
 namespace DowUmg.Services
 {

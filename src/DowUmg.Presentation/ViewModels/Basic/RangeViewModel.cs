@@ -1,7 +1,7 @@
-﻿using ReactiveUI;
-using System.Linq;
+﻿using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -14,17 +14,19 @@ namespace DowUmg.Presentation.ViewModels
             MaxInput = new OptionInputViewModel<int>(Enumerable.Range(min, count).ToArray());
             MaxInput.SelectedItem = MaxInput.Items.Last();
 
-            RefreshForMin = ReactiveCommand.Create((OptionInputItem<int> item) =>
-            {
-                foreach (var maxItem in MaxInput.Items)
+            RefreshForMin = ReactiveCommand.Create(
+                (OptionInputItem<int> item) =>
                 {
-                    maxItem.IsEnabled = maxItem.Item >= item.Item;
+                    foreach (var maxItem in MaxInput.Items)
+                    {
+                        maxItem.IsEnabled = maxItem.Item >= item.Item;
+                    }
+                    if (!MaxInput.SelectedItem.IsEnabled)
+                    {
+                        MaxInput.SelectedItem = MaxInput.Items.Where(x => x.IsEnabled).First();
+                    }
                 }
-                if (!MaxInput.SelectedItem.IsEnabled)
-                {
-                    MaxInput.SelectedItem = MaxInput.Items.Where(x => x.IsEnabled).First();
-                }
-            });
+            );
 
             this.WhenAnyValue(x => x.MinInput.SelectedItem)
                 .DistinctUntilChanged()

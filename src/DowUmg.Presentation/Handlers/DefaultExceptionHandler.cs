@@ -1,8 +1,8 @@
-﻿using ReactiveUI;
-using Splat;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Reactive.Concurrency;
+using ReactiveUI;
+using Splat;
 
 namespace DowUmg.Presentation.Handlers
 {
@@ -22,7 +22,10 @@ namespace DowUmg.Presentation.Handlers
                 Debugger.Break();
             }
 
-            RxApp.MainThreadScheduler.Schedule(() => { throw new NotImplementedException(); });
+            RxApp.MainThreadScheduler.Schedule(() =>
+            {
+                throw new NotImplementedException();
+            });
         }
 
         public void OnError(Exception error)
@@ -44,7 +47,10 @@ namespace DowUmg.Presentation.Handlers
 
             this.logger.Write(error, "Unhandled exception was thrown", LogLevel.Fatal);
 
-            RxApp.MainThreadScheduler.Schedule(() => { throw error; });
+            RxApp.MainThreadScheduler.Schedule(() =>
+            {
+                throw error;
+            });
         }
     }
 }

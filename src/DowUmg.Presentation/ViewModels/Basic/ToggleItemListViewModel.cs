@@ -1,10 +1,10 @@
-﻿using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -28,18 +28,22 @@ namespace DowUmg.Presentation.ViewModels
                 }
             });
 
-            FilterItems = ReactiveCommand.Create((string search) =>
-            {
-                foreach (var item in Items)
+            FilterItems = ReactiveCommand.Create(
+                (string search) =>
                 {
-                    item.IsFiltered = !string.IsNullOrEmpty(search) && !item.Label.Contains(search, System.StringComparison.OrdinalIgnoreCase);
+                    foreach (var item in Items)
+                    {
+                        item.IsFiltered =
+                            !string.IsNullOrEmpty(search)
+                            && !item.Label.Contains(
+                                search,
+                                System.StringComparison.OrdinalIgnoreCase
+                            );
+                    }
                 }
-            });
+            );
 
-            this.WhenAnyValue(x => x.Search)
-                .DistinctUntilChanged()
-                .InvokeCommand(FilterItems);
-
+            this.WhenAnyValue(x => x.Search).DistinctUntilChanged().InvokeCommand(FilterItems);
         }
 
         public string Label { get; }
@@ -65,8 +69,7 @@ namespace DowUmg.Presentation.ViewModels
 
     public class ToggleItemListViewModel : ToggleItemListViewModel<object>
     {
-        public ToggleItemListViewModel(string label) : base(label)
-        {
-        }
+        public ToggleItemListViewModel(string label)
+            : base(label) { }
     }
 }

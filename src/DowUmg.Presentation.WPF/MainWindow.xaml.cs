@@ -1,8 +1,8 @@
-﻿using DowUmg.Presentation.ViewModels;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DowUmg.Presentation.ViewModels;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF
 {

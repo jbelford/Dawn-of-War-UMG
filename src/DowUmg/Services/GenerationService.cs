@@ -1,16 +1,14 @@
-﻿using DowUmg.Constants;
+﻿using System;
+using System.Linq;
+using DowUmg.Constants;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
-using System;
-using System.Linq;
 
 namespace DowUmg.Services
 {
     public class GenerationService
     {
-        public GenerationService()
-        {
-        }
+        public GenerationService() { }
 
         public Matchup GenerateMatchup(GenerationSettings settings)
         {
@@ -22,10 +20,19 @@ namespace DowUmg.Services
             {
                 Options = new GameOptions()
                 {
-                    Difficulty = (GameDifficulty)RandomOption(settings.GameDifficultyTickets, random),
+                    Difficulty = (GameDifficulty)RandomOption(
+                        settings.GameDifficultyTickets,
+                        random
+                    ),
                     Speed = (GameSpeed)RandomOption(settings.GameSpeedTickets, random),
-                    ResourceRate = (GameResourceRate)RandomOption(settings.ResourceRateTickets, random),
-                    StartingResources = (GameStartResource)RandomOption(settings.StartResourceTickets, random)
+                    ResourceRate = (GameResourceRate)RandomOption(
+                        settings.ResourceRateTickets,
+                        random
+                    ),
+                    StartingResources = (GameStartResource)RandomOption(
+                        settings.StartResourceTickets,
+                        random
+                    )
                 }
             };
 

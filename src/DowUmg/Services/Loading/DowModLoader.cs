@@ -130,7 +130,7 @@ namespace DowUmg.Services
                         allUnloaded[dep.File.ModFolder],
                         allUnloaded,
                         memo,
-                        unloaded.Locales
+                        newLocales
                     );
                     loaded.Dependents.Add(mod);
                     return loaded;

@@ -13,14 +13,19 @@ namespace DowUmg.Constants
 
     public static class GameDifficultyEx
     {
-        public static string ToString(this GameDifficulty val) => val switch
-        {
-            GameDifficulty.EASY => "Easy",
-            GameDifficulty.STANDARD => "Standard",
-            GameDifficulty.HARD => "Hard",
-            GameDifficulty.HARDER => "Harder",
-            GameDifficulty.INSANE => "Insane",
-            _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(val))
-        };
+        public static string ToString(this GameDifficulty val) =>
+            val switch
+            {
+                GameDifficulty.EASY => "Easy",
+                GameDifficulty.STANDARD => "Standard",
+                GameDifficulty.HARD => "Hard",
+                GameDifficulty.HARDER => "Harder",
+                GameDifficulty.INSANE => "Insane",
+                _
+                    => throw new ArgumentException(
+                        message: "invalid enum value",
+                        paramName: nameof(val)
+                    )
+            };
     }
 }

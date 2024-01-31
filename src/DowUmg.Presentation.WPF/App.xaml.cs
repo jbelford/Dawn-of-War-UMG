@@ -1,4 +1,5 @@
-﻿using DowUmg.Data;
+﻿using System.Windows;
+using DowUmg.Data;
 using DowUmg.Interfaces;
 using DowUmg.Presentation.Handlers;
 using DowUmg.Presentation.ViewModels;
@@ -7,7 +8,6 @@ using DowUmg.Presentation.WPF.Services;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using Splat;
-using System.Windows;
 
 namespace DowUmg.Presentation.WPF
 {
@@ -31,13 +31,18 @@ namespace DowUmg.Presentation.WPF
             MigrateDatabase();
 
             var window = new MainWindow();
-            window.Closed += delegate { Shutdown(); };
+            window.Closed += delegate
+            {
+                Shutdown();
+            };
             window.Show();
         }
 
         private void RegisterDependencies()
         {
-            Locator.CurrentMutable.RegisterLazySingleton<IFilePathProvider>(() => new WindowsFilePathProvider());
+            Locator.CurrentMutable.RegisterLazySingleton<IFilePathProvider>(
+                () => new WindowsFilePathProvider()
+            );
             AppBootstrapper.RegisterDefaults();
         }
 
@@ -46,7 +51,9 @@ namespace DowUmg.Presentation.WPF
             Locator.CurrentMutable.Register<IViewFor<TitleViewModel>>(() => new TitlePage());
             Locator.CurrentMutable.Register<IViewFor<SettingsViewModel>>(() => new SettingsPage());
             Locator.CurrentMutable.Register<IViewFor<ModsViewModel>>(() => new ModsPage());
-            Locator.CurrentMutable.Register<IViewFor<GenerationViewModel>>(() => new GenerationSettingsPage());
+            Locator.CurrentMutable.Register<IViewFor<GenerationViewModel>>(
+                () => new GenerationSettingsPage()
+            );
             Locator.CurrentMutable.Register<IViewFor<MatchupViewModel>>(() => new MatchupPage());
         }
 

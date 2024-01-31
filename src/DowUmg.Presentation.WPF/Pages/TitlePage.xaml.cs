@@ -1,8 +1,8 @@
-﻿using DowUmg.Presentation.ViewModels;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DowUmg.Presentation.ViewModels;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -17,13 +17,16 @@ namespace DowUmg.Presentation.WPF.Pages
                 this.BindCommand(ViewModel, x => x.SettingsAction, x => x.SettingsButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, x => x.ModsAction, x => x.ModsButton)
-                    .DisposeWith(d);
+                this.BindCommand(ViewModel, x => x.ModsAction, x => x.ModsButton).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.MatchupAction, v => v.MatchupButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, viewModel => viewModel.CloseApp, view => view.QuitButton)
+                this.BindCommand(
+                        ViewModel,
+                        viewModel => viewModel.CloseApp,
+                        view => view.QuitButton
+                    )
                     .DisposeWith(d);
 
                 this.WhenAnyValue(x => x.ViewModel.IsLoaded)
@@ -34,7 +37,9 @@ namespace DowUmg.Presentation.WPF.Pages
                             : System.Windows.Visibility.Visible;
 
                         MatchupButton.IsEnabled = isLoaded;
-                    }).Subscribe().DisposeWith(d);
+                    })
+                    .Subscribe()
+                    .DisposeWith(d);
             });
         }
     }

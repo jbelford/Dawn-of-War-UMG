@@ -1,8 +1,8 @@
-﻿using DowUmg.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using DowUmg.Extensions;
 
 namespace DowUmg.FileFormats
 {
@@ -135,12 +135,21 @@ namespace DowUmg.FileFormats
             int startIndex = dataOffset + entryOffset;
             return ((RgdDataType)type) switch
             {
-                RgdDataType.Float => new RgdEntry<float>(hash, BitConverter.ToSingle(data, startIndex)),
-                RgdDataType.Integer => new RgdEntry<int>(hash, BitConverter.ToInt32(data, startIndex)),
-                RgdDataType.Bool => new RgdEntry<bool>(hash, BitConverter.ToBoolean(data, startIndex)),
-                RgdDataType.String => new RgdEntry<string>(hash, Parsing.GetAsciiString(data, startIndex)),
-                RgdDataType.WString => new RgdEntry<string>(hash, Parsing.GetUnicodeString(data, startIndex)),
-                RgdDataType.Table => new RgdEntry<Dictionary<uint, IRgdEntry>>(hash, ReadEntries(data, startIndex)),
+                RgdDataType.Float
+                    => new RgdEntry<float>(hash, BitConverter.ToSingle(data, startIndex)),
+                RgdDataType.Integer
+                    => new RgdEntry<int>(hash, BitConverter.ToInt32(data, startIndex)),
+                RgdDataType.Bool
+                    => new RgdEntry<bool>(hash, BitConverter.ToBoolean(data, startIndex)),
+                RgdDataType.String
+                    => new RgdEntry<string>(hash, Parsing.GetAsciiString(data, startIndex)),
+                RgdDataType.WString
+                    => new RgdEntry<string>(hash, Parsing.GetUnicodeString(data, startIndex)),
+                RgdDataType.Table
+                    => new RgdEntry<Dictionary<uint, IRgdEntry>>(
+                        hash,
+                        ReadEntries(data, startIndex)
+                    ),
                 _ => throw new Exception($"Unknown data type encountered {type}"),
             };
         }
