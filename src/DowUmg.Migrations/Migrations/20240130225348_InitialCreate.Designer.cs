@@ -5,17 +5,38 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace DowUmg.Migrations.Migrations
 {
     [DbContext(typeof(ModsContext))]
-    [Migration("20191224065354_InitialCreate")]
+    [Migration("20240130225348_InitialCreate")]
     partial class InitialCreate
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1");
+                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true);
+
+            modelBuilder.Entity("DowModDowMod", b =>
+                {
+                    b.Property<int>("DependenciesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DependentsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("DependenciesId", "DependentsId");
+
+                    b.HasIndex("DependentsId");
+
+                    b.ToTable("DowModDowMod");
+                });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMap", b =>
                 {
@@ -82,21 +103,6 @@ namespace DowUmg.Migrations.Migrations
                     b.ToTable("Mods");
                 });
 
-            modelBuilder.Entity("DowUmg.Data.Entities.DowModDependency", b =>
-                {
-                    b.Property<int>("MainModId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DepModId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("MainModId", "DepModId");
-
-                    b.HasIndex("DepModId");
-
-                    b.ToTable("ModDependencies");
-                });
-
             modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
                 {
                     b.Property<int>("Id")
@@ -148,6 +154,21 @@ namespace DowUmg.Migrations.Migrations
                     b.ToTable("GameRules");
                 });
 
+            modelBuilder.Entity("DowModDowMod", b =>
+                {
+                    b.HasOne("DowUmg.Data.Entities.DowMod", null)
+                        .WithMany()
+                        .HasForeignKey("DependenciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DowUmg.Data.Entities.DowMod", null)
+                        .WithMany()
+                        .HasForeignKey("DependentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DowUmg.Data.Entities.DowMap", b =>
                 {
                     b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
@@ -155,21 +176,8 @@ namespace DowUmg.Migrations.Migrations
                         .HasForeignKey("ModId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("DowUmg.Data.Entities.DowModDependency", b =>
-                {
-                    b.HasOne("DowUmg.Data.Entities.DowMod", "DepMod")
-                        .WithMany("Dependents")
-                        .HasForeignKey("DepModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DowUmg.Data.Entities.DowMod", "MainMod")
-                        .WithMany("Dependencies")
-                        .HasForeignKey("MainModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Mod");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
@@ -179,6 +187,8 @@ namespace DowUmg.Migrations.Migrations
                         .HasForeignKey("ModId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Mod");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
@@ -188,6 +198,17 @@ namespace DowUmg.Migrations.Migrations
                         .HasForeignKey("ModId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Mod");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
+                {
+                    b.Navigation("Maps");
+
+                    b.Navigation("Races");
+
+                    b.Navigation("Rules");
                 });
 #pragma warning restore 612, 618
         }

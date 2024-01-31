@@ -1,21 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.6.0" />
-    <PackageReference Include="ReactiveUI" Version="10.5.31" />
-    <PackageReference Include="ReactiveUI.Fody" Version="10.5.31" />
-    <PackageReference Include="ReactiveUI.Validation" Version="1.4.1" />
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="ReactiveUI" Version="19.5.41" />
+    <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+    <PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DowUmg\DowUmg.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Validators\" />
   </ItemGroup>

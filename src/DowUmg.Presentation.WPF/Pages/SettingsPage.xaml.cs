@@ -1,7 +1,7 @@
-﻿using DowUmg.Presentation.ViewModels;
-using ReactiveUI;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using System.Windows.Forms;
+using DowUmg.Presentation.ViewModels;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Pages
 {
@@ -16,11 +16,14 @@ namespace DowUmg.Presentation.WPF.Pages
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.SoulstormDirectory, v => v.DirectoryTextBox.Text)
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.SoulstormDirectory,
+                        v => v.DirectoryTextBox.Text
+                    )
                     .DisposeWith(d);
 
-                ViewModel.GetDirectory.RegisterHandler(GetDirectoryHandler)
-                    .DisposeWith(d);
+                ViewModel.GetDirectory.RegisterHandler(GetDirectoryHandler).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.SelectDirectory, v => v.SelectDirectoryButton)
                     .DisposeWith(d);
@@ -30,7 +33,7 @@ namespace DowUmg.Presentation.WPF.Pages
             });
         }
 
-        private void GetDirectoryHandler(InteractionContext<string, string?> interaction)
+        private void GetDirectoryHandler(IInteractionContext<string, string> interaction)
         {
             using var folderDialog = new FolderBrowserDialog
             {

@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Newtonsoft.Json.Linq;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Converters
 {
@@ -19,7 +19,12 @@ namespace DowUmg.Presentation.WPF.Converters
             return createSource(value as string);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(
+            object value,
+            Type targetType,
+            object parameter,
+            CultureInfo culture
+        )
         {
             throw new NotSupportedException();
         }
@@ -42,9 +47,17 @@ namespace DowUmg.Presentation.WPF.Converters
 
         private BitmapSource createSource(string path)
         {
-            using Pfim.IImage image = Pfim.Pfim.FromFile(path);
-            return BitmapSource.Create(image.Width, image.Height, 96.0, 96.0, PixelFormat(image),
-                null, image.Data, image.Stride);
+            using Pfim.IImage image = Pfim.Pfimage.FromFile(path);
+            return BitmapSource.Create(
+                image.Width,
+                image.Height,
+                96.0,
+                96.0,
+                PixelFormat(image),
+                null,
+                image.Data,
+                image.Stride
+            );
         }
 
         private PixelFormat PixelFormat(Pfim.IImage image)
@@ -68,7 +81,9 @@ namespace DowUmg.Presentation.WPF.Converters
                     return PixelFormats.Bgr565;
 
                 default:
-                    throw new System.Exception($"Unable to convert {image.Format} to WPF PixelFormat");
+                    throw new System.Exception(
+                        $"Unable to convert {image.Format} to WPF PixelFormat"
+                    );
             }
         }
     }

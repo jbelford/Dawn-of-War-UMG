@@ -2,11 +2,10 @@
 {
     public static class DowConstants
     {
-        public static string DXP2Folder = "DXP2";
-        public static string W40kFolder = "W40k";
+        public static string DXP2Folder = "dxp2";
+        public static string W40kFolder = "w40k";
 
         public static bool IsVanilla(string folderName) =>
-            DXP2Folder.Equals(folderName, System.StringComparison.OrdinalIgnoreCase)
-                || W40kFolder.Equals(folderName, System.StringComparison.OrdinalIgnoreCase);
+            DXP2Folder == folderName || W40kFolder == folderName;
     }
 }

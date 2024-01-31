@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Presentation.WPF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg", "DowUmg\DowUmg.csproj", "{6ADC765B-61C7-4AE1-858C-C87E3C57CBDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowUmg.Migrations", "DowUmg.Migrations\DowUmg.Migrations.csproj", "{0A7ADBC9-6663-40FA-98C3-871C1B9CF4A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DowUmg.Migrations", "DowUmg.Migrations\DowUmg.Migrations.csproj", "{0A7ADBC9-6663-40FA-98C3-871C1B9CF4A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

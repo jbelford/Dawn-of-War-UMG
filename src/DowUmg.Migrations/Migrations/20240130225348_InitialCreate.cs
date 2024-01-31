@@ -1,22 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace DowUmg.Migrations.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Mods",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    IsVanilla = table.Column<bool>(nullable: false),
-                    ModFolder = table.Column<string>(nullable: false),
-                    Playable = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Details = table.Column<string>(nullable: false)
+                    IsVanilla = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ModFolder = table.Column<string>(type: "TEXT", nullable: false),
+                    Playable = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,15 +28,39 @@ namespace DowUmg.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DowModDowMod",
+                columns: table => new
+                {
+                    DependenciesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DependentsId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DowModDowMod", x => new { x.DependenciesId, x.DependentsId });
+                    table.ForeignKey(
+                        name: "FK_DowModDowMod_Mods_DependenciesId",
+                        column: x => x.DependenciesId,
+                        principalTable: "Mods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DowModDowMod_Mods_DependentsId",
+                        column: x => x.DependentsId,
+                        principalTable: "Mods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GameRules",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: false),
-                    Details = table.Column<string>(nullable: false),
-                    ModId = table.Column<int>(nullable: false),
-                    IsWinCondition = table.Column<bool>(nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    ModId = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsWinCondition = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,14 +77,14 @@ namespace DowUmg.Migrations.Migrations
                 name: "Maps",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: false),
-                    Details = table.Column<string>(nullable: false),
-                    ModId = table.Column<int>(nullable: false),
-                    Players = table.Column<int>(nullable: false),
-                    Size = table.Column<int>(nullable: false),
-                    Image = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    ModId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Players = table.Column<int>(type: "INTEGER", nullable: false),
+                    Size = table.Column<int>(type: "INTEGER", nullable: false),
+                    Image = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,38 +98,14 @@ namespace DowUmg.Migrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModDependencies",
-                columns: table => new
-                {
-                    MainModId = table.Column<int>(nullable: false),
-                    DepModId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ModDependencies", x => new { x.MainModId, x.DepModId });
-                    table.ForeignKey(
-                        name: "FK_ModDependencies_Mods_DepModId",
-                        column: x => x.DepModId,
-                        principalTable: "Mods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ModDependencies_Mods_MainModId",
-                        column: x => x.MainModId,
-                        principalTable: "Mods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Races",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    ModId = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    ModId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,6 +119,11 @@ namespace DowUmg.Migrations.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DowModDowMod_DependentsId",
+                table: "DowModDowMod",
+                column: "DependentsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GameRules_ModId",
                 table: "GameRules",
                 column: "ModId");
@@ -123,11 +132,6 @@ namespace DowUmg.Migrations.Migrations
                 name: "IX_Maps_ModId",
                 table: "Maps",
                 column: "ModId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ModDependencies_DepModId",
-                table: "ModDependencies",
-                column: "DepModId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mods_IsVanilla_ModFolder",
@@ -140,16 +144,17 @@ namespace DowUmg.Migrations.Migrations
                 column: "ModId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DowModDowMod");
+
             migrationBuilder.DropTable(
                 name: "GameRules");
 
             migrationBuilder.DropTable(
                 name: "Maps");
-
-            migrationBuilder.DropTable(
-                name: "ModDependencies");
 
             migrationBuilder.DropTable(
                 name: "Races");

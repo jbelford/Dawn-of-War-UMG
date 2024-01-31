@@ -1,6 +1,6 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -10,14 +10,16 @@ namespace DowUmg.Presentation.ViewModels
         {
             Router = new RoutingState();
 
-            GoHome = ReactiveCommand.CreateFromObservable(() => Router.NavigateAndReset.Execute(new TitleViewModel(this)));
+            GoHome = ReactiveCommand.CreateFromObservable(
+                () => Router.NavigateAndReset.Execute(new TitleViewModel(this))
+            );
 
             GoBack = Router.NavigateBack;
 
             GoHome.Execute().Subscribe();
         }
 
-        public ReactiveCommand<Unit, Unit> GoBack { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoBack { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoHome { get; }
         public RoutingState Router { get; set; }
     }

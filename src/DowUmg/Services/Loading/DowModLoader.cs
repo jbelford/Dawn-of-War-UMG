@@ -1,10 +1,11 @@
-﻿using DowUmg.Data.Entities;
-using DowUmg.FileFormats;
-using DowUmg.Interfaces;
-using Splat;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DowUmg.Data.Entities;
+using DowUmg.FileFormats;
+using DowUmg.Interfaces;
+using Microsoft.Extensions.DependencyModel;
+using Splat;
 
 namespace DowUmg.Services
 {
@@ -19,11 +20,13 @@ namespace DowUmg.Services
     {
         private readonly IFilePathProvider filePathProvider;
         private readonly ILogger logger;
-        private readonly ModuleExtractorFactory moduleExtractorFactory = new ModuleExtractorFactory();
+        private readonly ModuleExtractorFactory moduleExtractorFactory =
+            new ModuleExtractorFactory();
 
         public DowModLoader(IFilePathProvider? filePathProvider = null)
         {
-            this.filePathProvider = filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
+            this.filePathProvider =
+                filePathProvider ?? Locator.Current.GetService<IFilePathProvider>();
             this.logger = this.Log();
         }
 
@@ -90,8 +93,12 @@ namespace DowUmg.Services
             }
         }
 
-        public DowMod LoadMod(UnloadedMod unloaded, Dictionary<string, UnloadedMod> allUnloaded, LoadMemo memo,
-            LocaleStore? parentLocales = null)
+        public DowMod LoadMod(
+            UnloadedMod unloaded,
+            Dictionary<string, UnloadedMod> allUnloaded,
+            LoadMemo memo,
+            LocaleStore? parentLocales = null
+        )
         {
             DowMod? existing = memo.Get(unloaded.File.ModFolder, unloaded.File.IsVanilla);
             if (existing != null)
@@ -112,31 +119,39 @@ namespace DowUmg.Services
                 ModFolder = unloaded.File.ModFolder,
                 Details = unloaded.File.Description,
                 IsVanilla = unloaded.File.IsVanilla,
-                Playable = unloaded.File.Playable
+                Playable = unloaded.File.Playable,
+                Dependents = new List<DowMod>()
             };
 
-            mod.Dependencies = new List<DowModDependency>();
-
-            foreach (var dependency in unloaded.Dependencies)
-            {
-                mod.Dependencies.Add(new DowModDependency()
+            mod.Dependencies = unloaded
+                .Dependencies.Select(dep =>
                 {
-                    MainMod = mod,
-                    DepMod = LoadMod(allUnloaded[dependency.File.ModFolder], allUnloaded, memo, unloaded.Locales)
-                });
-            }
+                    var loaded = LoadMod(
+                        allUnloaded[dep.File.ModFolder],
+                        allUnloaded,
+                        memo,
+                        unloaded.Locales
+                    );
+                    loaded.Dependents.Add(mod);
+                    return loaded;
+                })
+                .ToList();
 
-            using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(unloaded.File);
+            using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(
+                unloaded.File
+            );
 
             mod.Races = new List<DowRace>();
 
             foreach (RaceFile race in extractor.GetRaces().Where(race => race.Playable))
             {
-                mod.Races.Add(new DowRace()
-                {
-                    Name = newLocales.Replace(race.Name),
-                    Description = newLocales.Replace(race.Description)
-                });
+                mod.Races.Add(
+                    new DowRace()
+                    {
+                        Name = newLocales.Replace(race.Name),
+                        Description = newLocales.Replace(race.Description)
+                    }
+                );
             }
 
             mod.Maps = new List<DowMap>();
@@ -145,38 +160,47 @@ namespace DowUmg.Services
             {
                 if (map.Players < 2 || map.Players > 8)
                 {
-                    this.logger.Write($"({mod.Name}) Probably not a valid map {map.FileName} as it does not contain a valid player size: '{map.Players}'",
-                            LogLevel.Info);
+                    this.logger.Write(
+                        $"({mod.Name}) Probably not a valid map {map.FileName} as it does not contain a valid player size: '{map.Players}'",
+                        LogLevel.Info
+                    );
                     continue;
                 }
 
                 string? image = extractor.GetMapImage(map.FileName);
                 if (image == null)
                 {
-                    this.logger.Write($"({mod.Name}) Probably not valid map {map.FileName} as it does not have an image", LogLevel.Info);
+                    this.logger.Write(
+                        $"({mod.Name}) Probably not valid map {map.FileName} as it does not have an image",
+                        LogLevel.Info
+                    );
                     continue;
                 }
 
-                mod.Maps.Add(new DowMap()
-                {
-                    Name = newLocales.Replace(map.Name),
-                    Details = newLocales.Replace(map.Description),
-                    Players = map.Players,
-                    Size = map.Size,
-                    Image = image
-                });
+                mod.Maps.Add(
+                    new DowMap()
+                    {
+                        Name = newLocales.Replace(map.Name),
+                        Details = newLocales.Replace(map.Description),
+                        Players = map.Players,
+                        Size = map.Size,
+                        Image = image
+                    }
+                );
             }
 
             mod.Rules = new List<GameRule>();
 
             foreach (GameRuleFile rule in extractor.GetGameRules())
             {
-                mod.Rules.Add(new GameRule()
-                {
-                    Name = newLocales.Replace(rule.Title),
-                    Details = newLocales.Replace(rule.Description),
-                    IsWinCondition = rule.VictoryCondition
-                });
+                mod.Rules.Add(
+                    new GameRule()
+                    {
+                        Name = newLocales.Replace(rule.Title),
+                        Details = newLocales.Replace(rule.Description),
+                        IsWinCondition = rule.VictoryCondition
+                    }
+                );
             }
 
             memo.Put(mod);
@@ -207,7 +231,11 @@ namespace DowUmg.Services
 
             try
             {
-                string[] files = Directory.GetFiles(localePath, "*.ucs", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(
+                    localePath,
+                    "*.ucs",
+                    SearchOption.AllDirectories
+                );
                 var ucsLoader = new LocaleLoader();
                 return files.Select(x => ucsLoader.Load(x));
             }
@@ -221,7 +249,8 @@ namespace DowUmg.Services
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
             var moduleLoader = new ModuleLoader();
-            return GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly).Select(file => moduleLoader.Load(file));
+            return GetFiles(dowPath, "*.module", SearchOption.TopDirectoryOnly)
+                .Select(file => moduleLoader.Load(file));
         }
 
         private string[] GetFiles(string path, string searchPattern, SearchOption option)

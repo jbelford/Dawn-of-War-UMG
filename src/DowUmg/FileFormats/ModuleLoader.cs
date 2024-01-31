@@ -1,9 +1,9 @@
-﻿using DowUmg.Constants;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using DowUmg.Constants;
 using DowUmg.Interfaces;
 using IniParser;
 using IniParser.Model;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace DowUmg.FileFormats
 {
@@ -45,11 +45,17 @@ namespace DowUmg.FileFormats
                 Description = global["Description"],
                 DllName = global["DllName"],
                 Playable = "1".Equals(global["Playable"]),
-                ModFolder = modFolder,
+                ModFolder = modFolder.ToLower(),
                 ModVersion = global["ModVersion"],
-                ArchiveFiles = global.Where(x => archiveFileReg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
-                RequiredMods = global.Where(x => requireModReg.IsMatch(x.KeyName)).Select(x => x.Value).ToArray(),
-                IsVanilla = DowConstants.IsVanilla(modFolder)
+                ArchiveFiles = global
+                    .Where(x => archiveFileReg.IsMatch(x.KeyName))
+                    .Select(x => x.Value.ToLower())
+                    .ToArray(),
+                RequiredMods = global
+                    .Where(x => requireModReg.IsMatch(x.KeyName))
+                    .Select(x => x.Value.ToLower())
+                    .ToArray(),
+                IsVanilla = DowConstants.IsVanilla(modFolder.ToLower())
             };
         }
     }
