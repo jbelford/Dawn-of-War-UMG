@@ -25,7 +25,7 @@ namespace DowUmg.Presentation.WPF.Pages
                         ViewModel,
                         vm => vm.Matchup,
                         v => v.ModName.Text,
-                        m => m.Map.Mod.Name
+                        m => $"Mod Folder: {m.Map.Mod.ModFolder}"
                     )
                     .DisposeWith(d);
 

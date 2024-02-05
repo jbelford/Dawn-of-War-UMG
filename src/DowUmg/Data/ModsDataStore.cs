@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DowUmg.Constants;
 using DowUmg.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +9,9 @@ namespace DowUmg.Data
 {
     public class ModsDataStore : IDisposable
     {
-        private readonly ModsContext context;
+        private readonly ModsContext context = new();
 
-        public ModsDataStore()
-        {
-            this.context = new ModsContext();
-        }
+        public ModsDataStore() { }
 
         public void Dispose()
         {
@@ -29,25 +27,30 @@ namespace DowUmg.Data
         {
             return this
                 .context.Mods.Where(mod => mod.Playable)
-                .Where(mod => mod.Maps.Count > 0 || mod.Rules.Count > 0 || mod.Races.Count > 0);
+                .Where(mod =>
+                    mod.Data.Maps.Count > 0 || mod.Data.Rules.Count > 0 || mod.Data.Races.Count > 0
+                );
+        }
+
+        public IEnumerable<DowMap> GetAddonMaps()
+        {
+            return context
+                .Mods.Where(mod => !mod.IsVanilla)
+                .Where(mod => mod.Data.ModFolder == "dxp2" || mod.Data.ModFolder == "w40k")
+                .SelectMany(mod => mod.Data.Maps);
         }
 
         public void DropAll()
         {
-            this.context.Mods.RemoveRange(this.context.Mods);
+            context.Data.RemoveRange(context.Data);
+            context.SaveChanges();
         }
 
         public void Add(DowMod mod)
         {
             var existing = context.Mods.SingleOrDefault(existing =>
-                existing.IsVanilla == mod.IsVanilla && existing.ModFolder == mod.ModFolder
+                mod.ModFile == existing.ModFile
             );
-
-            if (existing != null)
-            {
-                context.Mods.Remove(existing);
-                context.SaveChanges();
-            }
 
             context.ChangeTracker.TrackGraph(
                 mod,
@@ -65,8 +68,8 @@ namespace DowUmg.Data
             DowMod mod = GetAll().Single(mod => mod.Id == modId);
 
             return mod
-                .Dependencies.SelectMany(dep => dep.Races)
-                .Concat(mod.Races)
+                .Dependencies.SelectMany(dep => dep.Data.Races)
+                .Concat(mod.Data.Races)
                 .GroupBy(r => r.Name)
                 .ToDictionary(g => g.Key, g => g.Last())
                 .Values;
@@ -77,8 +80,8 @@ namespace DowUmg.Data
             DowMod mod = GetAll().Single(mod => mod.Id == modId);
 
             return mod
-                .Dependencies.SelectMany(dep => dep.Maps)
-                .Concat(mod.Maps)
+                .Dependencies.SelectMany(dep => dep.Data.Maps)
+                .Concat(mod.Data.Maps)
                 .GroupBy(r => r.Name)
                 .ToDictionary(g => g.Key, g => g.Last())
                 .Values;
@@ -89,8 +92,8 @@ namespace DowUmg.Data
             DowMod mod = GetAll().Single(mod => mod.Id == modId);
 
             return mod
-                .Dependencies.SelectMany(dep => dep.Rules)
-                .Concat(mod.Rules)
+                .Dependencies.SelectMany(dep => dep.Data.Rules)
+                .Concat(mod.Data.Rules)
                 .GroupBy(r => r.Name)
                 .ToDictionary(g => g.Key, g => g.Last())
                 .Values;

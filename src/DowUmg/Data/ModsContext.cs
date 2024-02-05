@@ -17,6 +17,7 @@ namespace DowUmg.Data
 
         public DbSet<DowMap> Maps { get; set; } = null!;
         public DbSet<DowMod> Mods { get; set; } = null!;
+        public DbSet<DowModData> Data { get; set; } = null!;
         public DbSet<GameRule> GameRules { get; set; } = null!;
         public DbSet<DowRace> Races { get; set; } = null!;
 
@@ -32,29 +33,35 @@ namespace DowUmg.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DowMod>().HasIndex(x => new { x.IsVanilla, x.ModFolder });
+            modelBuilder.Entity<DowMod>().HasIndex(x => new { x.IsVanilla, x.ModFile });
 
             modelBuilder.Entity<DowMod>().HasMany(x => x.Dependencies).WithMany(x => x.Dependents);
             modelBuilder.Entity<DowMod>().HasMany(x => x.Dependents).WithMany(x => x.Dependencies);
 
             modelBuilder
-                .Entity<DowMod>()
+                .Entity<DowModData>()
+                .HasMany(x => x.Mods)
+                .WithOne(x => x.Data)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey("ModDataId");
+            modelBuilder
+                .Entity<DowModData>()
                 .HasMany(x => x.Maps)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey("ModId");
+                .HasForeignKey("ModDataId");
             modelBuilder
-                .Entity<DowMod>()
+                .Entity<DowModData>()
                 .HasMany(x => x.Rules)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey("ModId");
+                .HasForeignKey("ModDataId");
             modelBuilder
-                .Entity<DowMod>()
+                .Entity<DowModData>()
                 .HasMany(x => x.Races)
                 .WithOne(x => x.Mod)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasForeignKey("ModId");
+                .HasForeignKey("ModDataId");
         }
     }
 }

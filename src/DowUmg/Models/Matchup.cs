@@ -3,17 +3,11 @@ using DowUmg.Data.Entities;
 
 namespace DowUmg.Models
 {
-    public class Matchup
+    public class Matchup(DowMap map, GameInfo info)
     {
-        public Matchup(DowMap map, GameInfo info)
-        {
-            Map = map;
-            GameInfo = info;
-        }
-
         public List<List<MatchupArmy>> Teams { get; } = new List<List<MatchupArmy>>();
-        public DowMap Map { get; set; }
-        public GameInfo GameInfo { get; set; }
+        public DowMap Map { get; set; } = map;
+        public GameInfo GameInfo { get; set; } = info;
     }
 
     public class MatchupTeam

@@ -56,7 +56,7 @@ namespace DowUmg.Services
                     .Select(file => LoadMap(mapsLoader, file))
                     .Where(map => map != null)
                     .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetMaps()))
-                as IEnumerable<MapFile>;
+                    .Distinct() as IEnumerable<MapFile>;
         }
 
         public string? GetMapImage(string fileName)

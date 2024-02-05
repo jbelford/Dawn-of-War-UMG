@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
@@ -100,7 +101,7 @@ namespace DowUmg.Presentation.ViewModels
                             IsLoaded = store
                                 .GetAll()
                                 .Any(mod =>
-                                    unloaded.File.ModFolder.Equals(mod.ModFolder)
+                                    unloaded.File.FileName.Equals(mod.ModFile)
                                     && mod.IsVanilla == unloaded.File.IsVanilla
                                 )
                         })
@@ -116,9 +117,10 @@ namespace DowUmg.Presentation.ViewModels
             store.DropAll();
 
             var allItems = BaseGameItems.Concat(ModItems);
-            Dictionary<string, UnloadedMod> allUnloaded = allItems
-                .GroupBy(item => item.Module.File.ModFolder, item => item.Module)
-                .ToDictionary(g => g.Key, g => g.First());
+            Dictionary<(string, bool), UnloadedMod> allUnloaded = allItems.ToDictionary(
+                item => (item.Module.File.FileName, item.Module.File.IsVanilla),
+                item => item.Module
+            );
 
             foreach (var item in allItems)
             {
@@ -127,7 +129,11 @@ namespace DowUmg.Presentation.ViewModels
 
             var memo = new LoadMemo();
 
-            foreach (var item in allItems.Where(mod => mod.Module.File.Playable))
+            foreach (
+                var item in allItems.Where(mod =>
+                    mod.Module.File.Playable || DowConstants.IsVanilla(mod.Module.File.ModFolder)
+                )
+            )
             {
                 DowMod mod = await Observable.Start(
                     () => dowModService.LoadMod(item.Module, allUnloaded, memo),
@@ -141,8 +147,7 @@ namespace DowUmg.Presentation.ViewModels
 
             foreach (var item in allItems.Where(mod => !mod.Module.File.Playable))
             {
-                item.IsLoaded =
-                    memo.Get(item.Module.File.ModFolder, item.Module.File.IsVanilla) != null;
+                item.IsLoaded = memo.GetMod(item.Module.File) != null;
             }
         }
     }

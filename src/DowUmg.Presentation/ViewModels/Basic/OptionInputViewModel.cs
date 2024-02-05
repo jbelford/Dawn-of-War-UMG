@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -7,7 +8,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class OptionInputViewModel<T> : ReactiveObject
     {
-        public OptionInputViewModel(Func<T, string> toString, params T[] items)
+        public OptionInputViewModel(Func<T, string> toString, IEnumerable<T> items)
         {
             foreach (var item in items)
             {
@@ -19,8 +20,8 @@ namespace DowUmg.Presentation.ViewModels
             }
         }
 
-        public OptionInputViewModel(params T[] items)
-            : this((T item) => item!.ToString(), items) { }
+        public OptionInputViewModel(IEnumerable<T> items)
+            : this((T item) => item.ToString(), items) { }
 
         [Reactive]
         public OptionInputItem<T> SelectedItem { get; set; }

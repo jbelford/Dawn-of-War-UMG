@@ -40,49 +40,52 @@ namespace DowUmg.Services
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()
         {
-            var modules = new Dictionary<string, UnloadedMod>();
-            foreach (DowModuleFile module in GetAllModules())
-            {
-                if (modules.ContainsKey(module.ModFolder))
-                {
-                    modules[module.ModFolder].File.UIName += $" / {module.UIName}";
-                }
-                else
-                {
-                    modules[module.ModFolder] = new UnloadedMod()
-                    {
-                        File = module,
-                        Locales = new LocaleStore(GetLocales(module.ModFolder).ToArray())
-                    };
-                }
-            }
+            Dictionary<string, DowModuleFile> modFiles = GetAllModules()
+                .ToDictionary(m => m.FileName, m => m);
 
-            foreach (UnloadedMod unloaded in modules.Values)
+            // Mod data is stored in folders. Different mods may share the same mod folder for locales
+            Dictionary<string, LocaleStore> modFolders = modFiles
+                .Values.Select(m => m.ModFolder)
+                .Distinct()
+                .ToDictionary(
+                    folder => folder,
+                    folder => new LocaleStore(GetLocales(folder).ToArray())
+                );
+
+            // Create dictionary of unloaded mods by filename
+            Dictionary<string, UnloadedMod> unloadedMods = modFiles
+                .Values.Select(moduleFile => new UnloadedMod()
+                {
+                    File = moduleFile,
+                    Locales = modFolders[moduleFile.ModFolder]
+                })
+                .ToDictionary(m => m.File.FileName, m => m);
+
+            // Add locale dependencies
+            foreach (UnloadedMod unloaded in unloadedMods.Values)
             {
                 foreach (string name in unloaded.File.RequiredMods)
                 {
-                    if (modules.ContainsKey(name))
+                    if (unloadedMods.TryGetValue(name, out UnloadedMod? value))
                     {
-                        unloaded.Dependencies.Add(modules[name]);
-                        unloaded.Locales.Dependencies.Add(modules[name].Locales);
+                        unloaded.Dependencies.Add(value);
+                        unloaded.Locales.Dependencies.Add(value.Locales);
                     }
                 }
             }
 
-            foreach (var module in modules.Values)
+            // Replace names with locales once locale dependency graph is setup
+            foreach (var module in unloadedMods.Values)
             {
-                if (module.Locales != null)
-                {
-                    module.File.UIName = module.Locales.Replace(module.File.UIName);
-                    module.File.Description = module.Locales.Replace(module.File.Description);
-                }
+                module.File.UIName = module.Locales.Replace(module.File.UIName);
+                module.File.Description = module.Locales.Replace(module.File.Description);
 
                 yield return module;
             }
 
             // Add unloaded mods for the uncompressed data possibly contained in vanilla mod folders
             // This data would include custom maps that were installed elsewhere
-            foreach (var mod in modules.Values.Where(unloaded => unloaded.File.IsVanilla))
+            foreach (var mod in unloadedMods.Values.Where(unloaded => unloaded.File.IsVanilla))
             {
                 yield return new UnloadedMod()
                 {
@@ -95,68 +98,69 @@ namespace DowUmg.Services
 
         public DowMod LoadMod(
             UnloadedMod unloaded,
-            Dictionary<string, UnloadedMod> allUnloaded,
+            Dictionary<(string, bool), UnloadedMod> allUnloaded,
             LoadMemo memo,
             LocaleStore? parentLocales = null
         )
         {
-            DowMod? existing = memo.Get(unloaded.File.ModFolder, unloaded.File.IsVanilla);
+            DowMod? existing = memo.GetMod(unloaded.File);
             if (existing != null)
             {
                 return existing;
             }
 
-            LocaleStore newLocales = new LocaleStore();
+            var newLocales = new LocaleStore();
             if (parentLocales != null)
             {
                 newLocales.Dependencies.Add(parentLocales);
             }
             newLocales.Dependencies.Add(unloaded.Locales);
 
-            var mod = new DowMod()
+            var mod = new DowMod
             {
                 Name = unloaded.File.UIName,
-                ModFolder = unloaded.File.ModFolder,
+                ModFile = unloaded.File.FileName,
                 Details = unloaded.File.Description,
                 IsVanilla = unloaded.File.IsVanilla,
                 Playable = unloaded.File.Playable,
-                Dependents = new List<DowMod>()
+                Dependencies = unloaded
+                    .Dependencies.Select(dep =>
+                        LoadMod(
+                            allUnloaded[(dep.File.FileName, dep.File.IsVanilla)],
+                            allUnloaded,
+                            memo,
+                            newLocales
+                        )
+                    )
+                    .ToList(),
             };
 
-            mod.Dependencies = unloaded
-                .Dependencies.Select(dep =>
-                {
-                    var loaded = LoadMod(
-                        allUnloaded[dep.File.ModFolder],
-                        allUnloaded,
-                        memo,
-                        newLocales
-                    );
-                    loaded.Dependents.Add(mod);
-                    return loaded;
-                })
-                .ToList();
+            memo.PutMod(mod);
 
-            using IModuleDataExtractor extractor = this.moduleExtractorFactory.Create(
+            DowModData? existingData = memo.GetData(unloaded.File);
+            if (existingData != null)
+            {
+                mod.Data = existingData;
+                existingData.Mods.Add(mod);
+                return mod;
+            }
+
+            using IModuleDataExtractor dataExtractor = this.moduleExtractorFactory.Create(
                 unloaded.File
             );
 
-            mod.Races = new List<DowRace>();
+            var races = dataExtractor
+                .GetRaces()
+                .Where(race => race.Playable)
+                .Select(race => new DowRace()
+                {
+                    Name = newLocales.Replace(race.Name),
+                    Description = newLocales.Replace(race.Description)
+                })
+                .ToList();
 
-            foreach (RaceFile race in extractor.GetRaces().Where(race => race.Playable))
-            {
-                mod.Races.Add(
-                    new DowRace()
-                    {
-                        Name = newLocales.Replace(race.Name),
-                        Description = newLocales.Replace(race.Description)
-                    }
-                );
-            }
-
-            mod.Maps = new List<DowMap>();
-
-            foreach (MapFile map in extractor.GetMaps())
+            var maps = new List<DowMap>();
+            foreach (MapFile map in dataExtractor.GetMaps())
             {
                 if (map.Players < 2 || map.Players > 8)
                 {
@@ -167,7 +171,7 @@ namespace DowUmg.Services
                     continue;
                 }
 
-                string? image = extractor.GetMapImage(map.FileName);
+                string? image = dataExtractor.GetMapImage(map.FileName);
                 if (image == null)
                 {
                     this.logger.Write(
@@ -177,7 +181,7 @@ namespace DowUmg.Services
                     continue;
                 }
 
-                mod.Maps.Add(
+                maps.Add(
                     new DowMap()
                     {
                         Name = newLocales.Replace(map.Name),
@@ -189,21 +193,26 @@ namespace DowUmg.Services
                 );
             }
 
-            mod.Rules = new List<GameRule>();
+            var rules = dataExtractor
+                .GetGameRules()
+                .Select(rule => new GameRule()
+                {
+                    Name = newLocales.Replace(rule.Title),
+                    Details = newLocales.Replace(rule.Description),
+                    IsWinCondition = rule.VictoryCondition
+                })
+                .ToList();
 
-            foreach (GameRuleFile rule in extractor.GetGameRules())
+            mod.Data = new DowModData()
             {
-                mod.Rules.Add(
-                    new GameRule()
-                    {
-                        Name = newLocales.Replace(rule.Title),
-                        Details = newLocales.Replace(rule.Description),
-                        IsWinCondition = rule.VictoryCondition
-                    }
-                );
-            }
+                ModFolder = unloaded.File.ModFolder,
+                Mods = new List<DowMod>([mod]),
+                Races = races,
+                Maps = maps,
+                Rules = rules
+            };
 
-            memo.Put(mod);
+            memo.PutData(mod.Data, mod.IsVanilla);
 
             return mod;
         }
@@ -216,11 +225,12 @@ namespace DowUmg.Services
                 DllName = mod.DllName,
                 ModFolder = mod.ModFolder,
                 ModVersion = mod.ModVersion,
-                Playable = mod.Playable,
-                ArchiveFiles = new string[] { },
+                Playable = false,
+                ArchiveFiles = [],
                 RequiredMods = mod.RequiredMods,
                 UIName = $"{mod.UIName} - Additions",
-                IsVanilla = false
+                IsVanilla = false,
+                FileName = mod.FileName,
             };
         }
 

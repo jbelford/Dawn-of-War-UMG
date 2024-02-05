@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DowUmg.Constants;
 using DowUmg.Interfaces;
@@ -9,6 +10,7 @@ namespace DowUmg.FileFormats
 {
     public class DowModuleFile
     {
+        public string FileName { get; set; } = null!;
         public string UIName { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string DllName { get; set; } = null!;
@@ -41,6 +43,7 @@ namespace DowUmg.FileFormats
 
             return new DowModuleFile()
             {
+                FileName = Path.GetFileNameWithoutExtension(filePath).ToLower(),
                 UIName = global["UIName"],
                 Description = global["Description"],
                 DllName = global["DllName"],

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DowUmg.Migrations.Migrations
 {
     [DbContext(typeof(ModsContext))]
-    [Migration("20240130225348_InitialCreate")]
+    [Migration("20240204234744_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -52,7 +52,7 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ModId")
+                    b.Property<int>("ModDataId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -67,7 +67,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId");
+                    b.HasIndex("ModDataId");
 
                     b.ToTable("Maps");
                 });
@@ -85,7 +85,10 @@ namespace DowUmg.Migrations.Migrations
                     b.Property<bool>("IsVanilla")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ModFolder")
+                    b.Property<int>("ModDataId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModFile")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -98,9 +101,26 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsVanilla", "ModFolder");
+                    b.HasIndex("ModDataId");
+
+                    b.HasIndex("IsVanilla", "ModFile");
 
                     b.ToTable("Mods");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowModData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModFolder")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Data");
                 });
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
@@ -113,7 +133,7 @@ namespace DowUmg.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ModId")
+                    b.Property<int>("ModDataId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -122,7 +142,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId");
+                    b.HasIndex("ModDataId");
 
                     b.ToTable("Races");
                 });
@@ -140,7 +160,7 @@ namespace DowUmg.Migrations.Migrations
                     b.Property<bool>("IsWinCondition")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ModId")
+                    b.Property<int>("ModDataId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -149,7 +169,7 @@ namespace DowUmg.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModId");
+                    b.HasIndex("ModDataId");
 
                     b.ToTable("GameRules");
                 });
@@ -171,31 +191,9 @@ namespace DowUmg.Migrations.Migrations
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMap", b =>
                 {
-                    b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
+                    b.HasOne("DowUmg.Data.Entities.DowModData", "Mod")
                         .WithMany("Maps")
-                        .HasForeignKey("ModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mod");
-                });
-
-            modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
-                {
-                    b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
-                        .WithMany("Races")
-                        .HasForeignKey("ModId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mod");
-                });
-
-            modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
-                {
-                    b.HasOne("DowUmg.Data.Entities.DowMod", "Mod")
-                        .WithMany("Rules")
-                        .HasForeignKey("ModId")
+                        .HasForeignKey("ModDataId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -204,7 +202,42 @@ namespace DowUmg.Migrations.Migrations
 
             modelBuilder.Entity("DowUmg.Data.Entities.DowMod", b =>
                 {
+                    b.HasOne("DowUmg.Data.Entities.DowModData", "Data")
+                        .WithMany("Mods")
+                        .HasForeignKey("ModDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Data");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowRace", b =>
+                {
+                    b.HasOne("DowUmg.Data.Entities.DowModData", "Mod")
+                        .WithMany("Races")
+                        .HasForeignKey("ModDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mod");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.GameRule", b =>
+                {
+                    b.HasOne("DowUmg.Data.Entities.DowModData", "Mod")
+                        .WithMany("Rules")
+                        .HasForeignKey("ModDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mod");
+                });
+
+            modelBuilder.Entity("DowUmg.Data.Entities.DowModData", b =>
+                {
                     b.Navigation("Maps");
+
+                    b.Navigation("Mods");
 
                     b.Navigation("Races");
 

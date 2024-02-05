@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using DowUmg.Constants;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
@@ -20,18 +18,9 @@ namespace DowUmg.Presentation.ViewModels
 
             using var store = new ModsDataStore();
 
-            DowMod[] mods = store.GetPlayableMods().ToArray();
+            GeneralTab = new GeneralTabViewModel(store.GetAddonMaps().ToList());
 
-            IEnumerable<DowMod> addonMods = mods.Where(mod =>
-                !mod.IsVanilla && DowConstants.IsVanilla(mod.ModFolder)
-            );
-            IEnumerable<DowMod> baseMods = mods.Where(mod =>
-                mod.IsVanilla || !DowConstants.IsVanilla(mod.ModFolder)
-            );
-
-            GeneralTab = new GeneralTabViewModel(addonMods.SelectMany(mod => mod.Maps).ToList());
-
-            Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, baseMods.ToArray());
+            Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, store.GetPlayableMods());
 
             RefreshMod = ReactiveCommand.Create(
                 (DowMod mod) =>

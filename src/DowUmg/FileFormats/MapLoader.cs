@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using DowUmg.Interfaces;
 
@@ -37,13 +38,37 @@ namespace DowUmg.FileFormats
     * X byte description
     */
 
-    public class MapFile
+    public class MapFile : IEquatable<MapFile?>
     {
         public string FileName { get; set; } = null!;
         public int Players { get; set; }
         public int Size { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
+
+        #region Generated
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as MapFile);
+        }
+
+        public bool Equals(MapFile? other)
+        {
+            return other is not null
+                && FileName == other.FileName
+                && Players == other.Players
+                && Size == other.Size
+                && Name == other.Name
+                && Description == other.Description;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(FileName, Players, Size, Name, Description);
+        }
+
+        #endregion
     }
 
     internal class MapLoader : IFileLoader<MapFile>

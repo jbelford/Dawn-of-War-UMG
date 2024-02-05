@@ -13,7 +13,7 @@ namespace DowUmg.Presentation.ViewModels
         public PlayersSelectViewModel(string label, IEnumerable<int> humans, RangeViewModel minMax)
         {
             Label = label;
-            Humans = new OptionInputViewModel<int>(humans.ToArray());
+            Humans = new OptionInputViewModel<int>(humans);
             MinMax = minMax;
 
             RefreshForHumanPlayers = ReactiveCommand.Create(

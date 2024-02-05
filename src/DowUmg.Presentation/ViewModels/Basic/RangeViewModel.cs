@@ -10,8 +10,8 @@ namespace DowUmg.Presentation.ViewModels
         public RangeViewModel(int min, int max)
         {
             int count = max - min + 1;
-            MinInput = new OptionInputViewModel<int>(Enumerable.Range(min, count).ToArray());
-            MaxInput = new OptionInputViewModel<int>(Enumerable.Range(min, count).ToArray());
+            MinInput = new OptionInputViewModel<int>(Enumerable.Range(min, count));
+            MaxInput = new OptionInputViewModel<int>(Enumerable.Range(min, count));
             MaxInput.SelectedItem = MaxInput.Items.Last();
 
             RefreshForMin = ReactiveCommand.Create(

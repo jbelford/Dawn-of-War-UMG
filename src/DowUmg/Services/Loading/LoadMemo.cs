@@ -1,37 +1,67 @@
 ﻿using System.Collections.Generic;
 using DowUmg.Data.Entities;
+using DowUmg.FileFormats;
 
 namespace DowUmg.Services
 {
     public class LoadMemo
     {
-        private Dictionary<string, (DowMod? vanilla, DowMod? mod)> dict = new();
+        private readonly Dictionary<string, (DowMod? vanilla, DowMod? mod)> modMemo = [];
+        private readonly Dictionary<string, (DowModData? vanilla, DowModData? mod)> dataMemo = [];
 
-        public DowMod? Get(string modFolder, bool isVanilla)
+        public DowMod? GetMod(DowModuleFile moduleFile)
         {
-            if (this.dict.ContainsKey(modFolder))
+            if (modMemo.TryGetValue(moduleFile.FileName, out (DowMod? vanilla, DowMod? mod) value))
             {
-                var (vanilla, mod) = this.dict[modFolder];
-                return isVanilla ? vanilla : mod;
+                var (vanilla, mod) = value;
+                return moduleFile.IsVanilla ? vanilla : mod;
             }
 
             return null;
         }
 
-        public void Put(DowMod newMod)
+        public void PutMod(DowMod newMod)
         {
-            (DowMod? vanilla, DowMod? mod) value = (null, null);
-            if (this.dict.ContainsKey(newMod.ModFolder))
-            {
-                value = this.dict[newMod.ModFolder];
-            }
+            modMemo.TryGetValue(newMod.ModFile, out (DowMod? vanilla, DowMod? mod) value);
             if (newMod.IsVanilla)
             {
-                this.dict[newMod.ModFolder] = (newMod, value.mod);
+                this.modMemo[newMod.ModFile] = (newMod, value.mod);
             }
             else
             {
-                this.dict[newMod.ModFolder] = (value.vanilla, newMod);
+                this.modMemo[newMod.ModFile] = (value.vanilla, newMod);
+            }
+        }
+
+        public DowModData? GetData(DowModuleFile moduleFile)
+        {
+            if (
+                dataMemo.TryGetValue(
+                    moduleFile.ModFolder,
+                    out (DowModData? vanilla, DowModData? mod) value
+                )
+            )
+            {
+                var (vanilla, mod) = value;
+                return moduleFile.IsVanilla ? vanilla : mod;
+            }
+
+            return null;
+        }
+
+        public void PutData(DowModData newData, bool isVanilla)
+        {
+            dataMemo.TryGetValue(
+                newData.ModFolder,
+                out (DowModData? vanilla, DowModData? mod) value
+            );
+            if (isVanilla)
+            {
+                this.dataMemo[newData.ModFolder] = (newData, value.mod);
+            }
+            else
+            {
+                this.dataMemo[newData.ModFolder] = (value.vanilla, newData);
             }
         }
     }
