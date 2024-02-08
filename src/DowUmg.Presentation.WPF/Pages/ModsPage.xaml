@@ -1,21 +1,16 @@
 ﻿<rxui:ReactiveUserControl
-        x:Class="DowUmg.Presentation.WPF.Pages.ModsPage"
-        x:TypeArguments="vm:ModsViewModel"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:rxui="http://reactiveui.net"
-        xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:c="clr-namespace:DowUmg.Presentation.WPF.Controls"
-        mc:Ignorable="d"
-        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-        d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <DataTemplate x:Key="ModItemTemplate" DataType="{x:Type vm:ModItemViewModel}">
-            <c:ModItemView ViewModel="{Binding Mode=OneTime}" />
-        </DataTemplate>
-    </UserControl.Resources>
+    x:Class="DowUmg.Presentation.WPF.Pages.ModsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="vm:ModsViewModel"
+    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+    mc:Ignorable="d">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -24,7 +19,12 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Mods" HorizontalAlignment="Center" FontSize="{StaticResource FontSizeXXLarge}" Margin="0,0,0,20" />
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,20"
+            HorizontalAlignment="Center"
+            FontSize="{StaticResource FontSizeXXLarge}"
+            Text="Mods" />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -34,22 +34,31 @@
         </Grid>
         <StackPanel Grid.Row="2">
             <Label Content="Base Game" Target="{Binding ElementName=VanillaModsList, Mode=OneWay}" />
-            <ListBox x:Name="VanillaModsList" HorizontalContentAlignment="Stretch"
-                     ItemTemplate="{StaticResource ModItemTemplate}" />
+            <ListBox x:Name="VanillaModsList" HorizontalContentAlignment="Stretch" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label Content="Additional" Grid.Column="1" Target="{Binding ElementName=ModsList, Mode=OneWay}" />
-                <Button x:Name="RefreshButton" Content="Refresh Lists" Grid.Column="2" Margin="5" Padding="5,0" HorizontalAlignment="Left" />
+                <Label
+                    Grid.Column="1"
+                    Content="Additional"
+                    Target="{Binding ElementName=ModsList, Mode=OneWay}" />
+                <Button
+                    x:Name="RefreshButton"
+                    Grid.Column="2"
+                    Margin="5"
+                    Padding="5,0"
+                    HorizontalAlignment="Left"
+                    Content="Refresh Lists" />
             </Grid>
         </StackPanel>
-        <ListBox x:Name="ModsList" Grid.Row="3"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 HorizontalContentAlignment="Stretch"
-                 ItemTemplate="{StaticResource ModItemTemplate}" />
+        <ListBox
+            x:Name="ModsList"
+            Grid.Row="3"
+            HorizontalContentAlignment="Stretch"
+            ScrollViewer.VerticalScrollBarVisibility="Visible" />
         <Grid Grid.Row="4" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -58,7 +67,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <Button x:Name="loadModsButton" Grid.Column="1" FontSize="{StaticResource FontSizeRegular}" Content="Reload All Mods" />
+            <Button
+                x:Name="loadModsButton"
+                Grid.Column="1"
+                Content="Reload All Mods"
+                FontSize="{StaticResource FontSizeRegular}" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

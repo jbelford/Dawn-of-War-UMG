@@ -17,7 +17,7 @@ namespace DowUmg.Presentation.ViewModels
             : base(screen, "settings")
         {
             this.settingsService =
-                settingsService ?? Locator.Current.GetService<AppSettingsService>();
+                settingsService ?? Locator.Current.GetService<AppSettingsService>()!;
 
             SavedSettings = this.settingsService.GetSettings();
 

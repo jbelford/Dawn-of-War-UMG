@@ -1,28 +1,18 @@
 ﻿<rxui:ReactiveUserControl
-    x:Class="DowUmg.Presentation.WPF.Pages.TitlePage"
+    x:Class="DowUmg.Presentation.WPF.Pages.CampaignPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
-    xmlns:viewmodels="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
-    d:DesignHeight="558.5"
-    d:DesignWidth="936.913"
-    x:TypeArguments="viewmodels:TitleViewModel"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="vm:CampaignViewModel"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style x:Key="MessageStyle" TargetType="Border">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="DarkRed" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="Padding" Value="5" />
-        </Style>
-    </UserControl.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -39,22 +29,11 @@
             Grid.Column="1"
             FontSize="{StaticResource FontSizeXXLarge}"
             FontWeight="SemiBold"
-            Text="Dawn of War: Ultimate Matchup Generator"
-            TextWrapping="WrapWithOverflow" />
-
-        <Border
-            x:Name="WarningMessage"
-            Grid.Row="2"
-            Grid.Column="1"
-            Style="{StaticResource MessageStyle}">
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="{StaticResource FontSizeRegular}"
-                Text="Load mods first!" />
-        </Border>
+            Text="Campaign"
+            TextAlignment="Center" />
 
         <Grid
-            Grid.Row="4"
+            Grid.Row="2"
             Grid.Column="1"
             Width="200">
             <Grid.Resources>
@@ -70,29 +49,21 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button
-                x:Name="CampaignButton"
+                x:Name="NewCampaignButton"
                 Grid.Row="0"
-                Content="Campaign" />
+                Content="New"
+                IsEnabled="False" />
             <Button
-                x:Name="MatchupButton"
+                x:Name="LoadCampaignButton"
                 Grid.Row="1"
-                Content="Matchup" />
+                Content="Load"
+                IsEnabled="False" />
             <Button
-                x:Name="ModsButton"
+                x:Name="CreateCampaignButton"
                 Grid.Row="2"
-                Content="Mods" />
-            <Button
-                x:Name="SettingsButton"
-                Grid.Row="3"
-                Content="Settings" />
-            <Button
-                x:Name="QuitButton"
-                Grid.Row="4"
-                Content="Quit" />
+                Content="Create" />
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

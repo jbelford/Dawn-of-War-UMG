@@ -3,6 +3,7 @@ using DowUmg.Data;
 using DowUmg.Interfaces;
 using DowUmg.Presentation.Handlers;
 using DowUmg.Presentation.ViewModels;
+using DowUmg.Presentation.WPF.Controls;
 using DowUmg.Presentation.WPF.Pages;
 using DowUmg.Presentation.WPF.Services;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,20 @@ namespace DowUmg.Presentation.WPF
                 () => new GenerationSettingsPage()
             );
             Locator.CurrentMutable.Register<IViewFor<MatchupViewModel>>(() => new MatchupPage());
+            Locator.CurrentMutable.Register<IViewFor<CampaignViewModel>>(() => new CampaignPage());
+            Locator.CurrentMutable.Register<IViewFor<CreateCampaignViewModel>>(
+                () => new CreateCampaignPage()
+            );
+            Locator.CurrentMutable.Register<IViewFor<ModItemViewModel>>(() => new ModItemView());
+            Locator.CurrentMutable.Register<IViewFor<MissionEditorViewModel>>(
+                () => new MissionEditorPage()
+            );
+            Locator.CurrentMutable.Register(
+                () => new MapListItemView() as IViewFor<MissionListItemViewModel>
+            );
+            Locator.CurrentMutable.Register<IViewFor<MapListItemViewModel>>(
+                () => new MapListItemView()
+            );
         }
 
         private void MigrateDatabase()

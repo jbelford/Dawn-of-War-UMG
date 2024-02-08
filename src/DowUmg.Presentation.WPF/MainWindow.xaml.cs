@@ -18,20 +18,11 @@ namespace DowUmg.Presentation.WPF
 
             this.WhenActivated(d =>
             {
-                // More efficient than binding.
-                this.WhenAnyValue(x => x.ViewModel)
-                    .Where(x => x != null)
-                    .Do(SetRoutedViewHost)
-                    .Subscribe()
+                this.OneWayBind(ViewModel, vm => vm.Router, v => v.RoutedViewHost.Router)
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.GoHome, v => v.HomeButton).DisposeWith(d);
             });
-        }
-
-        private void SetRoutedViewHost(MainViewModel vm)
-        {
-            RoutedViewHost.Router = vm.Router;
         }
     }
 }

@@ -22,6 +22,9 @@ namespace DowUmg.Presentation.WPF.Pages
                 this.BindCommand(ViewModel, vm => vm.MatchupAction, v => v.MatchupButton)
                     .DisposeWith(d);
 
+                this.BindCommand(ViewModel, vm => vm.CampaignAction, v => v.CampaignButton)
+                    .DisposeWith(d);
+
                 this.BindCommand(
                         ViewModel,
                         viewModel => viewModel.CloseApp,
@@ -37,6 +40,7 @@ namespace DowUmg.Presentation.WPF.Pages
                             : System.Windows.Visibility.Visible;
 
                         MatchupButton.IsEnabled = isLoaded;
+                        CampaignButton.IsEnabled = isLoaded;
                     })
                     .Subscribe()
                     .DisposeWith(d);

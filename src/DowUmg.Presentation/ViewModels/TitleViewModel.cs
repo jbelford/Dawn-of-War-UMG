@@ -25,6 +25,10 @@ namespace DowUmg.Presentation.ViewModels
                 () => HostScreen.Router.Navigate.Execute(new GenerationViewModel(HostScreen))
             );
 
+            CampaignAction = ReactiveCommand.CreateFromObservable(
+                () => HostScreen.Router.Navigate.Execute(new CampaignViewModel(HostScreen))
+            );
+
             CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
         }
 
@@ -33,13 +37,9 @@ namespace DowUmg.Presentation.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> ModsAction { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> MatchupAction { get; }
 
+        public ReactiveCommand<Unit, IRoutableViewModel> CampaignAction { get; }
+
         [Reactive]
         public bool IsLoaded { get; set; }
-
-        public enum MenuType
-        {
-            Campaign,
-            None
-        };
     }
 }

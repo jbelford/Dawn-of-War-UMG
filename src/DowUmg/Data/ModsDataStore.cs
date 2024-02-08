@@ -98,5 +98,10 @@ namespace DowUmg.Data
                 .ToDictionary(g => g.Key, g => g.Last())
                 .Values;
         }
+
+        public DowMap GetDowMap()
+        {
+            return context.Maps.First();
+        }
     }
 }

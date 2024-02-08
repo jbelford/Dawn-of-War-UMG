@@ -1,0 +1,54 @@
+﻿<rxui:ReactiveWindow
+    x:Class="DowUmg.Presentation.WPF.Controls.MapSelectionWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    Title="Mission Match Selection"
+    Width="800"
+    Height="450"
+    x:TypeArguments="vm:MapSelectionViewModel"
+    mc:Ignorable="d">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="100" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            FontSize="{StaticResource FontSizeXLarge}"
+            FontWeight="SemiBold"
+            Text="Select Map"
+            TextWrapping="WrapWithOverflow" />
+
+        <ListBox
+            x:Name="MapListBox"
+            Grid.Row="1"
+            Margin="0,5,0,5" />
+
+        <Grid Grid.Row="2" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="Save"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                Content="Ok"
+                Style="{StaticResource RegularButton}" />
+            <Button
+                x:Name="Cancel"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                Content="Cancel"
+                Style="{StaticResource RegularButton}" />
+        </Grid>
+    </Grid>
+</rxui:ReactiveWindow>
