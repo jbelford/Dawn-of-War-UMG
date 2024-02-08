@@ -7,9 +7,9 @@ namespace DowUmg
     {
         public static void RegisterDefaults()
         {
-            Locator.CurrentMutable.Register(() => new AppSettingsService());
-            Locator.CurrentMutable.Register(() => new DowModLoader());
-            Locator.CurrentMutable.Register(() => new GenerationService());
+            Locator.CurrentMutable.RegisterLazySingleton(() => new AppSettingsService());
+            Locator.CurrentMutable.RegisterLazySingleton(() => new DowModLoader());
+            Locator.CurrentMutable.RegisterLazySingleton(() => new GenerationService());
         }
     }
 }
