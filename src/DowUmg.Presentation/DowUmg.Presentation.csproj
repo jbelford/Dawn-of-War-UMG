@@ -12,7 +12,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DowUmg\DowUmg.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validators\" />
-  </ItemGroup>
 </Project>
