@@ -15,7 +15,7 @@ namespace DowUmg.Presentation.WPF.Converters
             {
                 return null;
             }
-            return createSource(value as string);
+            return CreateSource(value as string);
         }
 
         public object ConvertBack(
@@ -40,11 +40,11 @@ namespace DowUmg.Presentation.WPF.Converters
                 result = null;
                 return false;
             }
-            result = createSource(from as string);
+            result = CreateSource(from as string);
             return true;
         }
 
-        private BitmapSource createSource(string path)
+        public BitmapSource CreateSource(string path)
         {
             try
             {
