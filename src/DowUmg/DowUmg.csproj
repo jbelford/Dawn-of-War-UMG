@@ -6,6 +6,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
+    <PackageReference Include="MessagePack" Version="2.5.140" />
+    <PackageReference Include="MessagePackAnalyzer" Version="2.5.140">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NLua" Version="1.7.1" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="Splat" Version="14.8.12" />

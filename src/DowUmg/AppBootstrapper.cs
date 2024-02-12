@@ -1,4 +1,5 @@
-﻿using DowUmg.Services;
+﻿using DowUmg.Interfaces;
+using DowUmg.Services;
 using Splat;
 
 namespace DowUmg
@@ -10,6 +11,9 @@ namespace DowUmg
             Locator.CurrentMutable.RegisterLazySingleton(() => new AppSettingsService());
             Locator.CurrentMutable.RegisterLazySingleton(() => new DowModLoader());
             Locator.CurrentMutable.RegisterLazySingleton(() => new GenerationService());
+            Locator.CurrentMutable.RegisterLazySingleton<ICampaignService>(
+                () => new CampaignService()
+            );
         }
     }
 }
