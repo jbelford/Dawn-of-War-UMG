@@ -62,7 +62,7 @@ namespace DowUmg.Services
 
             images.Sort((a, b) => a.Name.CompareTo(b.Name));
 
-            SgaRawFile image = images.Last();
+            SgaRawFile image = images.First();
 
             string imagesFolder = Path.Combine(cacheFolder, "data", "scenarios", "mp");
             Directory.CreateDirectory(imagesFolder);
