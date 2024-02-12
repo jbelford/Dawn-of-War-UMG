@@ -72,8 +72,17 @@ namespace DowUmg.Presentation.ViewModels
             missions.Add(mission);
 
             return HostScreen.Router.Navigate.Execute(
-                new MissionEditorViewModel(HostScreen, mission)
+                new MissionEditorViewModel(HostScreen, mission, OnSaveNewMission)
             );
+        }
+
+        private void OnSaveNewMission(CampaignMission newMission)
+        {
+            missions.Edit(inner =>
+            {
+                inner.Remove(inner.Last());
+                inner.Add(newMission);
+            });
         }
     }
 }

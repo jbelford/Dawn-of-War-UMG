@@ -18,6 +18,8 @@ namespace DowUmg.Presentation.WPF.Pages
                 this.BindCommand(ViewModel, vm => vm.CancelCommand, v => v.CancelButton)
                     .DisposeWith(d);
 
+                this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
+
                 this.Bind(ViewModel, vm => vm.Name, v => v.MissionNameInput.Text).DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.Description, v => v.MissionDescriptionInput.Text)
