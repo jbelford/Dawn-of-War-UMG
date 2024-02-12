@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json.Linq;
 using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Converters
@@ -47,17 +46,24 @@ namespace DowUmg.Presentation.WPF.Converters
 
         private BitmapSource createSource(string path)
         {
-            using Pfim.IImage image = Pfim.Pfimage.FromFile(path);
-            return BitmapSource.Create(
-                image.Width,
-                image.Height,
-                96.0,
-                96.0,
-                PixelFormat(image),
-                null,
-                image.Data,
-                image.Stride
-            );
+            try
+            {
+                using Pfim.IImage image = Pfim.Pfimage.FromFile(path);
+                return BitmapSource.Create(
+                    image.Width,
+                    image.Height,
+                    96.0,
+                    96.0,
+                    PixelFormat(image),
+                    null,
+                    image.Data,
+                    image.Stride
+                );
+            }
+            catch (Exception)
+            {
+                return ConvertBitmapToSource(Properties.Resources.missingImage);
+            }
         }
 
         private PixelFormat PixelFormat(Pfim.IImage image)
@@ -85,6 +91,31 @@ namespace DowUmg.Presentation.WPF.Converters
                         $"Unable to convert {image.Format} to WPF PixelFormat"
                     );
             }
+        }
+
+        private BitmapSource ConvertBitmapToSource(System.Drawing.Bitmap bitmap)
+        {
+            var bitmapData = bitmap.LockBits(
+                new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                bitmap.PixelFormat
+            );
+
+            var bitmapSource = BitmapSource.Create(
+                bitmapData.Width,
+                bitmapData.Height,
+                bitmap.HorizontalResolution,
+                bitmap.VerticalResolution,
+                PixelFormats.Bgr32,
+                null,
+                bitmapData.Scan0,
+                bitmapData.Stride * bitmapData.Height,
+                bitmapData.Stride
+            );
+
+            bitmap.UnlockBits(bitmapData);
+
+            return bitmapSource;
         }
     }
 }
