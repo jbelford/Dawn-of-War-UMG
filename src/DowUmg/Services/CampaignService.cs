@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using DowUmg.Data;
+using DowUmg.Data.Entities;
 using DowUmg.Interfaces;
 using DowUmg.Models;
 using MessagePack;
@@ -14,15 +15,19 @@ namespace DowUmg.Services
     public class CampaignService : ICampaignService, IEnableLogger
     {
         private ILogger logger;
+        private readonly DowModLoader modLoader;
 
         public CampaignService()
         {
             logger = this.Log();
+            modLoader = Locator.Current.GetService<DowModLoader>()!;
         }
 
-        public IList<Campaign> GetCampaignList()
+        public CampaignMap GetDefaultCampaignMap()
         {
-            throw new NotImplementedException();
+            using var dataStore = new ModsDataStore();
+            DowMap map = dataStore.GetDowMap();
+            return ConvertMapEntity(map);
         }
 
         public void SaveCampaign(string filePath, Campaign campaign)
@@ -52,5 +57,16 @@ namespace DowUmg.Services
                 throw new CampaignIOException("Failed to read campaign!", ex);
             }
         }
+
+        private CampaignMap ConvertMapEntity(DowMap map) =>
+            new()
+            {
+                Name = map.Name,
+                Details = map.Details,
+                Players = map.Players,
+                Size = map.Size,
+                Image = map.Image,
+                ImagePath = modLoader.GetMapImagePath(map)
+            };
     }
 }

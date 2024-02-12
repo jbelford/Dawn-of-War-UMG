@@ -19,7 +19,7 @@ namespace DowUmg.Services
         internal IModuleDataExtractor Create(DowModuleFile file)
         {
             string folder = Path.Combine(filePathProvider.SoulstormLocation, file.ModFolder);
-            string cacheFolder = Path.Combine(filePathProvider.AppDataLocation, file.ModFolder);
+            string cacheFolder = Path.Combine(filePathProvider.ModCacheLocation, file.ModFolder);
 
             if (file.IsVanilla)
             {

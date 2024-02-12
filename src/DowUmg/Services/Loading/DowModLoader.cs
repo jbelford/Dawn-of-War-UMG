@@ -4,7 +4,6 @@ using System.Linq;
 using DowUmg.Data.Entities;
 using DowUmg.FileFormats;
 using DowUmg.Interfaces;
-using Microsoft.Extensions.DependencyModel;
 using Splat;
 
 namespace DowUmg.Services
@@ -35,7 +34,7 @@ namespace DowUmg.Services
             string subPath = Path.Combine(map.Mod.ModFolder, "data", "scenarios", "mp", map.Image);
             return File.Exists(Path.Combine(filePathProvider.SoulstormLocation, subPath))
                 ? Path.Combine(filePathProvider.SoulstormLocation, subPath)
-                : Path.Combine(filePathProvider.AppDataLocation, subPath);
+                : Path.Combine(filePathProvider.ModCacheLocation, subPath);
         }
 
         public IEnumerable<UnloadedMod> GetUnloadedMods()

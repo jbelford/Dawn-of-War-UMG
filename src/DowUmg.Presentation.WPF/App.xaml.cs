@@ -64,9 +64,6 @@ namespace DowUmg.Presentation.WPF
             Locator.CurrentMutable.Register<IViewFor<MissionEditorViewModel>>(
                 () => new MissionEditorPage()
             );
-            Locator.CurrentMutable.Register(
-                () => new MapListItemView() as IViewFor<MissionListItemViewModel>
-            );
             Locator.CurrentMutable.Register<IViewFor<MapListItemViewModel>>(
                 () => new MapListItemView()
             );

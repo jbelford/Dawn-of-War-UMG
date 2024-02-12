@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReactiveUI;
+﻿using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
@@ -11,7 +6,7 @@ namespace DowUmg.Presentation.ViewModels
     public class MapListItemViewModel : ReactiveObject
     {
         [Reactive]
-        public string MapImage { get; set; }
+        public string? MapImage { get; set; }
 
         [Reactive]
         public string Header { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DowUmg.Data.Entities;
 using MessagePack;
 
 namespace DowUmg.Models
@@ -41,5 +40,8 @@ namespace DowUmg.Models
 
         [Key(4)]
         public string Image { get; set; } = null!;
+
+        [IgnoreMember]
+        public string? ImagePath { get; set; }
     }
 }

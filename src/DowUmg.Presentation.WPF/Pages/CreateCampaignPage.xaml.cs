@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Disposables;
-using System.Windows.Controls;
+using System.Windows;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
@@ -30,6 +30,14 @@ namespace DowUmg.Presentation.WPF.Pages
                     .DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.MissionList, v => v.MissionListBox.ItemsSource)
+                    .DisposeWith(d);
+
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.MissionList,
+                        v => v.WarningMessage.Visibility,
+                        list => list.Count > 0 ? Visibility.Hidden : Visibility.Visible
+                    )
                     .DisposeWith(d);
             });
         }

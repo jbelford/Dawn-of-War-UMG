@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reactive;
+﻿using System.Reactive;
 using DowUmg.Models;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -8,17 +7,17 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class MissionEditorViewModel : RoutableReactiveObject
     {
-        public MissionEditorViewModel(IScreen screen, MissionListItemViewModel missionViewModel)
+        public MissionEditorViewModel(IScreen screen, CampaignMission mission)
             : base(screen, "missionEdit")
         {
             CancelCommand = HostScreen.Router.NavigateBack;
 
-            Name = missionViewModel.Mission.Name;
-            Description = missionViewModel.Mission.Description;
+            Name = mission.Name;
+            Description = mission.Description;
 
             SaveCommand = ReactiveCommand.CreateFromObservable(() =>
             {
-                missionViewModel.Mission = new CampaignMission(missionViewModel.Mission.Map)
+                mission = new CampaignMission(mission.Map)
                 {
                     Name = Name,
                     Description = Description,

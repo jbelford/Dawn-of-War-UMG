@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DowUmg.Data;
-using DowUmg.Data.Entities;
+using DowUmg.Interfaces;
 using DowUmg.Models;
-using DynamicData.Binding;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -18,28 +15,37 @@ namespace DowUmg.Presentation.ViewModels
     public class CreateCampaignViewModel : RoutableReactiveObject
     {
         private Campaign campaign = new();
+        private SourceList<CampaignMission> missions = new();
+
+        private readonly ICampaignService campaignService;
+        private readonly CampaignMap defaultCampaignMap;
 
         public CreateCampaignViewModel(IScreen screen)
             : base(screen, "createcampaign")
         {
-            using var modStore = new ModsDataStore();
+            campaignService = Locator.Current.GetService<ICampaignService>()!;
+            defaultCampaignMap = campaignService.GetDefaultCampaignMap();
 
-            var defaultMap = modStore.GetDowMap();
-
-            AddMissionCommand = ReactiveCommand.CreateFromObservable(() =>
-            {
-                var mission = new MissionListItemViewModel(new CampaignMission(defaultMap));
-                MissionList.Add(mission);
-
-                return HostScreen.Router.Navigate.Execute(
-                    new MissionEditorViewModel(HostScreen, mission)
-                );
-            });
+            AddMissionCommand = ReactiveCommand.CreateFromObservable(AddMission);
 
             this.WhenAnyValue(x => x.CampaignName, x => x.CampaignDescription)
                 .Select((_) => IsModified())
-                .ToProperty(this, x => x.IsChanged, out _isChanged);
+                .ToPropertyEx(this, x => x.IsChanged);
+
+            missions
+                .Connect()
+                .Transform(mission => new MapListItemViewModel()
+                {
+                    MapImage = mission.Map.ImagePath,
+                    Header = mission.Name,
+                    Details = mission.Description,
+                    Footer = $"Map: {mission.Map.Name}"
+                })
+                .Bind(out _missionList)
+                .Subscribe();
         }
+
+        #region ViewModelProps
 
         [Reactive]
         public string CampaignName { get; set; }
@@ -47,15 +53,27 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public string CampaignDescription { get; set; }
 
-        private readonly ObservableAsPropertyHelper<bool> _isChanged;
-        public bool IsChanged => _isChanged.Value;
+        [ObservableAsProperty]
+        public bool IsChanged { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> AddMissionCommand { get; set; }
 
-        public IObservableCollection<MissionListItemViewModel> MissionList { get; set; } =
-            new ObservableCollectionExtended<MissionListItemViewModel>();
+        private readonly ReadOnlyObservableCollection<MapListItemViewModel> _missionList;
+        public ReadOnlyObservableCollection<MapListItemViewModel> MissionList => _missionList;
+
+        #endregion
 
         private bool IsModified() =>
             campaign.Name != CampaignName || campaign.Description != CampaignDescription;
+
+        private IObservable<IRoutableViewModel> AddMission()
+        {
+            var mission = new CampaignMission(defaultCampaignMap);
+            missions.Add(mission);
+
+            return HostScreen.Router.Navigate.Execute(
+                new MissionEditorViewModel(HostScreen, mission)
+            );
+        }
     }
 }
