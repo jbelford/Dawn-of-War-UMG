@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+﻿using System.Reactive.Disposables;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
@@ -21,21 +19,10 @@ namespace DowUmg.Presentation.WPF.Controls
                     .DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource)
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.Content).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.Content)
+                this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.ViewModel).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.ViewModel)
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Rules, v => v.WinConditions.Content)
-                    .DisposeWith(d);
-
-                this.OneWayBind(
-                        ViewModel,
-                        vm => vm.AddonMaps.Items,
-                        v => v.AddonMaps.Visibility,
-                        items =>
-                            items.Count > 0
-                                ? System.Windows.Visibility.Visible
-                                : System.Windows.Visibility.Hidden
-                    )
+                this.OneWayBind(ViewModel, vm => vm.Rules, v => v.WinConditions.ViewModel)
                     .DisposeWith(d);
             });
         }

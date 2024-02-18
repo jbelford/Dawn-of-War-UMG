@@ -1,46 +1,48 @@
-using System.Reactive.Linq;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemViewModel<T> : ItemViewModel<T>
+    public interface IToggleItem
     {
-        private readonly ObservableAsPropertyHelper<bool> _isShown;
+        public bool IsToggled { get; set; }
+    }
 
-        public ToggleItemViewModel()
+    public class ToggleItem<T> : ReactiveObject, IToggleItem
+    {
+        public ToggleItem(T item)
         {
+            Item = item;
             IsToggled = true;
-            IsEnabled = true;
-            this.WhenAnyValue(
-                    x => x.IsEnabled,
-                    x => x.IsFiltered,
-                    (enabled, filtered) => enabled && !filtered
-                )
-                .DistinctUntilChanged()
-                .ToProperty(this, x => x.IsShown, out _isShown);
         }
+
+        public T Item { get; set; }
 
         [Reactive]
         public bool IsToggled { get; set; }
+    }
+
+    public class ToggleItemViewModel : ReactiveObject
+    {
+        public ToggleItemViewModel(IToggleItem item, string label)
+        {
+            Item = item;
+            Label = label;
+            IsShown = true;
+        }
+
+        public IToggleItem Item { get; set; }
 
         [Reactive]
-        public bool IsEnabled { get; set; }
+        public string Label { get; set; }
 
         [Reactive]
-        public bool IsFiltered { get; set; }
-
-        public bool IsShown => _isShown.Value;
+        public bool IsShown { get; set; }
 
         [Reactive]
         public string ToolTip { get; set; }
 
         [Reactive]
         public string MapPath { get; set; }
-    }
-
-    public class ToggleItemViewModel : ToggleItemViewModel<object>
-    {
-        public ToggleItemViewModel() { }
     }
 }

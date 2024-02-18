@@ -1,10 +1,11 @@
-﻿<Application x:Class="DowUmg.Presentation.WPF.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
-             xmlns:controls="clr-namespace:DowUmg.Presentation.WPF.Controls"
-             Startup="OnApplicationStartup"
-             x:Name="DowUmgApp">
+﻿<Application
+    x:Class="DowUmg.Presentation.WPF.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:DowUmg.Presentation.WPF.Controls"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    x:Name="DowUmgApp"
+    Startup="OnApplicationStartup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,7 +15,10 @@
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-                <ComboBox VerticalContentAlignment="Center" ItemsSource="{Binding Path=Items}" SelectedItem="{Binding Path=SelectedItem}">
+                <ComboBox
+                    VerticalContentAlignment="Center"
+                    ItemsSource="{Binding Path=Items}"
+                    SelectedItem="{Binding Path=SelectedItem}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:OptionInputItem}">
                             <TextBlock Text="{Binding Path=Label, Mode=OneTime}" />
@@ -36,17 +40,25 @@
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="1" Content="{Binding Path=Label, Mode=OneTime}"
+                    <Label
+                        Grid.Column="1"
                         Margin="0,0,5,0"
-                        HorizontalContentAlignment="Right" />
-                    <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="{Binding Path=Input}" />
+                        HorizontalContentAlignment="Right"
+                        Content="{Binding Path=Label, Mode=OneTime}" />
+                    <Slider
+                        Grid.Column="2"
+                        Maximum="100"
+                        Minimum="0"
+                        Value="{Binding Path=Input}" />
                     <TextBlock Grid.Column="3" Text="{Binding Path=Input, StringFormat={}{0:F0}%}" />
                 </Grid>
             </DataTemplate>
 
             <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
-                <CheckBox IsChecked="{Binding Path=IsToggled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="{Binding Path=Label, Mode=OneTime}"
-                          Visibility="{Binding Path=IsShown, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <CheckBox
+                    Content="{Binding Path=Label, Mode=OneTime}"
+                    IsChecked="{Binding Path=Item.IsToggled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Visibility="{Binding Path=IsShown, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <CheckBox.ToolTip>
                         <ToolTip>
                             <ToolTip.Style>
@@ -59,7 +71,10 @@
                                 </Style>
                             </ToolTip.Style>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Path=MapPath, Converter={StaticResource MapPathToSourceConverter}, Mode=OneTime}" Width="150" Margin="5">
+                                <Image
+                                    Width="150"
+                                    Margin="5"
+                                    Source="{Binding Path=MapPath, Converter={StaticResource MapPathToSourceConverter}, Mode=OneTime}">
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Style.Triggers>
@@ -70,7 +85,10 @@
                                         </Style>
                                     </Image.Style>
                                 </Image>
-                                <TextBlock Text="{Binding Path=ToolTip, Mode=OneTime}" TextWrapping="WrapWithOverflow" MaxWidth="250" />
+                                <TextBlock
+                                    MaxWidth="250"
+                                    Text="{Binding Path=ToolTip, Mode=OneTime}"
+                                    TextWrapping="WrapWithOverflow" />
                             </StackPanel>
                         </ToolTip>
                     </CheckBox.ToolTip>

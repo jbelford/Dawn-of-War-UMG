@@ -19,17 +19,25 @@ namespace DowUmg.Presentation.ViewModels
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
-            GeneralTab = new GeneralTabViewModel(modDataService.GetAddonMaps());
+            var generationState = new GenerationViewModelState(modDataService.GetAddonMaps());
+
+            GeneralTab = new GeneralTabViewModel(generationState);
 
             Mod = new OptionInputViewModel<DowMod>(
                 mod => mod.Name,
                 modDataService.GetPlayableMods()
             );
 
-            RefreshMod = ReactiveCommand.Create(
-                (DowMod mod) =>
+            RefreshMod = ReactiveCommand.CreateFromTask(
+                async (DowMod mod) =>
                 {
-                    GeneralTab.Mod = mod;
+                    await Observable.Start(
+                        () =>
+                        {
+                            generationState.RefreshForMod(mod.Id);
+                        },
+                        RxApp.TaskpoolScheduler
+                    );
                 }
             );
 
@@ -40,11 +48,13 @@ namespace DowUmg.Presentation.ViewModels
                     Mod = Mod.SelectedItem.Item,
                     Maps = GeneralTab
                         .Maps.Items.Concat(GeneralTab.AddonMaps.Items)
-                        .Where(map => map.IsEnabled && map.IsToggled)
+                        .Where(map => map.Item.IsToggled)
+                        .Select(map => (ToggleItem<DowMap>)map.Item)
                         .Select(map => map.Item)
                         .ToList(),
                     Rules = GeneralTab
-                        .Rules.Items.Where(rule => rule.IsToggled)
+                        .Rules.Items.Where(rule => rule.Item.IsToggled)
+                        .Select(rule => (ToggleItem<GameRule>)rule.Item)
                         .Select(rule => rule.Item)
                         .ToList()
                 };

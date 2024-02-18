@@ -1,176 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using DowUmg.Constants;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
+using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
     public class GeneralTabViewModel : ReactiveObject
     {
-        public GeneralTabViewModel(List<DowMap> addonMaps)
+        private DowModLoader _modLoader;
+
+        public GeneralTabViewModel(GenerationViewModelState generationState)
         {
-            IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
+            _modLoader = Locator.Current.GetService<DowModLoader>()!;
 
-            MapTypes = new ObservableCollection<ToggleItemViewModel<int>>();
-            MapSizes = new ObservableCollection<ToggleItemViewModel<int>>();
+            var mapTypes = Enumerable
+                .Range(2, 7)
+                .Select(players => new ToggleItem<int>(players))
+                .ToList();
 
-            addonMaps.Sort(MapSort);
-            var modLoader = Locator.Current.GetService<DowModLoader>();
-
-            AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
-            AddonMaps.SetItems(
-                addonMaps
-                    .Select(map => new ToggleItemViewModel<DowMap>()
-                    {
-                        Label = $"{map.Name} [{map.Size}]",
-                        Item = map,
-                        ToolTip = map.Details,
-                        MapPath = modLoader.GetMapImagePath(map)
-                    })
-                    .ToArray()
-            );
-
-            Maps = new ToggleItemListViewModel<DowMap>("Maps");
-            Rules = new ToggleItemListViewModel<GameRule>("Win Conditions");
-
-            RefreshForMod = ReactiveCommand.CreateFromTask(
-                async (int id) =>
-                {
-                    var (maps, rules) = await Observable.Start(
-                        () =>
-                        {
-                            return (
-                                modDataService.GetModMaps(id).ToList(),
-                                modDataService.GetModRules(id).ToList()
-                            );
-                        },
-                        RxApp.TaskpoolScheduler
-                    );
-
-                    maps.Sort(MapSort);
-
-                    Maps.SetItems(
-                        maps.Select(map => new ToggleItemViewModel<DowMap>()
-                        {
-                            Label = $"{map.Name} [{map.Size}]",
-                            Item = map,
-                            ToolTip = map.Details,
-                            MapPath = modLoader.GetMapImagePath(map)
-                        })
-                    );
-                    Rules.SetItems(
-                        rules
-                            .Where(rule => rule.IsWinCondition)
-                            .Select(rule => new ToggleItemViewModel<GameRule>()
-                            {
-                                Label = rule.Name,
-                                Item = rule,
-                                ToolTip = rule.Details
-                            })
-                    );
-                }
-            );
-
-            var sizeToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
-            var playerToToggle = new Dictionary<int, ToggleItemViewModel<int>>();
-
-            ToggleMapPlayerFilter = ReactiveCommand.Create(
-                (ToggleItemViewModel<int> player) =>
-                {
-                    foreach (var map in Maps.Items.Concat(AddonMaps.Items))
-                    {
-                        if (
-                            map.Item.Players == player.Item
-                            && sizeToToggle.GetValueOrDefault(map.Item.Size)
-                                is ToggleItemViewModel<int> size
-                            && size.IsToggled
-                        )
-                        {
-                            map.IsEnabled = player.IsToggled;
-                        }
-                    }
-                }
-            );
-
-            ToggleMapSizeFilter = ReactiveCommand.Create(
-                (ToggleItemViewModel<int> size) =>
-                {
-                    foreach (var map in Maps.Items.Concat(AddonMaps.Items))
-                    {
-                        if (
-                            map.Item.Size == size.Item
-                            && playerToToggle.GetValueOrDefault(map.Item.Players)
-                                is ToggleItemViewModel<int> players
-                            && players.IsToggled
-                        )
-                        {
-                            map.IsEnabled = size.IsToggled;
-                        }
-                    }
-                }
-            );
-
-            foreach (var players in Enumerable.Range(2, 7))
-            {
-                var item = new ToggleItemViewModel<int>() { Label = $"{players}p", Item = players };
-                MapTypes.Add(item);
-                playerToToggle.Add(players, item);
-                item.WhenAnyValue(x => x.IsToggled)
-                    .DistinctUntilChanged()
-                    .Select(x => item)
-                    .InvokeCommand(ToggleMapPlayerFilter);
-            }
-
+            var mapSizes = new List<ToggleItem<int>>();
             foreach (int size in Enum.GetValues(typeof(MapSize)))
             {
-                var item = new ToggleItemViewModel<int>() { Label = size.ToString(), Item = size };
-                MapSizes.Add(item);
-                sizeToToggle.Add(size, item);
-                item.WhenAnyValue(x => x.IsToggled)
-                    .DistinctUntilChanged()
-                    .Select(x => item)
-                    .InvokeCommand(ToggleMapSizeFilter);
+                mapSizes.Add(new ToggleItem<int>(size));
             }
 
-            this.WhenAnyValue(x => x.Mod)
-                .Where(mod => mod != null)
-                .Select(mod => mod.Id)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForMod);
+            MapTypes = mapTypes
+                .Select(players => new ToggleItemViewModel(players, $"{players.Item}p"))
+                .ToList();
+
+            MapSizes = mapSizes
+                .Select(size => new ToggleItemViewModel(size, size.Item.ToString()))
+                .ToList();
+
+            AddonMaps = new ToggleItemListViewModel(
+                "Addon Maps",
+                generationState.ConnectAddonMaps().Sort(MapSort).Transform(MapToViewModelTransform)
+            );
+
+            Maps = new ToggleItemListViewModel(
+                "Maps",
+                generationState.ConnectMainMaps().Sort(MapSort).Transform(MapToViewModelTransform)
+            );
+
+            Rules = new ToggleItemListViewModel(
+                "Win Conditions",
+                generationState
+                    .ConnectRules()
+                    .Filter(rule => rule.IsWinCondition)
+                    .Transform(rule => new ToggleItemViewModel(
+                        new ToggleItem<GameRule>(rule),
+                        rule.Name
+                    )
+                    {
+                        ToolTip = rule.Details
+                    })
+            );
+
+            foreach (var players in mapTypes)
+            {
+                var item = players.Item;
+                players
+                    .WhenAnyValue(x => x.IsToggled)
+                    .ObserveOn(RxApp.TaskpoolScheduler)
+                    .Subscribe(toggled =>
+                    {
+                        generationState.SetPlayersAllowed(item, toggled);
+                    });
+            }
+
+            foreach (var size in mapSizes)
+            {
+                var item = size.Item;
+                size.WhenAnyValue(x => x.IsToggled)
+                    .ObserveOn(RxApp.TaskpoolScheduler)
+                    .Subscribe(toggled =>
+                    {
+                        generationState.SetSizeAllowed(item, toggled);
+                    });
+            }
         }
 
-        [Reactive]
-        public DowMod Mod { get; set; }
+        public ToggleItemListViewModel Maps { get; set; }
 
-        public ObservableCollection<DowRace> Races { get; } = new ObservableCollection<DowRace>();
+        public ToggleItemListViewModel AddonMaps { get; set; }
 
-        public ToggleItemListViewModel<DowMap> Maps { get; set; }
+        public ToggleItemListViewModel Rules { get; set; }
 
-        public ToggleItemListViewModel<DowMap> AddonMaps { get; set; }
+        public List<ToggleItemViewModel> MapTypes { get; set; }
 
-        public ToggleItemListViewModel<GameRule> Rules { get; set; }
+        public List<ToggleItemViewModel> MapSizes { get; set; }
 
-        public ObservableCollection<ToggleItemViewModel<int>> MapTypes { get; set; }
+        private ToggleItemViewModel MapToViewModelTransform(DowMap map) =>
+            new(new ToggleItem<DowMap>(map), $"{map.Name} [{map.Size}]")
+            {
+                ToolTip = map.Details,
+                MapPath = _modLoader.GetMapImagePath(map)
+            };
 
-        public ObservableCollection<ToggleItemViewModel<int>> MapSizes { get; set; }
-
-        public ReactiveCommand<int, Unit> RefreshForMod { get; }
-
-        public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapPlayerFilter { get; }
-
-        public ReactiveCommand<ToggleItemViewModel<int>, Unit> ToggleMapSizeFilter { get; }
-
-        private int MapSort(DowMap a, DowMap b)
-        {
-            return a.Players != b.Players ? a.Players - b.Players : string.Compare(a.Name, b.Name);
-        }
+        private SortExpressionComparer<DowMap> MapSort =>
+            SortExpressionComparer<DowMap>.Ascending(m => m.Players).ThenByAscending(m => m.Name);
     }
 }
