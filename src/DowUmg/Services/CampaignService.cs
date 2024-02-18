@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Interfaces;
 using DowUmg.Models;
@@ -16,17 +15,18 @@ namespace DowUmg.Services
     {
         private ILogger logger;
         private readonly DowModLoader modLoader;
+        private readonly IModDataService modDataService;
 
         public CampaignService()
         {
             logger = this.Log();
             modLoader = Locator.Current.GetService<DowModLoader>()!;
+            modDataService = Locator.Current.GetService<IModDataService>()!;
         }
 
         public CampaignMap GetDefaultCampaignMap()
         {
-            using var dataStore = new ModsDataStore();
-            DowMap map = dataStore.GetDowMap();
+            DowMap map = modDataService.GetDefaultMap();
             return ConvertMapEntity(map);
         }
 

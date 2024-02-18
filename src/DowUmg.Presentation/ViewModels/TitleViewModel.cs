@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
-using DowUmg.Data;
+using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -12,8 +13,8 @@ namespace DowUmg.Presentation.ViewModels
         public TitleViewModel(IScreen screen)
             : base(screen, "main")
         {
-            using var store = new ModsDataStore();
-            IsLoaded = store.GetPlayableMods().Any();
+            IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
+            IsLoaded = modDataService.GetPlayableMods().Any();
 
             SettingsAction = ReactiveCommand.CreateFromObservable(
                 () => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen))

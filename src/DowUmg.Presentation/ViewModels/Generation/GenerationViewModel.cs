@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
+using DowUmg.Services;
 using ReactiveUI;
+using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -16,11 +17,14 @@ namespace DowUmg.Presentation.ViewModels
             GameTab = new GameTabViewModel();
             TeamTab = new TeamTabViewModel();
 
-            using var store = new ModsDataStore();
+            IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
-            GeneralTab = new GeneralTabViewModel(store.GetAddonMaps().ToList());
+            GeneralTab = new GeneralTabViewModel(modDataService.GetAddonMaps());
 
-            Mod = new OptionInputViewModel<DowMod>(mod => mod.Name, store.GetPlayableMods());
+            Mod = new OptionInputViewModel<DowMod>(
+                mod => mod.Name,
+                modDataService.GetPlayableMods()
+            );
 
             RefreshMod = ReactiveCommand.Create(
                 (DowMod mod) =>

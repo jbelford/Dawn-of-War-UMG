@@ -5,7 +5,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DowUmg.Constants;
-using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using DynamicData;
@@ -19,13 +18,15 @@ namespace DowUmg.Presentation.ViewModels
     public class ModsViewModel : RoutableReactiveObject, IEnableLogger
     {
         private readonly IFullLogger logger;
-        private readonly DowModLoader dowModService;
+        private readonly DowModLoader modLoader;
+        private readonly IModDataService modDataService;
 
         public ModsViewModel(IScreen screen, DowModLoader? dowModService = null)
             : base(screen, "mods")
         {
             this.logger = this.Log();
-            this.dowModService = dowModService ?? Locator.Current.GetService<DowModLoader>();
+            this.modLoader = dowModService ?? Locator.Current.GetService<DowModLoader>()!;
+            this.modDataService = Locator.Current.GetService<IModDataService>()!;
 
             var whenNotLoading = this.WhenAnyValue(x => x.Loading)
                 .Select(loading => !loading)
@@ -45,7 +46,7 @@ namespace DowUmg.Presentation.ViewModels
                 )
                 .DistinctUntilChanged();
 
-            ReloadMods = ReactiveCommand.CreateFromTask(LoadAllMods, whenNotLoading);
+            ReloadMods = ReactiveCommand.CreateFromTask(LoadModsAsync, whenNotLoading);
 
             RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
             RefreshMods.ThrownExceptions.Subscribe(exception => logger.Error(exception));
@@ -92,18 +93,16 @@ namespace DowUmg.Presentation.ViewModels
             return await Observable.Start(
                 () =>
                 {
-                    using var store = new ModsDataStore();
-                    return dowModService
+                    IEnumerable<DowMod> mods = modDataService.GetMods();
+                    return modLoader
                         .GetUnloadedMods()
                         .Select(unloaded => new ModItemViewModel()
                         {
                             Module = unloaded,
-                            IsLoaded = store
-                                .GetAll()
-                                .Any(mod =>
-                                    unloaded.File.FileName.Equals(mod.ModFile)
-                                    && mod.IsVanilla == unloaded.File.IsVanilla
-                                )
+                            IsLoaded = mods.Any(mod =>
+                                unloaded.File.FileName.Equals(mod.ModFile)
+                                && mod.IsVanilla == unloaded.File.IsVanilla
+                            )
                         })
                         .ToList();
                 },
@@ -111,11 +110,8 @@ namespace DowUmg.Presentation.ViewModels
             );
         }
 
-        private async Task LoadAllMods()
+        private async Task LoadModsAsync()
         {
-            using var store = new ModsDataStore();
-            store.DropAll();
-
             var allItems = BaseGameItems.Concat(ModItems);
             Dictionary<(string, bool), UnloadedMod> allUnloaded = allItems.ToDictionary(
                 item => (item.Module.File.FileName, item.Module.File.IsVanilla),
@@ -127,8 +123,8 @@ namespace DowUmg.Presentation.ViewModels
                 item.IsLoaded = false;
             }
 
+            var mods = new List<DowMod>();
             var memo = new LoadMemo();
-
             foreach (
                 var item in allItems.Where(mod =>
                     mod.Module.File.Playable || DowConstants.IsVanilla(mod.Module.File.ModFolder)
@@ -136,11 +132,11 @@ namespace DowUmg.Presentation.ViewModels
             )
             {
                 DowMod mod = await Observable.Start(
-                    () => dowModService.LoadMod(item.Module, allUnloaded, memo),
+                    () => modLoader.LoadMod(item.Module, allUnloaded, memo),
                     RxApp.TaskpoolScheduler
                 );
 
-                store.Add(mod);
+                mods.Add(mod);
 
                 item.IsLoaded = true;
             }
@@ -149,6 +145,15 @@ namespace DowUmg.Presentation.ViewModels
             {
                 item.IsLoaded = memo.GetMod(item.Module.File) != null;
             }
+
+            await Observable.Start(
+                () =>
+                {
+                    modDataService.DropModData();
+                    modDataService.Add(mods);
+                },
+                RxApp.TaskpoolScheduler
+            );
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using DowUmg.Constants;
-using DowUmg.Data;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using ReactiveUI;
@@ -18,11 +17,12 @@ namespace DowUmg.Presentation.ViewModels
     {
         public GeneralTabViewModel(List<DowMap> addonMaps)
         {
+            IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
+
             MapTypes = new ObservableCollection<ToggleItemViewModel<int>>();
             MapSizes = new ObservableCollection<ToggleItemViewModel<int>>();
 
             addonMaps.Sort(MapSort);
-
             var modLoader = Locator.Current.GetService<DowModLoader>();
 
             AddonMaps = new ToggleItemListViewModel<DowMap>("Addon Maps");
@@ -47,8 +47,10 @@ namespace DowUmg.Presentation.ViewModels
                     var (maps, rules) = await Observable.Start(
                         () =>
                         {
-                            using var store = new ModsDataStore();
-                            return (store.GetMaps(id).ToList(), store.GetRules(id).ToList());
+                            return (
+                                modDataService.GetModMaps(id).ToList(),
+                                modDataService.GetModRules(id).ToList()
+                            );
                         },
                         RxApp.TaskpoolScheduler
                     );
