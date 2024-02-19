@@ -23,10 +23,10 @@ namespace DowUmg.Presentation.ViewModels
                 ToggleItemViewModel first = Items.FirstOrDefault();
                 if (first != null)
                 {
-                    bool isToggled = first.Item.IsToggled;
+                    bool isToggled = first.IsToggled;
                     foreach (var item in Items)
                     {
-                        item.Item.IsToggled = !isToggled;
+                        item.IsToggled = !isToggled;
                     }
                 }
             });

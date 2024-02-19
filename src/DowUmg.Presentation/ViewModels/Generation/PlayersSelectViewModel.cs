@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DowUmg.Data.Entities;
 using ReactiveUI;
@@ -8,7 +9,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class PlayersSelectViewModel : ReactiveObject
+    public class PlayersSelectViewModel : ActivatableReactiveObject
     {
         public PlayersSelectViewModel(string label, IEnumerable<int> humans, RangeViewModel minMax)
         {
@@ -42,9 +43,13 @@ namespace DowUmg.Presentation.ViewModels
                 }
             );
 
-            this.WhenAnyValue(x => x.Humans.SelectedItem)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForHumanPlayers);
+            this.WhenActivated(d =>
+            {
+                this.WhenAnyValue(x => x.Humans.SelectedItem)
+                    .DistinctUntilChanged()
+                    .InvokeCommand(RefreshForHumanPlayers)
+                    .DisposeWith(d);
+            });
         }
 
         public string Label { get; }

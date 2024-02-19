@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DowUmg.Data.Entities;
 using ReactiveUI;
@@ -8,7 +9,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class TeamTabViewModel : ReactiveObject
+    public class TeamTabViewModel : ActivatableReactiveObject
     {
         public TeamTabViewModel()
         {
@@ -109,15 +110,19 @@ namespace DowUmg.Presentation.ViewModels
             //    .DistinctUntilChanged()
             //    .InvokeCommand(RefreshMapsForRange);
 
-            this.WhenAnyValue(x => x.TeamNum.SelectedItem)
-                .DistinctUntilChanged()
-                .Select(item => item.Item)
-                .InvokeCommand(RefreshTeamList);
+            this.WhenActivated(d =>
+            {
+                this.WhenAnyValue(x => x.TeamNum.SelectedItem)
+                    .DistinctUntilChanged()
+                    .Select(item => item.Item)
+                    .InvokeCommand(RefreshTeamList)
+                    .DisposeWith(d);
 
-            this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForMin);
-
+                this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
+                    .DistinctUntilChanged()
+                    .InvokeCommand(RefreshForMin)
+                    .DisposeWith(d);
+            });
             //this.WhenAnyValue(x => x.Mod)
             //    .Where(mod => mod != null)
             //    .Select(mod => mod.Id)

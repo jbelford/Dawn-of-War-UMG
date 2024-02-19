@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
@@ -9,7 +10,7 @@ using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GenerationSettingsViewModel : RoutableReactiveObject
+    public class GenerationSettingsViewModel : RoutableReactiveObject, IActivatableViewModel
     {
         public GenerationSettingsViewModel(IScreen screen)
             : base(screen, "generation")
@@ -42,14 +43,12 @@ namespace DowUmg.Presentation.ViewModels
                     Mod = Mod.SelectedItem.Item,
                     Maps = GeneralTab
                         .Maps.Items.Concat(GeneralTab.AddonMaps.Items)
-                        .Where(map => map.Item.IsToggled)
-                        .Select(map => (ToggleItem<DowMap>)map.Item)
-                        .Select(map => map.Item)
+                        .Where(map => map.ToggleItem.IsToggled)
+                        .Select(map => map.Model)
                         .ToList(),
                     Rules = GeneralTab
-                        .Rules.Items.Where(rule => rule.Item.IsToggled)
-                        .Select(rule => (ToggleItem<GameRule>)rule.Item)
-                        .Select(rule => rule.Item)
+                        .WinConditions.Items.Where(rule => rule.ToggleItem.IsToggled)
+                        .Select(rule => rule.Model)
                         .ToList()
                 };
 
@@ -78,11 +77,15 @@ namespace DowUmg.Presentation.ViewModels
                 );
             });
 
-            this.WhenAnyValue(x => x.Mod.SelectedItem)
-                .DistinctUntilChanged()
-                .Select(mod => mod.Item)
-                .ObserveOn(RxApp.TaskpoolScheduler)
-                .InvokeCommand(RefreshMod);
+            this.WhenActivated(d =>
+            {
+                this.WhenAnyValue(x => x.Mod.SelectedItem)
+                    .DistinctUntilChanged()
+                    .Select(mod => mod.Item)
+                    .ObserveOn(RxApp.TaskpoolScheduler)
+                    .InvokeCommand(RefreshMod)
+                    .DisposeWith(d);
+            });
         }
 
         public GeneralTabViewModel GeneralTab { get; }

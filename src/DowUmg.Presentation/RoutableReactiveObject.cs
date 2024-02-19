@@ -2,7 +2,7 @@
 
 namespace DowUmg.Presentation
 {
-    public class RoutableReactiveObject : ReactiveObject, IRoutableViewModel
+    public class RoutableReactiveObject : ActivatableReactiveObject, IRoutableViewModel
     {
         public RoutableReactiveObject(IScreen screen, string urlPathSegment)
         {

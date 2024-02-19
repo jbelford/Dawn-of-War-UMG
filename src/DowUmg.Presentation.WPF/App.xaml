@@ -57,7 +57,7 @@
             <DataTemplate x:Key="ToggleItemTemplate" DataType="{x:Type vm:ToggleItemViewModel}">
                 <CheckBox
                     Content="{Binding Path=Label, Mode=OneTime}"
-                    IsChecked="{Binding Path=Item.IsToggled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    IsChecked="{Binding Path=IsToggled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Visibility="{Binding Path=IsShown, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <CheckBox.ToolTip>
                         <ToolTip>
