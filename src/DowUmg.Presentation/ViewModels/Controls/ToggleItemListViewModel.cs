@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using ReactiveUI;
@@ -9,7 +10,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemListViewModel : ReactiveObject
+    public class ToggleItemListViewModel : ActivatableReactiveObject
     {
         public ToggleItemListViewModel(
             string label,
@@ -42,9 +43,16 @@ namespace DowUmg.Presentation.ViewModels
                 }
             );
 
-            items.ObserveOn(RxApp.MainThreadScheduler).Bind(out _items).Subscribe();
+            this.WhenActivated(d =>
+            {
+                items
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Bind(out _items)
+                    .Subscribe()
+                    .DisposeWith(d);
 
-            this.WhenAnyValue(x => x.Search).InvokeCommand(FilterItems);
+                this.WhenAnyValue(x => x.Search).InvokeCommand(FilterItems).DisposeWith(d);
+            });
         }
 
         public string Label { get; }
@@ -52,7 +60,7 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public string Search { get; set; }
 
-        private readonly ReadOnlyObservableCollection<ToggleItemViewModel> _items;
+        private ReadOnlyObservableCollection<ToggleItemViewModel> _items;
         public ReadOnlyObservableCollection<ToggleItemViewModel> Items => _items;
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }

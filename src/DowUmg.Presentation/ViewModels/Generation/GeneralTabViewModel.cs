@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DowUmg.Constants;
 using DowUmg.Data.Entities;
@@ -12,7 +13,7 @@ using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GeneralTabViewModel : ReactiveObject
+    public class GeneralTabViewModel : ActivatableReactiveObject
     {
         private DowModLoader _modLoader;
 
@@ -63,28 +64,33 @@ namespace DowUmg.Presentation.ViewModels
                     })
             );
 
-            foreach (var players in mapTypes)
+            this.WhenActivated(d =>
             {
-                var item = players.Item;
-                players
-                    .WhenAnyValue(x => x.IsToggled)
-                    .ObserveOn(RxApp.TaskpoolScheduler)
-                    .Subscribe(toggled =>
-                    {
-                        generationState.SetPlayersAllowed(item, toggled);
-                    });
-            }
+                foreach (var players in mapTypes)
+                {
+                    var item = players.Item;
+                    players
+                        .WhenAnyValue(x => x.IsToggled)
+                        .ObserveOn(RxApp.TaskpoolScheduler)
+                        .Subscribe(toggled =>
+                        {
+                            generationState.SetPlayersAllowed(item, toggled);
+                        })
+                        .DisposeWith(d);
+                }
 
-            foreach (var size in mapSizes)
-            {
-                var item = size.Item;
-                size.WhenAnyValue(x => x.IsToggled)
-                    .ObserveOn(RxApp.TaskpoolScheduler)
-                    .Subscribe(toggled =>
-                    {
-                        generationState.SetSizeAllowed(item, toggled);
-                    });
-            }
+                foreach (var size in mapSizes)
+                {
+                    var item = size.Item;
+                    size.WhenAnyValue(x => x.IsToggled)
+                        .ObserveOn(RxApp.TaskpoolScheduler)
+                        .Subscribe(toggled =>
+                        {
+                            generationState.SetSizeAllowed(item, toggled);
+                        })
+                        .DisposeWith(d);
+                }
+            });
         }
 
         public ToggleItemListViewModel Maps { get; set; }
