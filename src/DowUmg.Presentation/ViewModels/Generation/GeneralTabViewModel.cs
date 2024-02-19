@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -37,8 +38,8 @@ namespace DowUmg.Presentation.ViewModels
                 mapSizes.Add(new ToggleModel<int>(size, new ToggleItemViewModel(size.ToString())));
             }
 
-            MapTypes = mapTypes.Select(item => item.ToggleItem).ToList();
-            MapSizes = mapSizes.Select(item => item.ToggleItem).ToList();
+            MapTypes = new(mapTypes.Select(item => item.ToggleItem));
+            MapSizes = new(mapSizes.Select(item => item.ToggleItem));
 
             this.WhenActivated(d =>
             {
@@ -114,9 +115,9 @@ namespace DowUmg.Presentation.ViewModels
         internal IObservableList<ToggleModel<GameRule>> WinConditions => _winConditions;
         public ToggleItemListViewModel WinConditionsViewModel { get; set; }
 
-        public List<ToggleItemViewModel> MapTypes { get; set; }
+        public ObservableCollection<ToggleItemViewModel> MapTypes { get; set; }
 
-        public List<ToggleItemViewModel> MapSizes { get; set; }
+        public ObservableCollection<ToggleItemViewModel> MapSizes { get; set; }
 
         private ToggleModel<DowMap> MapToViewModelTransform(DowMap map) =>
             new(
