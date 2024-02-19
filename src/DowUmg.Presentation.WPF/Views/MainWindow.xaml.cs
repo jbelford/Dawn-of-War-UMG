@@ -1,10 +1,8 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+﻿using System.Reactive.Disposables;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
-namespace DowUmg.Presentation.WPF
+namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
     /// Interaction logic for RoutingWindow.xaml
