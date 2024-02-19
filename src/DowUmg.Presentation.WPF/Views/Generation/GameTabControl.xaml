@@ -1,13 +1,15 @@
 ﻿<rxui:ReactiveUserControl
-        x:Class="DowUmg.Presentation.WPF.Views.GameTabControl"
-        x:TypeArguments="vm:GameTabViewModel"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:rxui="http://reactiveui.net"
-        xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
-        mc:Ignorable="d"  d:DesignWidth="936.913" d:DesignHeight="558.5">
+    x:Class="DowUmg.Presentation.WPF.Views.GameTabControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="558.5"
+    d:DesignWidth="936.913"
+    x:TypeArguments="vm:GameTabViewModel"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="GameOptionTemplate" DataType="{x:Type vm:ProportionalOptionsViewModel}">
             <GroupBox Padding="5">
@@ -15,7 +17,7 @@
                     <Label Content="{Binding Path=Name, Mode=OneTime}" />
                 </GroupBox.Header>
 
-                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource NumberInputSliderTemplate}">
+                <ItemsControl ItemTemplate="{StaticResource NumberInputSliderTemplate}" ItemsSource="{Binding Items}">
                     <ItemsControl.ItemContainerStyle>
                         <Style>
                             <Setter Property="FrameworkElement.Margin" Value="5" />
@@ -30,10 +32,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0">
-            <ContentControl x:Name="DiffOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="SpeedOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="RateOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl x:Name="StartingOption" Margin="10" ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl
+                x:Name="DiffOption"
+                Margin="10"
+                ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl
+                x:Name="SpeedOption"
+                Margin="10"
+                ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl
+                x:Name="RateOption"
+                Margin="10"
+                ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl
+                x:Name="StartingOption"
+                Margin="10"
+                ContentTemplate="{StaticResource GameOptionTemplate}" />
         </WrapPanel>
     </Grid>
 </rxui:ReactiveUserControl>
