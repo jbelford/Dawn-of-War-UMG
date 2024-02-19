@@ -1,4 +1,6 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
@@ -15,10 +17,16 @@ namespace DowUmg.Presentation.WPF.Views
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.MapSizes, v => v.MapSizes.ItemsSource)
+                this.WhenAnyValue(x => x.ViewModel)
+                    .WhereNotNull()
+                    .Do(vm =>
+                    {
+                        MapTypes.ItemsSource = vm.MapTypes;
+                        MapSizes.ItemsSource = vm.MapSizes;
+                    })
+                    .Subscribe()
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.MapTypes, v => v.MapTypes.ItemsSource)
-                    .DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.Maps, v => v.Maps.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.AddonMaps, v => v.AddonMaps.ViewModel)
                     .DisposeWith(d);
