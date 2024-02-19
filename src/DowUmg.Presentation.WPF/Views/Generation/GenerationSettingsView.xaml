@@ -1,0 +1,58 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="DowUmg.Presentation.WPF.Views.GenerationSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:DowUmg.Presentation.WPF.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="vm:GenerationSettingsViewModel"
+    mc:Ignorable="d">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                FontSize="{StaticResource FontSizeXLarge}"
+                Text="Generation Settings" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Label VerticalContentAlignment="Center" Content="Mod" />
+                <ContentControl x:Name="ModOption" ContentTemplate="{StaticResource OptionInputTemplate}" />
+            </StackPanel>
+        </Grid>
+        <TabControl Grid.Row="1" Margin="0,20">
+            <TabItem Header="General">
+                <c:GeneralTabControl x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
+            </TabItem>
+            <TabItem Header="Team">
+                <c:TeamTabControl x:Name="TeamTab" HorizontalContentAlignment="Stretch" />
+            </TabItem>
+            <TabItem Header="Game">
+                <c:GameTabControl x:Name="GameTab" HorizontalContentAlignment="Stretch" />
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="GenerateButton"
+                Grid.Column="1"
+                Padding="10,5"
+                Content="Generate!" />
+        </Grid>
+    </Grid>
+</rxui:ReactiveUserControl>

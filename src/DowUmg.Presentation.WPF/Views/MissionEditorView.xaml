@@ -1,0 +1,142 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="DowUmg.Presentation.WPF.Views.MissionEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="vm:MissionEditorViewModel"
+    mc:Ignorable="d">
+    <Grid Margin="20">
+        <Grid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
+                <Setter Property="FontStyle" Value="Italic" />
+            </Style>
+            <Style BasedOn="{StaticResource RegularButton}" TargetType="Button" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            FontSize="{StaticResource FontSizeXXLarge}"
+            Text="Mission Editor"
+            TextAlignment="Center" />
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="Mission Name" />
+                    <TextBox
+                        x:Name="MissionNameInput"
+                        Grid.Row="1"
+                        Padding="5"
+                        d:Text="Mission #1"
+                        FontSize="{StaticResource FontSizeRegular}"
+                        MaxLength="100" />
+                </Grid>
+
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="Summary" />
+                    <TextBox
+                        x:Name="MissionDescriptionInput"
+                        Grid.Row="1"
+                        Padding="5"
+                        d:Text="A very cool mission"
+                        AcceptsReturn="True"
+                        FontSize="{StaticResource FontSizeRegular}"
+                        MaxLength="255"
+                        MinLines="3"
+                        SpellCheck.IsEnabled="True"
+                        TextWrapping="Wrap" />
+                </Grid>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="Map" />
+                    <Button
+                        x:Name="MapButton"
+                        Grid.Row="1"
+                        HorizontalContentAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="MapImage" Grid.Column="0" />
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    x:Name="MapPlayers"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    d:Text="Players: 4" />
+                                <TextBlock
+                                    x:Name="MapSize"
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    d:Text="Size: 257" />
+                                <TextBlock
+                                    x:Name="MapName"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="3"
+                                    d:Text="Map Name"
+                                    TextAlignment="Center" />
+                                <TextBlock
+                                    x:Name="MapDescription"
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    d:Text="This is a description about the map" />
+                            </Grid>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="CancelButton"
+                Grid.Column="0"
+                Content="Cancel" />
+            <Button
+                x:Name="SaveButton"
+                Grid.Column="2"
+                Content="Save" />
+        </Grid>
+    </Grid>
+</rxui:ReactiveUserControl>

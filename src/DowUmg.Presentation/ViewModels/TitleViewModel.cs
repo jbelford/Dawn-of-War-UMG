@@ -23,7 +23,8 @@ namespace DowUmg.Presentation.ViewModels
                 () => HostScreen.Router.Navigate.Execute(new ModsViewModel(HostScreen))
             );
             MatchupAction = ReactiveCommand.CreateFromObservable(
-                () => HostScreen.Router.Navigate.Execute(new GenerationViewModel(HostScreen))
+                () =>
+                    HostScreen.Router.Navigate.Execute(new GenerationSettingsViewModel(HostScreen))
             );
 
             CampaignAction = ReactiveCommand.CreateFromObservable(

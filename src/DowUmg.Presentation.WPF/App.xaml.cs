@@ -2,9 +2,6 @@
 using DowUmg.Data;
 using DowUmg.Interfaces;
 using DowUmg.Presentation.Handlers;
-using DowUmg.Presentation.ViewModels;
-using DowUmg.Presentation.WPF.Controls;
-using DowUmg.Presentation.WPF.Pages;
 using DowUmg.Presentation.WPF.Services;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
@@ -27,7 +24,6 @@ namespace DowUmg.Presentation.WPF
             RxApp.DefaultExceptionHandler = new DefaultExceptionHandler();
 
             RegisterDependencies();
-            RegisterViews();
 
             MigrateDatabase();
 
@@ -41,32 +37,11 @@ namespace DowUmg.Presentation.WPF
 
         private void RegisterDependencies()
         {
+            Locator.CurrentMutable.RegisterLazySingleton<IViewLocator>(() => new AppViewLocator());
             Locator.CurrentMutable.RegisterLazySingleton<IFilePathProvider>(
                 () => new WindowsFilePathProvider()
             );
             AppBootstrapper.RegisterDefaults();
-        }
-
-        private void RegisterViews()
-        {
-            Locator.CurrentMutable.Register<IViewFor<TitleViewModel>>(() => new TitlePage());
-            Locator.CurrentMutable.Register<IViewFor<SettingsViewModel>>(() => new SettingsPage());
-            Locator.CurrentMutable.Register<IViewFor<ModsViewModel>>(() => new ModsPage());
-            Locator.CurrentMutable.Register<IViewFor<GenerationViewModel>>(
-                () => new GenerationSettingsPage()
-            );
-            Locator.CurrentMutable.Register<IViewFor<MatchupViewModel>>(() => new MatchupPage());
-            Locator.CurrentMutable.Register<IViewFor<CampaignViewModel>>(() => new CampaignPage());
-            Locator.CurrentMutable.Register<IViewFor<CreateCampaignViewModel>>(
-                () => new CreateCampaignPage()
-            );
-            Locator.CurrentMutable.Register<IViewFor<ModItemViewModel>>(() => new ModItemView());
-            Locator.CurrentMutable.Register<IViewFor<MissionEditorViewModel>>(
-                () => new MissionEditorPage()
-            );
-            Locator.CurrentMutable.Register<IViewFor<MapListItemViewModel>>(
-                () => new MapListItemView()
-            );
         }
 
         private void MigrateDatabase()
