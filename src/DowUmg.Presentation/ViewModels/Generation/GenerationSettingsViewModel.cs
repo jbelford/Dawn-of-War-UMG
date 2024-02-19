@@ -28,16 +28,10 @@ namespace DowUmg.Presentation.ViewModels
                 modDataService.GetPlayableMods()
             );
 
-            RefreshMod = ReactiveCommand.CreateFromTask(
-                async (DowMod mod) =>
+            RefreshMod = ReactiveCommand.Create(
+                (DowMod mod) =>
                 {
-                    await Observable.Start(
-                        () =>
-                        {
-                            generationState.RefreshForMod(mod.Id);
-                        },
-                        RxApp.TaskpoolScheduler
-                    );
+                    generationState.RefreshForMod(mod.Id);
                 }
             );
 
@@ -87,6 +81,7 @@ namespace DowUmg.Presentation.ViewModels
             this.WhenAnyValue(x => x.Mod.SelectedItem)
                 .DistinctUntilChanged()
                 .Select(mod => mod.Item)
+                .ObserveOn(RxApp.TaskpoolScheduler)
                 .InvokeCommand(RefreshMod);
         }
 
