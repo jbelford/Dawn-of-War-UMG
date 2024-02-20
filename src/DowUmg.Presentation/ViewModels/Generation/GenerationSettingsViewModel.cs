@@ -88,6 +88,10 @@ namespace DowUmg.Presentation.ViewModels
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .InvokeCommand(RefreshMod)
                     .DisposeWith(d);
+
+                GeneralTabViewModel.DisposeWith(d);
+                TeamTabViewModel.DisposeWith(d);
+                ModViewModel.DisposeWith(d);
             });
         }
 

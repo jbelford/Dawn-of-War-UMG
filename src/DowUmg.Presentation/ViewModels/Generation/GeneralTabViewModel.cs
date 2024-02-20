@@ -16,7 +16,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     internal record ToggleModel<T>(T Model, ToggleItemViewModel ToggleItem);
 
-    public class GeneralTabViewModel : ActivatableReactiveObject
+    public class GeneralTabViewModel : ActivatableReactiveObject, IDisposable
     {
         private DowModLoader _modLoader;
 
@@ -41,41 +41,41 @@ namespace DowUmg.Presentation.ViewModels
             MapTypes = new(mapTypes.Select(item => item.ToggleItem));
             MapSizes = new(mapSizes.Select(item => item.ToggleItem));
 
+            AddonMapsViewModel = new ToggleItemListViewModel(
+                "Addon Maps",
+                generationState
+                    .ConnectAddonMaps()
+                    .Sort(MapSort)
+                    .Transform(MapToViewModelTransform)
+                    .BindToObservableList(out _addonMaps)
+                    .Transform(item => item.ToggleItem)
+            );
+
+            MapsViewModel = new ToggleItemListViewModel(
+                "Maps",
+                generationState
+                    .ConnectMainMaps()
+                    .Sort(MapSort)
+                    .Transform(MapToViewModelTransform)
+                    .BindToObservableList(out _maps)
+                    .Transform(item => item.ToggleItem)
+            );
+
+            WinConditionsViewModel = new ToggleItemListViewModel(
+                "Win Conditions",
+                generationState
+                    .ConnectRules()
+                    .Filter(rule => rule.IsWinCondition)
+                    .Transform(rule => new ToggleModel<GameRule>(
+                        rule,
+                        new ToggleItemViewModel(rule.Name) { ToolTip = rule.Details }
+                    ))
+                    .BindToObservableList(out _winConditions)
+                    .Transform(item => item.ToggleItem)
+            );
+
             this.WhenActivated(d =>
             {
-                AddonMapsViewModel = new ToggleItemListViewModel(
-                    "Addon Maps",
-                    generationState
-                        .ConnectAddonMaps()
-                        .Sort(MapSort)
-                        .Transform(MapToViewModelTransform)
-                        .BindToObservableList(out _addonMaps)
-                        .Transform(item => item.ToggleItem)
-                );
-
-                MapsViewModel = new ToggleItemListViewModel(
-                    "Maps",
-                    generationState
-                        .ConnectMainMaps()
-                        .Sort(MapSort)
-                        .Transform(MapToViewModelTransform)
-                        .BindToObservableList(out _maps)
-                        .Transform(item => item.ToggleItem)
-                );
-
-                WinConditionsViewModel = new ToggleItemListViewModel(
-                    "Win Conditions",
-                    generationState
-                        .ConnectRules()
-                        .Filter(rule => rule.IsWinCondition)
-                        .Transform(rule => new ToggleModel<GameRule>(
-                            rule,
-                            new ToggleItemViewModel(rule.Name) { ToolTip = rule.Details }
-                        ))
-                        .BindToObservableList(out _winConditions)
-                        .Transform(item => item.ToggleItem)
-                );
-
                 foreach (var players in mapTypes)
                 {
                     var item = players.Model;
@@ -101,6 +101,13 @@ namespace DowUmg.Presentation.ViewModels
                         .DisposeWith(d);
                 }
             });
+        }
+
+        public void Dispose()
+        {
+            AddonMapsViewModel.Dispose();
+            MapsViewModel.Dispose();
+            WinConditionsViewModel.Dispose();
         }
 
         private IObservableList<ToggleModel<DowMap>> _maps;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -7,7 +8,7 @@ using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class RangeViewModel : ActivatableReactiveObject
+    public class RangeViewModel : ActivatableReactiveObject, IDisposable
     {
         public RangeViewModel(int min, int max)
         {
@@ -36,20 +37,20 @@ namespace DowUmg.Presentation.ViewModels
                 }
             );
 
+            MinInputViewModel = new OptionInputViewModel(
+                inputItems
+                    .Connect()
+                    .Transform(num => new OptionInputItemViewModel(num.ToString(), num))
+            );
+            MaxInputViewModel = new OptionInputViewModel(
+                inputItems
+                    .Connect()
+                    .Transform(num => new OptionInputItemViewModel(num.ToString(), num)),
+                true
+            );
+
             this.WhenActivated(d =>
             {
-                MinInputViewModel = new OptionInputViewModel(
-                    inputItems
-                        .Connect()
-                        .Transform(num => new OptionInputItemViewModel(num.ToString(), num))
-                );
-                MaxInputViewModel = new OptionInputViewModel(
-                    inputItems
-                        .Connect()
-                        .Transform(num => new OptionInputItemViewModel(num.ToString(), num)),
-                    true
-                );
-
                 this.WhenAnyValue(x => x.MinInputViewModel.SelectedItem)
                     .WhereNotNull()
                     .DistinctUntilChanged()
@@ -62,5 +63,11 @@ namespace DowUmg.Presentation.ViewModels
         public OptionInputViewModel MaxInputViewModel { get; set; }
 
         public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForMin { get; }
+
+        public void Dispose()
+        {
+            MinInputViewModel.Dispose();
+            MaxInputViewModel.Dispose();
+        }
     }
 }

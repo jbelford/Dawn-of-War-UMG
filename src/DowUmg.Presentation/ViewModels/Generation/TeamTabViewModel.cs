@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -9,7 +10,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class TeamTabViewModel : ActivatableReactiveObject
+    public class TeamTabViewModel : ActivatableReactiveObject, IDisposable
     {
         public TeamTabViewModel()
         {
@@ -81,6 +82,16 @@ namespace DowUmg.Presentation.ViewModels
                     .InvokeCommand(RefreshForMin)
                     .DisposeWith(d);
             });
+        }
+
+        public void Dispose()
+        {
+            TeamNum.Dispose();
+            GlobalPlayerOptions.Dispose();
+            foreach (var team in TeamPlayerOptions)
+            {
+                team.Dispose();
+            }
         }
 
         [Reactive]
