@@ -41,13 +41,6 @@
                     AcceptsReturn="False" />
             </Grid>
             <ScrollViewer Grid.Row="1">
-                <!--<ItemsControl x:Name="ToggleItemList" VirtualizingStackPanel.IsVirtualizing="True">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <c:ToggleItemControl ViewModel="{Binding Mode=OneTime}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>-->
                 <ItemsControl
                     x:Name="ToggleItemList"
                     ItemTemplate="{StaticResource ToggleItemTemplate}"
