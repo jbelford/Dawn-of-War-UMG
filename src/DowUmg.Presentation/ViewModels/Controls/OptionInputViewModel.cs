@@ -1,51 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Disposables;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class OptionInputViewModel<T> : ReactiveObject
+    public class OptionInputViewModel : ActivatableReactiveObject
     {
-        public OptionInputViewModel(Func<T, string> toString, IEnumerable<T> items)
+        public OptionInputViewModel(
+            IObservable<IChangeSet<OptionInputItemViewModel>> items,
+            bool selectLast = false
+        )
         {
-            foreach (var item in items)
+            this.WhenActivated(d =>
             {
-                Items.Add(new OptionInputItem<T>() { Label = toString.Invoke(item), Item = item });
-            }
-            if (Items.Count > 0)
-            {
-                SelectedItem = Items[0];
-            }
-        }
+                items.Bind(out _items).Subscribe().DisposeWith(d);
 
-        public OptionInputViewModel(IEnumerable<T> items)
-            : this((T item) => item.ToString(), items) { }
-
-        [Reactive]
-        public OptionInputItem<T> SelectedItem { get; set; }
-
-        public ObservableCollection<OptionInputItem<T>> Items { get; } =
-            new ObservableCollection<OptionInputItem<T>>();
-    }
-
-    public class OptionInputItem<T> : ItemViewModel<T>
-    {
-        public OptionInputItem(bool enabled = true)
-        {
-            IsEnabled = enabled;
+                SelectedItem = selectLast ? Items.Last() : Items.First();
+            });
         }
 
         [Reactive]
-        public bool IsEnabled { get; set; }
+        public OptionInputItemViewModel SelectedItem { get; set; }
+
+        private ReadOnlyObservableCollection<OptionInputItemViewModel>? _items;
+        public ReadOnlyObservableCollection<OptionInputItemViewModel>? Items => _items;
     }
 
-    public class OptionInputViewModel : OptionInputViewModel<object>
+    public class OptionInputItemViewModel(string label, object obj) : ReactiveObject
     {
-        public OptionInputViewModel(params object[] items)
-            : base(items) { }
-    }
+        private readonly object _object = obj;
 
-    public class OptionInputItem : OptionInputItem<object> { }
+        [Reactive]
+        public string Label { get; set; } = label;
+
+        [Reactive]
+        public bool IsEnabled { get; set; } = true;
+
+        internal TObject GetItem<TObject>() => (TObject)_object;
+    }
 }

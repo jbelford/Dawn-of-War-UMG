@@ -5,28 +5,30 @@ using System.Reactive.Linq;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
 using DowUmg.Services;
+using DynamicData;
 using ReactiveUI;
 using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GenerationSettingsViewModel : RoutableReactiveObject, IActivatableViewModel
+    public class GenerationSettingsViewModel : RoutableReactiveObject
     {
         public GenerationSettingsViewModel(IScreen screen)
             : base(screen, "generation")
         {
-            GameTab = new GameTabViewModel();
-            TeamTab = new TeamTabViewModel();
+            GameTabViewModel = new GameTabViewModel();
+            TeamTabViewModel = new TeamTabViewModel();
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
             var generationState = new GenerationViewModelState(modDataService.GetAddonMaps());
 
-            GeneralTab = new GeneralTabViewModel(generationState);
+            GeneralTabViewModel = new GeneralTabViewModel(generationState);
 
-            Mod = new OptionInputViewModel<DowMod>(
-                mod => mod.Name,
-                modDataService.GetPlayableMods()
+            var playableMods = new SourceList<DowMod>();
+            playableMods.AddRange(modDataService.GetPlayableMods());
+            ModViewModel = new OptionInputViewModel(
+                playableMods.Connect().Transform(mod => new OptionInputItemViewModel(mod.Name, mod))
             );
 
             RefreshMod = ReactiveCommand.Create(
@@ -40,36 +42,36 @@ namespace DowUmg.Presentation.ViewModels
             {
                 var settings = new GenerationSettings()
                 {
-                    Mod = Mod.SelectedItem.Item,
-                    Maps = GeneralTab
-                        .Maps.Items.Concat(GeneralTab.AddonMaps.Items)
+                    Mod = ModViewModel.SelectedItem.GetItem<DowMod>(),
+                    Maps = GeneralTabViewModel
+                        .Maps.Items.Concat(GeneralTabViewModel.AddonMaps.Items)
                         .Where(map => map.ToggleItem.IsToggled)
                         .Select(map => map.Model)
                         .ToList(),
-                    Rules = GeneralTab
+                    Rules = GeneralTabViewModel
                         .WinConditions.Items.Where(rule => rule.ToggleItem.IsToggled)
                         .Select(rule => rule.Model)
                         .ToList()
                 };
 
-                foreach (var diff in GameTab.DiffOption.Items)
+                foreach (var diff in GameTabViewModel.DiffOption)
                 {
-                    settings.GameDifficultyTickets[(int)diff.Item] = diff.Input;
+                    settings.GameDifficultyTickets[(int)diff.Model] = diff.NumberInput.Input;
                 }
 
-                foreach (var speed in GameTab.SpeedOption.Items)
+                foreach (var speed in GameTabViewModel.SpeedOption)
                 {
-                    settings.GameSpeedTickets[(int)speed.Item] = speed.Input;
+                    settings.GameSpeedTickets[(int)speed.Model] = speed.NumberInput.Input;
                 }
 
-                foreach (var rate in GameTab.RateOption.Items)
+                foreach (var rate in GameTabViewModel.RateOption)
                 {
-                    settings.ResourceRateTickets[(int)rate.Item] = rate.Input;
+                    settings.ResourceRateTickets[(int)rate.Model] = rate.NumberInput.Input;
                 }
 
-                foreach (var start in GameTab.StartingOption.Items)
+                foreach (var start in GameTabViewModel.StartingOption)
                 {
-                    settings.StartResourceTickets[(int)start.Item] = start.Input;
+                    settings.StartResourceTickets[(int)start.Model] = start.NumberInput.Input;
                 }
 
                 return HostScreen.Router.Navigate.Execute(
@@ -79,22 +81,23 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenActivated(d =>
             {
-                this.WhenAnyValue(x => x.Mod.SelectedItem)
+                this.WhenAnyValue(x => x.ModViewModel.SelectedItem)
+                    .WhereNotNull()
                     .DistinctUntilChanged()
-                    .Select(mod => mod.Item)
+                    .Select(mod => mod.GetItem<DowMod>())
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .InvokeCommand(RefreshMod)
                     .DisposeWith(d);
             });
         }
 
-        public GeneralTabViewModel GeneralTab { get; }
+        public GeneralTabViewModel GeneralTabViewModel { get; }
 
-        public GameTabViewModel GameTab { get; }
+        public GameTabViewModel GameTabViewModel { get; }
 
-        public TeamTabViewModel TeamTab { get; }
+        public TeamTabViewModel TeamTabViewModel { get; }
 
-        public OptionInputViewModel<DowMod> Mod { get; }
+        public OptionInputViewModel ModViewModel { get; }
 
         public ReactiveCommand<DowMod, Unit> RefreshMod { get; }
 

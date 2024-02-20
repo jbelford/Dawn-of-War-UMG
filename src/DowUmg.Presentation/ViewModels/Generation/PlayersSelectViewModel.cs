@@ -3,9 +3,8 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DowUmg.Data.Entities;
+using DynamicData;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -14,32 +13,28 @@ namespace DowUmg.Presentation.ViewModels
         public PlayersSelectViewModel(string label, IEnumerable<int> humans, RangeViewModel minMax)
         {
             Label = label;
-            Humans = new OptionInputViewModel<int>(humans);
             MinMax = minMax;
 
+            var sourceHumans = new SourceList<int>();
+            sourceHumans.AddRange(humans);
+            Humans = new OptionInputViewModel(
+                sourceHumans
+                    .Connect()
+                    .Transform(human => new OptionInputItemViewModel(human.ToString(), human))
+            );
+
             RefreshForHumanPlayers = ReactiveCommand.Create(
-                (OptionInputItem<int> item) =>
+                (OptionInputItemViewModel item) =>
                 {
-                    OptionInputViewModel<int> minInput = MinMax.MinInput;
+                    OptionInputViewModel minInput = MinMax.MinInputViewModel;
                     foreach (var minItem in minInput.Items)
                     {
-                        minItem.IsEnabled = minItem.Item >= item.Item;
+                        minItem.IsEnabled = minItem.GetItem<int>() >= item.GetItem<int>();
                     }
                     if (!minInput.SelectedItem.IsEnabled)
                     {
                         minInput.SelectedItem = minInput.Items.Where(x => x.IsEnabled).First();
                     }
-                }
-            );
-
-            RefreshForRaces = ReactiveCommand.Create(
-                (IEnumerable<DowRace> races) =>
-                {
-                    Races = new ProportionalOptionsViewModel<DowRace>(
-                        "Races",
-                        race => race.Name,
-                        races.ToArray()
-                    );
                 }
             );
 
@@ -54,15 +49,10 @@ namespace DowUmg.Presentation.ViewModels
 
         public string Label { get; }
 
-        public OptionInputViewModel<int> Humans { get; }
+        public OptionInputViewModel Humans { get; }
 
         public RangeViewModel MinMax { get; }
 
-        [Reactive]
-        public ProportionalOptionsViewModel<DowRace> Races { get; set; }
-
-        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForHumanPlayers { get; }
-
-        public ReactiveCommand<IEnumerable<DowRace>, Unit> RefreshForRaces { get; }
+        public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForHumanPlayers { get; }
     }
 }

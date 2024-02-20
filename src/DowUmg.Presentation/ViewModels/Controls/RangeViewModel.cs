@@ -1,40 +1,66 @@
 ﻿using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
 using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class RangeViewModel : ReactiveObject
+    public class RangeViewModel : ActivatableReactiveObject
     {
         public RangeViewModel(int min, int max)
         {
             int count = max - min + 1;
-            MinInput = new OptionInputViewModel<int>(Enumerable.Range(min, count));
-            MaxInput = new OptionInputViewModel<int>(Enumerable.Range(min, count));
-            MaxInput.SelectedItem = MaxInput.Items.Last();
+            var inputItems = new SourceList<int>();
+            inputItems.AddRange(Enumerable.Range(min, count));
 
             RefreshForMin = ReactiveCommand.Create(
-                (OptionInputItem<int> item) =>
+                (OptionInputItemViewModel item) =>
                 {
-                    foreach (var maxItem in MaxInput.Items)
+                    if (MaxInputViewModel.Items == null)
                     {
-                        maxItem.IsEnabled = maxItem.Item >= item.Item;
+                        return;
                     }
-                    if (!MaxInput.SelectedItem.IsEnabled)
+                    var selected = item.GetItem<int>();
+                    foreach (var maxItem in MaxInputViewModel.Items)
                     {
-                        MaxInput.SelectedItem = MaxInput.Items.Where(x => x.IsEnabled).First();
+                        maxItem.IsEnabled = maxItem.GetItem<int>() >= selected;
+                    }
+                    if (!MaxInputViewModel.SelectedItem.IsEnabled)
+                    {
+                        MaxInputViewModel.SelectedItem = MaxInputViewModel
+                            .Items.Where(x => x.IsEnabled)
+                            .First();
                     }
                 }
             );
 
-            this.WhenAnyValue(x => x.MinInput.SelectedItem)
-                .DistinctUntilChanged()
-                .InvokeCommand(RefreshForMin);
+            this.WhenActivated(d =>
+            {
+                MinInputViewModel = new OptionInputViewModel(
+                    inputItems
+                        .Connect()
+                        .Transform(num => new OptionInputItemViewModel(num.ToString(), num))
+                );
+                MaxInputViewModel = new OptionInputViewModel(
+                    inputItems
+                        .Connect()
+                        .Transform(num => new OptionInputItemViewModel(num.ToString(), num)),
+                    true
+                );
+
+                this.WhenAnyValue(x => x.MinInputViewModel.SelectedItem)
+                    .WhereNotNull()
+                    .DistinctUntilChanged()
+                    .InvokeCommand(RefreshForMin)
+                    .DisposeWith(d);
+            });
         }
 
-        public OptionInputViewModel<int> MinInput { get; }
-        public OptionInputViewModel<int> MaxInput { get; }
-        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMin { get; }
+        public OptionInputViewModel MinInputViewModel { get; set; }
+        public OptionInputViewModel MaxInputViewModel { get; set; }
+
+        public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForMin { get; }
     }
 }

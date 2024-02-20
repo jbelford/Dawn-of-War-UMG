@@ -1,0 +1,30 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="DowUmg.Presentation.WPF.Views.ToggleItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="vm:ToggleItemViewModel"
+    mc:Ignorable="d">
+    <CheckBox x:Name="CheckBox">
+        <CheckBox.ToolTip>
+            <ToolTip x:Name="ToolTip" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <Image
+                        x:Name="ToolTipImage"
+                        Width="150"
+                        Margin="5"
+                        Visibility="Collapsed" />
+                    <TextBlock
+                        x:Name="ToolTipText"
+                        MaxWidth="250"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </ToolTip>
+        </CheckBox.ToolTip>
+    </CheckBox>
+</rxui:ReactiveUserControl>

@@ -15,13 +15,21 @@ namespace DowUmg.Presentation.WPF.Views
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.DiffOption, v => v.DiffOption.Content)
+                this.OneWayBind(ViewModel, vm => vm.DiffOptionViewModel, v => v.DiffOption.Content)
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.SpeedOption, v => v.SpeedOption.Content)
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.SpeedOptionViewModel,
+                        v => v.SpeedOption.Content
+                    )
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.RateOption, v => v.RateOption.Content)
+                this.OneWayBind(ViewModel, vm => vm.RateOptionViewModel, v => v.RateOption.Content)
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.StartingOption, v => v.StartingOption.Content)
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.StartingOptionViewModel,
+                        v => v.StartingOption.Content
+                    )
                     .DisposeWith(d);
             });
         }

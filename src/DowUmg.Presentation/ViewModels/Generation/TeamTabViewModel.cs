@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DowUmg.Data.Entities;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -19,14 +19,20 @@ namespace DowUmg.Presentation.ViewModels
                 new RangeViewModel(2, 8)
             );
 
-            TeamNum = new OptionInputViewModel<int>(Enumerable.Range(2, 7).ToArray());
+            var teamNums = new SourceList<int>();
+            teamNums.AddRange(Enumerable.Range(2, 7));
+            TeamNum = new OptionInputViewModel(
+                teamNums
+                    .Connect()
+                    .Transform(num => new OptionInputItemViewModel(num.ToString(), num))
+            );
 
             RefreshForMin = ReactiveCommand.Create(
-                (OptionInputItem<int> min) =>
+                (OptionInputItemViewModel min) =>
                 {
                     foreach (var teamItem in TeamNum.Items)
                     {
-                        teamItem.IsEnabled = teamItem.Item <= min.Item;
+                        teamItem.IsEnabled = teamItem.GetItem<int>() <= min.GetItem<int>();
                     }
                     if (!TeamNum.SelectedItem.IsEnabled)
                     {
@@ -61,73 +67,20 @@ namespace DowUmg.Presentation.ViewModels
                 }
             );
 
-            //RefreshForMod = ReactiveCommand.CreateFromTask(async (int id) =>
-            //{
-            //    Races.Clear();
-            //    var (races, maps, rules) = await Observable.Start(() =>
-            //    {
-            //        using var store = new ModsDataStore();
-            //        return (store.GetRaces(id).ToList(), store.GetMaps(id).ToList(), store.GetRules(id).ToList());
-            //    }, RxApp.TaskpoolScheduler);
-
-            //    maps.Sort((a, b) => a.Players - b.Players);
-
-            //    Races.AddRange(races);
-
-            //    await GlobalPlayerOptions.RefreshForRaces.Execute(races);
-
-            //    foreach (var team in TeamPlayerOptions)
-            //    {
-            //        await team.RefreshForRaces.Execute(races);
-            //    }
-
-            //    Maps = new ToggleItemListViewModel<DowMap>("Maps", maps.Select(map => new ToggleItemViewModel<DowMap>(true) { Label = $"{map.Name}", Item = map }));
-            //    Rules = new ToggleItemListViewModel<GameRule>("Win Conditions", rules.Where(rule => rule.IsWinCondition)
-            //            .Select(rule => new ToggleItemViewModel<GameRule>(true) { Label = rule.Name, Item = rule }));
-            //});
-
-            //RefreshMapsForRange = ReactiveCommand.Create(((OptionInputItem<int> min, OptionInputItem<int> max) minMax) =>
-            //{
-            //    for (int i = 0; i < MapTypes.Count; ++i)
-            //    {
-            //        ToggleItemViewModel<int> mapType = MapTypes[i];
-            //        int mapPlayers = i + 2;
-            //        bool wasDisabled = !mapType.IsEnabled;
-            //        mapType.IsEnabled = mapPlayers >= minMax.min.Item && mapPlayers <= minMax.max.Item;
-            //        if (!mapType.IsEnabled)
-            //        {
-            //            mapType.IsToggled = false;
-            //        }
-            //        else if (wasDisabled)
-            //        {
-            //            mapType.IsToggled = true;
-            //        }
-            //    }
-            //});
-
-            //this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem,
-            //        x => x.GlobalPlayerOptions.MinMax.MaxInput.SelectedItem)
-            //    .DistinctUntilChanged()
-            //    .InvokeCommand(RefreshMapsForRange);
-
             this.WhenActivated(d =>
             {
                 this.WhenAnyValue(x => x.TeamNum.SelectedItem)
+                    .WhereNotNull()
                     .DistinctUntilChanged()
-                    .Select(item => item.Item)
+                    .Select(item => item.GetItem<int>())
                     .InvokeCommand(RefreshTeamList)
                     .DisposeWith(d);
 
-                this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInput.SelectedItem)
+                this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInputViewModel.SelectedItem)
                     .DistinctUntilChanged()
                     .InvokeCommand(RefreshForMin)
                     .DisposeWith(d);
             });
-            //this.WhenAnyValue(x => x.Mod)
-            //    .Where(mod => mod != null)
-            //    .Select(mod => mod.Id)
-            //    .DistinctUntilChanged()
-            //    .InvokeCommand(RefreshForMod);
         }
 
         [Reactive]
@@ -136,16 +89,12 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public bool TeamIsEven { get; set; } = true;
 
-        public ObservableCollection<DowRace> Races { get; } = new ObservableCollection<DowRace>();
-
-        public OptionInputViewModel<int> TeamNum { get; }
+        public OptionInputViewModel TeamNum { get; }
 
         public PlayersSelectViewModel GlobalPlayerOptions { get; }
-        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } =
-            new ObservableCollection<PlayersSelectViewModel>();
-        public ReactiveCommand<OptionInputItem<int>, Unit> RefreshForMin { get; }
+        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } = new();
+        public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForMin { get; }
         public ReactiveCommand<int, Unit> RefreshTeamList { get; }
         public ReactiveCommand<int, Unit> RefreshForMod { get; }
-        //public ReactiveCommand<(OptionInputItem<int>, OptionInputItem<int>), Unit> RefreshMapsForRange { get; }
     }
 }

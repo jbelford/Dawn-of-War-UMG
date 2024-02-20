@@ -1,21 +1,14 @@
-﻿using ReactiveUI.Fody.Helpers;
+﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class NumberInputViewModel<T> : ItemViewModel<T>
+    public class NumberInputViewModel(string label, int defaultValue = 0) : ReactiveObject
     {
-        public NumberInputViewModel(int defaultValue = 0)
-        {
-            Input = defaultValue;
-        }
+        [Reactive]
+        public int Input { get; set; } = defaultValue;
 
         [Reactive]
-        public int Input { get; set; }
-    }
-
-    public class NumberInputViewModel : NumberInputViewModel<object>
-    {
-        public NumberInputViewModel(int defaultValue = 0)
-            : base(defaultValue) { }
+        public string Label { get; set; } = label;
     }
 }

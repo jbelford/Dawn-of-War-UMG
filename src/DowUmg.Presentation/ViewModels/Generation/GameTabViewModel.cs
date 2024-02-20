@@ -1,39 +1,80 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using DowUmg.Constants;
+using DynamicData;
 using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
+    internal record EnumModel<T>(T Model, NumberInputViewModel NumberInput);
+
     public class GameTabViewModel : ReactiveObject
     {
         public GameTabViewModel()
         {
-            DiffOption = new ProportionalOptionsViewModel<GameDifficulty>(
+            DiffOption = Enum.GetValues(typeof(GameDifficulty))
+                .Cast<GameDifficulty>()
+                .Select(diff => new EnumModel<GameDifficulty>(
+                    diff,
+                    new NumberInputViewModel(diff.ToString(), 100)
+                ))
+                .ToList();
+
+            SpeedOption = Enum.GetValues(typeof(GameSpeed))
+                .Cast<GameSpeed>()
+                .Select(speed => new EnumModel<GameSpeed>(
+                    speed,
+                    new NumberInputViewModel(speed.ToString(), 100)
+                ))
+                .ToList();
+
+            RateOption = Enum.GetValues(typeof(GameResourceRate))
+                .Cast<GameResourceRate>()
+                .Select(rate => new EnumModel<GameResourceRate>(
+                    rate,
+                    new NumberInputViewModel(rate.ToString(), 100)
+                ))
+                .ToList();
+
+            StartingOption = Enum.GetValues(typeof(GameStartResource))
+                .Cast<GameStartResource>()
+                .Select(starting => new EnumModel<GameStartResource>(
+                    starting,
+                    new NumberInputViewModel(starting.ToString(), 100)
+                ))
+                .ToList();
+
+            DiffOptionViewModel = new ProportionalOptionsViewModel(
                 "Difficulty",
-                GameDifficultyEx.ToString,
-                Enum.GetValues(typeof(GameDifficulty)).Cast<GameDifficulty>().ToArray()
+                DiffOption.Select(item => item.NumberInput)
             );
-            SpeedOption = new ProportionalOptionsViewModel<GameSpeed>(
+
+            SpeedOptionViewModel = new ProportionalOptionsViewModel(
                 "Game Speed",
-                GameSpeedEx.ToString,
-                Enum.GetValues(typeof(GameSpeed)).Cast<GameSpeed>().ToArray()
+                SpeedOption.Select(item => item.NumberInput)
             );
-            RateOption = new ProportionalOptionsViewModel<GameResourceRate>(
+            RateOptionViewModel = new ProportionalOptionsViewModel(
                 "Resource Rate",
-                GameResourceRateEx.ToString,
-                Enum.GetValues(typeof(GameResourceRate)).Cast<GameResourceRate>().ToArray()
+                RateOption.Select(item => item.NumberInput)
             );
-            StartingOption = new ProportionalOptionsViewModel<GameStartResource>(
+            StartingOptionViewModel = new ProportionalOptionsViewModel(
                 "Starting Resources",
-                GameStartResourceEx.ToString,
-                Enum.GetValues(typeof(GameStartResource)).Cast<GameStartResource>().ToArray()
+                StartingOption.Select(item => item.NumberInput)
             );
         }
 
-        public ProportionalOptionsViewModel<GameDifficulty> DiffOption { get; set; }
-        public ProportionalOptionsViewModel<GameSpeed> SpeedOption { get; set; }
-        public ProportionalOptionsViewModel<GameResourceRate> RateOption { get; set; }
-        public ProportionalOptionsViewModel<GameStartResource> StartingOption { get; set; }
+        internal IList<EnumModel<GameDifficulty>> DiffOption { get; }
+        public ProportionalOptionsViewModel DiffOptionViewModel { get; set; }
+
+        internal IList<EnumModel<GameSpeed>> SpeedOption { get; }
+        public ProportionalOptionsViewModel SpeedOptionViewModel { get; set; }
+
+        internal IList<EnumModel<GameResourceRate>> RateOption { get; }
+        public ProportionalOptionsViewModel RateOptionViewModel { get; set; }
+
+        internal IList<EnumModel<GameStartResource>> StartingOption { get; }
+        public ProportionalOptionsViewModel StartingOptionViewModel { get; set; }
     }
 }

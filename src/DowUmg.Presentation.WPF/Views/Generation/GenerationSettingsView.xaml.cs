@@ -30,10 +30,10 @@ namespace DowUmg.Presentation.WPF.Views
 
         private void SetViewModels(GenerationSettingsViewModel vm)
         {
-            ModOption.Content = vm.Mod;
-            GeneralTab.ViewModel = vm.GeneralTab;
-            GameTab.ViewModel = vm.GameTab;
-            TeamTab.ViewModel = vm.TeamTab;
+            ModOption.ViewModel = vm.ModViewModel;
+            GeneralTab.ViewModel = vm.GeneralTabViewModel;
+            GameTab.ViewModel = vm.GameTabViewModel;
+            TeamTab.ViewModel = vm.TeamTabViewModel;
         }
     }
 }

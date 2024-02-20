@@ -29,7 +29,7 @@
                 Text="Generation Settings" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Label VerticalContentAlignment="Center" Content="Mod" />
-                <ContentControl x:Name="ModOption" ContentTemplate="{StaticResource OptionInputTemplate}" />
+                <c:OptionInputView x:Name="ModOption" />
             </StackPanel>
         </Grid>
         <TabControl Grid.Row="1" Margin="0,20">

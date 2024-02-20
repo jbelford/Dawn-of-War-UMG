@@ -14,24 +14,6 @@
                 <ResourceDictionary Source="Converters/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="OptionInputTemplate" DataType="{x:Type vm:OptionInputViewModel}">
-                <ComboBox
-                    VerticalContentAlignment="Center"
-                    ItemsSource="{Binding Path=Items}"
-                    SelectedItem="{Binding Path=SelectedItem}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:OptionInputItem}">
-                            <TextBlock Text="{Binding Path=Label, Mode=OneTime}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                    <ComboBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ComboBoxItem}">
-                            <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
-                        </Style>
-                    </ComboBox.ItemContainerStyle>
-                </ComboBox>
-            </DataTemplate>
-
             <DataTemplate x:Key="NumberInputSliderTemplate" DataType="{x:Type vm:NumberInputViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>

@@ -27,7 +27,8 @@ namespace DowUmg.Presentation.WPF.Views
 
                 this.Bind(ViewModel, vm => vm.TeamIsEven, v => v.EvenRadio.IsChecked)
                     .DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.TeamNum, v => v.TeamNum.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.TeamNum, v => v.TeamNum.ViewModel)
+                    .DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.TeamPlayerOptions, v => v.Teams.ItemsSource)
                     .DisposeWith(d);
