@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -25,41 +26,38 @@
             HorizontalAlignment="Center"
             FontSize="{StaticResource FontSizeXXLarge}"
             Text="Mods" />
-        <Grid Grid.Row="1">
+        <Label
+            Grid.Row="1"
+            Content="Base Game"
+            Target="{Binding ElementName=VanillaModsList, Mode=OneWay}" />
+        <ListBox
+            x:Name="VanillaModsList"
+            Grid.Row="2"
+            HorizontalContentAlignment="Stretch" />
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Label
+                Grid.Column="1"
+                Content="Additional"
+                Target="{Binding ElementName=ModsList, Mode=OneWay}" />
+            <Button
+                x:Name="RefreshButton"
+                Grid.Column="2"
+                Margin="5"
+                Padding="5,0"
+                HorizontalAlignment="Left"
+                Content="Refresh Lists" />
         </Grid>
-        <StackPanel Grid.Row="2">
-            <Label Content="Base Game" Target="{Binding ElementName=VanillaModsList, Mode=OneWay}" />
-            <ListBox x:Name="VanillaModsList" HorizontalContentAlignment="Stretch" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Column="1"
-                    Content="Additional"
-                    Target="{Binding ElementName=ModsList, Mode=OneWay}" />
-                <Button
-                    x:Name="RefreshButton"
-                    Grid.Column="2"
-                    Margin="5"
-                    Padding="5,0"
-                    HorizontalAlignment="Left"
-                    Content="Refresh Lists" />
-            </Grid>
-        </StackPanel>
         <ListBox
             x:Name="ModsList"
-            Grid.Row="3"
+            Grid.Row="4"
             HorizontalContentAlignment="Stretch"
             ScrollViewer.VerticalScrollBarVisibility="Visible" />
-        <Grid Grid.Row="4" Margin="0,20,0,0">
+        <Grid Grid.Row="5" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="130" />
