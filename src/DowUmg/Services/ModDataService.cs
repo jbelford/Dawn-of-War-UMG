@@ -63,7 +63,7 @@ namespace DowUmg.Services
         public DowMap GetDefaultMap()
         {
             using var context = new ModsContext();
-            return context.Maps.First();
+            return context.Maps.Include(map => map.Mod).First();
         }
 
         public List<DowMap> GetModMaps(int modId)
