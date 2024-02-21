@@ -29,18 +29,21 @@ namespace DowUmg.Presentation.ViewModels
             AddMissionCommand = ReactiveCommand.CreateFromObservable(AddMission);
 
             this.WhenAnyValue(x => x.CampaignName, x => x.CampaignDescription)
-                .Select((_) => IsModified())
+                .Select(value => IsModified(value.Item1, value.Item2))
                 .ToPropertyEx(this, x => x.IsChanged);
 
             missions
                 .Connect()
-                .Transform(mission => new MapListItemViewModel()
-                {
-                    MapImage = mission.Map.ImagePath,
-                    Header = mission.Name,
-                    Details = mission.Description,
-                    Footer = $"Map: {mission.Map.Name}"
-                })
+                .Transform(
+                    (mission, idx) =>
+                        new MapListItemViewModel()
+                        {
+                            MapImage = mission.Map.ImagePath,
+                            Header = $"Mission #{idx + 1}: {mission.Name}",
+                            Details = mission.Description,
+                            Footer = $"Map: {mission.Map.Name}"
+                        }
+                )
                 .Bind(out _missionList)
                 .Subscribe();
         }
@@ -63,8 +66,8 @@ namespace DowUmg.Presentation.ViewModels
 
         #endregion
 
-        private bool IsModified() =>
-            campaign.Name != CampaignName || campaign.Description != CampaignDescription;
+        private bool IsModified(string name, string desc) =>
+            campaign.Name != name || campaign.Description != desc;
 
         private IObservable<IRoutableViewModel> AddMission()
         {
