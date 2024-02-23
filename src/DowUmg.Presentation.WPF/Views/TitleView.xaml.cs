@@ -25,13 +25,6 @@ namespace DowUmg.Presentation.WPF.Views
                 this.BindCommand(ViewModel, vm => vm.CampaignAction, v => v.CampaignButton)
                     .DisposeWith(d);
 
-                this.BindCommand(
-                        ViewModel,
-                        viewModel => viewModel.CloseApp,
-                        view => view.QuitButton
-                    )
-                    .DisposeWith(d);
-
                 this.WhenAnyValue(x => x.ViewModel.IsLoaded)
                     .Do(isLoaded =>
                     {

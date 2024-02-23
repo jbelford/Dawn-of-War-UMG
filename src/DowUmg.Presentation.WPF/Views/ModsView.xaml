@@ -5,71 +5,98 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:TypeArguments="vm:ModsViewModel"
-    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
     mc:Ignorable="d">
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Margin="0,0,0,20"
-            HorizontalAlignment="Center"
-            FontSize="{StaticResource FontSizeXXLarge}"
-            Text="Mods" />
-        <Label
-            Grid.Row="1"
-            Content="Base Game"
-            Target="{Binding ElementName=VanillaModsList, Mode=OneWay}" />
-        <ListBox
-            x:Name="VanillaModsList"
-            Grid.Row="2"
-            HorizontalContentAlignment="Stretch" />
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Label
-                Grid.Column="1"
-                Content="Additional"
-                Target="{Binding ElementName=ModsList, Mode=OneWay}" />
-            <Button
-                x:Name="RefreshButton"
-                Grid.Column="2"
-                Margin="5"
-                Padding="5,0"
-                HorizontalAlignment="Left"
-                Content="Refresh Lists" />
-        </Grid>
-        <ListBox
-            x:Name="ModsList"
-            Grid.Row="4"
-            HorizontalContentAlignment="Stretch"
-            ScrollViewer.VerticalScrollBarVisibility="Visible" />
-        <Grid Grid.Row="5" Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="130" />
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button
+            <ui:TextBlock
+                Grid.Row="0"
+                HorizontalAlignment="Left"
+                FontTypography="TitleLarge"
+                Text="Mods" />
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBlock
+                        Grid.Row="0"
+                        FontTypography="Subtitle"
+                        Text="Base Game" />
+                    <ui:Button
+                        x:Name="RefreshButton"
+                        Grid.Column="2"
+                        Padding="5"
+                        HorizontalAlignment="Left"
+                        Appearance="Transparent"
+                        ToolTip="Refresh Mods">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="ArrowSync24" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                </Grid>
+                <ui:Card Grid.Row="1" Margin="0,10">
+                    <ItemsControl x:Name="VanillaModsList" HorizontalContentAlignment="Stretch" />
+                </ui:Card>
+                <ui:TextBlock
+                    Grid.Row="2"
+                    FontTypography="Subtitle"
+                    Text="Additional" />
+
+                <ui:Card Grid.Row="3" Margin="0,10,0,5">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl
+                            x:Name="ModsList"
+                            HorizontalContentAlignment="Stretch"
+                            ScrollViewer.VerticalScrollBarVisibility="Visible" />
+                    </ScrollViewer>
+                </ui:Card>
+
+                <ProgressBar
+                    x:Name="ModLoadBar"
+                    Grid.Row="4"
+                    IsIndeterminate="True" />
+            </Grid>
+            <ui:Button
                 x:Name="loadModsButton"
-                Grid.Column="1"
-                Content="Reload All Mods"
-                FontSize="{StaticResource FontSizeRegular}" />
+                Grid.Row="4"
+                Margin="0,5,0,0"
+                Padding="10"
+                HorizontalAlignment="Right"
+                Content="Import Mod Data"
+                ToolTip="Read the data from your Dawn of War installation">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="CubeArrowCurveDown20" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

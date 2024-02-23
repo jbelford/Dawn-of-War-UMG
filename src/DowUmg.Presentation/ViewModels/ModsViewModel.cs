@@ -32,20 +32,6 @@ namespace DowUmg.Presentation.ViewModels
                 .Select(loading => !loading)
                 .DistinctUntilChanged();
 
-            var whenItemSelected = this.WhenAnyValue(
-                    x => x.SelectedBaseItem,
-                    x => x.SelectedModItem,
-                    (baseItem, modItem) => baseItem != null || modItem != null
-                )
-                .DistinctUntilChanged();
-
-            var canLoadSpecific = whenNotLoading
-                .CombineLatest(
-                    whenItemSelected,
-                    (notLoading, itemSelected) => notLoading && itemSelected
-                )
-                .DistinctUntilChanged();
-
             ReloadMods = ReactiveCommand.CreateFromTask(LoadModsAsync, whenNotLoading);
 
             RefreshMods = ReactiveCommand.CreateFromTask(GetModsAsync);
@@ -75,12 +61,6 @@ namespace DowUmg.Presentation.ViewModels
             new ObservableCollectionExtended<ModItemViewModel>();
         public IObservableCollection<ModItemViewModel> BaseGameItems { get; } =
             new ObservableCollectionExtended<ModItemViewModel>();
-
-        [Reactive]
-        public ModItemViewModel? SelectedBaseItem { get; set; }
-
-        [Reactive]
-        public ModItemViewModel? SelectedModItem { get; set; }
 
         public extern bool Loading
         {

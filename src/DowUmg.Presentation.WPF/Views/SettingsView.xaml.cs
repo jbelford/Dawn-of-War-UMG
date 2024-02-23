@@ -1,7 +1,9 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using System.Windows.Forms;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
+using Wpf.Ui.Controls;
 
 namespace DowUmg.Presentation.WPF.Views
 {
@@ -29,6 +31,17 @@ namespace DowUmg.Presentation.WPF.Views
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.SaveSettings, v => v.SaveButton)
+                    .DisposeWith(d);
+
+                this.WhenAnyObservable(x => x.ViewModel.SaveSettings.CanExecute)
+                    .Subscribe(canExecute =>
+                    {
+                        SaveButton.Appearance = canExecute
+                            ? ControlAppearance.Primary
+                            : ControlAppearance.Dark;
+
+                        SaveIcon.Filled = canExecute;
+                    })
                     .DisposeWith(d);
             });
         }

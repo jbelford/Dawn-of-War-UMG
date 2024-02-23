@@ -5,70 +5,66 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewmodels="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="495.852"
     d:DesignWidth="729.038"
     x:TypeArguments="viewmodels:SettingsViewModel"
-    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        </Style>
-        <Style BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        </Style>
-        <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="TextBox">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        </Style>
-    </UserControl.Resources>
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <TextBlock
-                Margin="0,0,0,20"
-                HorizontalAlignment="Center"
-                FontSize="{StaticResource FontSizeXXLarge}"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ui:TextBlock
+                Grid.Row="0"
+                HorizontalAlignment="Left"
+                FontTypography="TitleLarge"
                 Text="Settings" />
-            <StackPanel>
+            <StackPanel Grid.Row="2">
                 <Label Content="Soulstorm Directory" />
                 <Grid Name="Directory">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
+                    <ui:TextBox
                         x:Name="DirectoryTextBox"
                         Grid.Column="0"
-                        Background="#FF979797"
-                        BorderBrush="Black"
                         IsEnabled="False" />
-                    <Button
+                    <ui:Button
                         x:Name="SelectDirectoryButton"
                         Grid.Column="1"
-                        Padding="10,0"
-                        HorizontalAlignment="Right"
-                        Content="Select" />
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Stretch">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="Folder28" />
+                        </ui:Button.Icon>
+                    </ui:Button>
                 </Grid>
             </StackPanel>
-        </StackPanel>
-        <Grid
-            Grid.Row="1"
-            Height="50"
-            VerticalAlignment="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button
+            <ui:Button
                 x:Name="SaveButton"
-                Grid.Column="1"
+                Grid.Row="3"
                 Width="100"
-                Content="Save" />
+                HorizontalAlignment="Right"
+                Content="Save">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon x:Name="SaveIcon" Symbol="Save28" />
+                </ui:Button.Icon>
+            </ui:Button>
         </Grid>
     </Grid>
 </rxui:ReactiveUserControl>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive;
+﻿using System.Reactive;
 using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -14,7 +12,7 @@ namespace DowUmg.Presentation.ViewModels
             : base(screen, "main")
         {
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
-            IsLoaded = modDataService.GetPlayableMods().Any();
+            IsLoaded = modDataService.GetPlayableMods().Count != 0;
 
             SettingsAction = ReactiveCommand.CreateFromObservable(
                 () => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen))
@@ -30,11 +28,8 @@ namespace DowUmg.Presentation.ViewModels
             CampaignAction = ReactiveCommand.CreateFromObservable(
                 () => HostScreen.Router.Navigate.Execute(new CampaignViewModel(HostScreen))
             );
-
-            CloseApp = ReactiveCommand.Create(() => Environment.Exit(0));
         }
 
-        public ReactiveCommand<Unit, Unit> CloseApp { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> ModsAction { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> MatchupAction { get; }

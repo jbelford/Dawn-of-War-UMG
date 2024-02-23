@@ -1,0 +1,45 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="DowUmg.Presentation.WPF.Views.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:Height="768"
+    d:Width="1366"
+    x:TypeArguments="vm:MainViewModel"
+    mc:Ignorable="d">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ui:Button
+                x:Name="HomeButton"
+                Grid.Column="0"
+                Margin="5"
+                VerticalAlignment="Stretch"
+                Appearance="Transparent"
+                BorderThickness="0"
+                Content="Home"
+                Cursor="Hand">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon Symbol="Home32" />
+                </ui:Button.Icon>
+            </ui:Button>
+            <ui:TitleBar Title="Dawn of War: UMG" Grid.Column="1">
+                <ui:TitleBar.Icon>
+                    <ui:ImageIcon Source="/Resources/icon.ico" />
+                </ui:TitleBar.Icon>
+            </ui:TitleBar>
+        </Grid>
+        <rxui:RoutedViewHost
+            x:Name="RoutedViewHost"
+            Margin="5"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch" />
+    </DockPanel>
+</rxui:ReactiveUserControl>

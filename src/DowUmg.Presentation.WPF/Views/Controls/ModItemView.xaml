@@ -5,25 +5,34 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="73.92"
     d:DesignWidth="333.803"
     x:TypeArguments="vm:ModItemViewModel"
     mc:Ignorable="d">
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock
-            x:Name="Text"
-            Grid.Row="1"
-            FontSize="{StaticResource FontSizeRegular}">
-            <StackPanel x:Name="ItemContent">
-                <TextBlock x:Name="ModName" Text="My Mod" />
-                <TextBlock x:Name="ModDesc" Text="This is a description" />
+        <DockPanel Grid.Row="1">
+            <ui:SymbolIcon
+                x:Name="ModIcon"
+                DockPanel.Dock="Left"
+                FontSize="24"
+                Symbol="BoxCheckmark24" />
+            <StackPanel Grid.Row="1" Margin="5">
+                <ui:TextBlock
+                    x:Name="ModName"
+                    FontTypography="Subtitle"
+                    Text="My Mod" />
+                <ui:TextBlock
+                    x:Name="ModDesc"
+                    FontTypography="Body"
+                    Text="This is a description" />
             </StackPanel>
-        </TextBlock>
+        </DockPanel>
     </Grid>
 </rxui:ReactiveUserControl>

@@ -1,26 +1,17 @@
-﻿using System.Reactive.Disposables;
-using DowUmg.Presentation.ViewModels;
-using ReactiveUI;
+﻿using DowUmg.Presentation.ViewModels;
+using Wpf.Ui.Controls;
 
 namespace DowUmg.Presentation.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for RoutingWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : ReactiveWindow<MainViewModel>
+    public partial class MainWindow : FluentWindow
     {
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new MainViewModel();
-
-            this.WhenActivated(d =>
-            {
-                this.OneWayBind(ViewModel, vm => vm.Router, v => v.RoutedViewHost.Router)
-                    .DisposeWith(d);
-
-                this.BindCommand(ViewModel, vm => vm.GoHome, v => v.HomeButton).DisposeWith(d);
-            });
+            MainView.ViewModel = new MainViewModel();
         }
     }
 }
