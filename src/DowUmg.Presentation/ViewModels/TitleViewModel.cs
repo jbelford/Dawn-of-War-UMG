@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using System.Reactive.Linq;
 using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -11,6 +12,16 @@ namespace DowUmg.Presentation.ViewModels
         public TitleViewModel(IScreen screen)
             : base(screen, "main")
         {
+            var isLoadedObservable = Observable.StartAsync(
+                async () =>
+                {
+                    IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
+                    var mods = await modDataService.GetPlayableMods();
+                    return mods.Count != 0;
+                },
+                RxApp.TaskpoolScheduler
+            );
+
             SettingsAction = ReactiveCommand.CreateFromObservable(
                 () => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen))
             );
@@ -19,21 +30,16 @@ namespace DowUmg.Presentation.ViewModels
             );
             MatchupAction = ReactiveCommand.CreateFromObservable(
                 () =>
-                    HostScreen.Router.Navigate.Execute(new GenerationSettingsViewModel(HostScreen))
+                    HostScreen.Router.Navigate.Execute(new GenerationSettingsViewModel(HostScreen)),
+                isLoadedObservable
             );
 
             CampaignAction = ReactiveCommand.CreateFromObservable(
-                () => HostScreen.Router.Navigate.Execute(new CampaignViewModel(HostScreen))
+                () => HostScreen.Router.Navigate.Execute(new CampaignViewModel(HostScreen)),
+                isLoadedObservable
             );
 
-            ReactiveCommand
-                .CreateFromTask(async () =>
-                {
-                    IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
-                    var mods = await modDataService.GetPlayableMods();
-                    IsLoaded = mods.Count != 0;
-                })
-                .Execute();
+            isLoadedObservable.ToPropertyEx(this, x => x.IsLoaded);
         }
 
         public ReactiveCommand<Unit, IRoutableViewModel> SettingsAction { get; }
@@ -42,7 +48,7 @@ namespace DowUmg.Presentation.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> CampaignAction { get; }
 
-        [Reactive]
-        public bool IsLoaded { get; set; }
+        [ObservableAsProperty]
+        public bool IsLoaded { get; }
     }
 }

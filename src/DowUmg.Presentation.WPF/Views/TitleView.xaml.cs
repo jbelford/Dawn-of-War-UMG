@@ -31,9 +31,6 @@ namespace DowUmg.Presentation.WPF.Views
                         WarningMessage.Visibility = isLoaded
                             ? System.Windows.Visibility.Collapsed
                             : System.Windows.Visibility.Visible;
-
-                        MatchupButton.IsEnabled = isLoaded;
-                        CampaignButton.IsEnabled = isLoaded;
                     })
                     .Subscribe()
                     .DisposeWith(d);
