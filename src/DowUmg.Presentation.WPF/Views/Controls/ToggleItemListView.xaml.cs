@@ -15,8 +15,7 @@ namespace DowUmg.Presentation.WPF.Views
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.Label, v => v.HeaderLabel.Content)
-                    .DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Label, v => v.HeaderLabel.Text).DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.Search, v => v.SearchTextBox.Text).DisposeWith(d);
 

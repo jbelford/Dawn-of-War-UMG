@@ -7,49 +7,53 @@
     xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:TypeArguments="vm:ToggleItemListViewModel"
     mc:Ignorable="d">
-    <GroupBox>
-        <GroupBox.Header>
-            <Label x:Name="HeaderLabel" FontStyle="Italic" />
-        </GroupBox.Header>
+    <ui:Card
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        VerticalContentAlignment="Top">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="5" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.Resources>
-                <Style TargetType="CheckBox">
+                <Style BasedOn="{StaticResource {x:Type CheckBox}}" TargetType="{x:Type CheckBox}">
                     <Setter Property="Margin" Value="5" />
                 </Style>
             </Grid.Resources>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0">Search</Label>
-                <TextBox
-                    x:Name="SearchTextBox"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    AcceptsReturn="False" />
-            </Grid>
-            <ScrollViewer Grid.Row="1">
+            <ui:TextBlock
+                x:Name="HeaderLabel"
+                Grid.Row="0"
+                Margin="0,0,0,5"
+                FontTypography="Subtitle"
+                Text="Name" />
+            <ui:TextBox
+                x:Name="SearchTextBox"
+                Grid.Row="1"
+                Margin="0,0,0,5"
+                VerticalAlignment="Center"
+                AcceptsReturn="False"
+                PlaceholderText="Filter results..." />
+            <ScrollViewer Grid.Row="2">
                 <ItemsControl
                     x:Name="ToggleItemList"
+                    Margin="5"
                     ItemTemplate="{StaticResource ToggleItemTemplate}"
                     VirtualizingStackPanel.IsVirtualizing="True" />
             </ScrollViewer>
-            <Button
-                x:Name="ToggleItemsButton"
-                Grid.Row="3"
-                Content="Toggle All" />
         </Grid>
-    </GroupBox>
+        <ui:Card.Footer>
+            <ui:Button
+                x:Name="ToggleItemsButton"
+                HorizontalAlignment="Right"
+                Content="Toggle All" />
+        </ui:Card.Footer>
+    </ui:Card>
 </rxui:ReactiveUserControl>

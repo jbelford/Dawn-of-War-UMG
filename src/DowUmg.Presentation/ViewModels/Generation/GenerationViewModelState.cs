@@ -14,11 +14,11 @@ namespace DowUmg.Presentation.ViewModels
 
         private List<DowMap> _addonMaps;
         private List<DowMap> _maps;
-        private SourceList<DowMap> _allowedAddonMaps = new();
         private SourceList<DowMap> _allowedMaps = new();
         private SourceList<GameRule> _rules = new();
         private Dictionary<int, bool> _allowedPlayers = new();
         private Dictionary<int, bool> _allowedSizes = new();
+        private bool _isAddonAllowed = true;
 
         public GenerationViewModelState(List<DowMap> addonMaps)
         {
@@ -38,8 +38,6 @@ namespace DowUmg.Presentation.ViewModels
         }
 
         public IObservable<IChangeSet<DowMap>> ConnectMainMaps() => _allowedMaps.Connect();
-
-        public IObservable<IChangeSet<DowMap>> ConnectAddonMaps() => _allowedAddonMaps.Connect();
 
         public IObservable<IChangeSet<GameRule>> ConnectRules() => _rules.Connect();
 
@@ -61,22 +59,23 @@ namespace DowUmg.Presentation.ViewModels
             RefreshFilters();
         }
 
+        public bool IsAddonAllowed
+        {
+            get => _isAddonAllowed;
+            set
+            {
+                _isAddonAllowed = value;
+                RefreshFilters();
+            }
+        }
+
         private void RefreshFilters()
         {
-            _allowedAddonMaps.Edit(inner =>
-            {
-                inner.Clear();
-                inner.AddRange(
-                    _addonMaps
-                        .Where(map => _allowedPlayers.GetValueOrDefault(map.Players, true))
-                        .Where(map => _allowedSizes.GetValueOrDefault(map.Size, true))
-                );
-            });
             _allowedMaps.Edit(inner =>
             {
                 inner.Clear();
                 inner.AddRange(
-                    _maps
+                    (_isAddonAllowed ? _maps.Concat(_addonMaps) : _maps)
                         .Where(map => _allowedPlayers.GetValueOrDefault(map.Players, true))
                         .Where(map => _allowedSizes.GetValueOrDefault(map.Size, true))
                 );

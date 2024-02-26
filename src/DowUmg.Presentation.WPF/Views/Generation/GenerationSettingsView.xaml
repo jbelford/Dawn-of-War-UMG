@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -28,19 +29,32 @@
                 FontSize="{StaticResource FontSizeXLarge}"
                 Text="Generation Settings" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Label VerticalContentAlignment="Center" Content="Mod" />
+                <ui:TextBlock
+                    Margin="0,0,5,0"
+                    VerticalAlignment="Center"
+                    FontTypography="BodyStrong"
+                    Text="Mod" />
                 <c:OptionInputView x:Name="ModOption" />
             </StackPanel>
         </Grid>
-        <TabControl Grid.Row="1" Margin="0,20">
+        <TabControl Grid.Row="1" Margin="0,5">
             <TabItem Header="General">
-                <c:GeneralTabControl x:Name="GeneralTab" HorizontalContentAlignment="Stretch" />
+                <c:GeneralTabControl
+                    x:Name="GeneralTab"
+                    Margin="0,5,0,0"
+                    HorizontalContentAlignment="Stretch" />
             </TabItem>
             <TabItem Header="Team">
-                <c:TeamTabControl x:Name="TeamTab" HorizontalContentAlignment="Stretch" />
+                <c:TeamTabControl
+                    x:Name="TeamTab"
+                    Margin="0,5,0,0"
+                    HorizontalContentAlignment="Stretch" />
             </TabItem>
             <TabItem Header="Game">
-                <c:GameTabControl x:Name="GameTab" HorizontalContentAlignment="Stretch" />
+                <c:GameTabControl
+                    x:Name="GameTab"
+                    Margin="0,5,0,0"
+                    HorizontalContentAlignment="Stretch" />
             </TabItem>
         </TabControl>
         <Grid Grid.Row="2">
@@ -48,10 +62,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button
+            <ui:Button
                 x:Name="GenerateButton"
                 Grid.Column="1"
-                Padding="10,5"
+                Width="100"
                 Content="Generate!" />
         </Grid>
     </Grid>

@@ -24,10 +24,12 @@ namespace DowUmg.Presentation.WPF.Views
                         MapTypes.ItemsSource = vm.MapTypes;
                         MapSizes.ItemsSource = vm.MapSizes;
                         Maps.ViewModel = vm.MapsViewModel;
-                        AddonMaps.ViewModel = vm.AddonMapsViewModel;
                         WinConditions.ViewModel = vm.WinConditionsViewModel;
                     })
                     .Subscribe()
+                    .DisposeWith(d);
+
+                this.Bind(ViewModel, vm => vm.IsAddonAllowed, v => v.AddonMapsToggle.IsChecked)
                     .DisposeWith(d);
             });
         }

@@ -10,6 +10,7 @@ using DowUmg.Services;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace DowUmg.Presentation.ViewModels
@@ -40,16 +41,7 @@ namespace DowUmg.Presentation.ViewModels
 
             MapTypes = new(mapTypes.Select(item => item.ToggleItem));
             MapSizes = new(mapSizes.Select(item => item.ToggleItem));
-
-            AddonMapsViewModel = new ToggleItemListViewModel(
-                "Addon Maps",
-                generationState
-                    .ConnectAddonMaps()
-                    .Sort(MapSort)
-                    .Transform(MapToViewModelTransform)
-                    .BindToObservableList(out _addonMaps)
-                    .Transform(item => item.ToggleItem)
-            );
+            IsAddonAllowed = generationState.IsAddonAllowed;
 
             MapsViewModel = new ToggleItemListViewModel(
                 "Maps",
@@ -100,12 +92,18 @@ namespace DowUmg.Presentation.ViewModels
                         })
                         .DisposeWith(d);
                 }
+
+                this.WhenAnyValue(x => x.IsAddonAllowed)
+                    .Subscribe(isAddonAlowed =>
+                    {
+                        generationState.IsAddonAllowed = isAddonAlowed;
+                    })
+                    .DisposeWith(d);
             });
         }
 
         public void Dispose()
         {
-            AddonMapsViewModel.Dispose();
             MapsViewModel.Dispose();
             WinConditionsViewModel.Dispose();
         }
@@ -114,10 +112,6 @@ namespace DowUmg.Presentation.ViewModels
         internal IObservableList<ToggleModel<DowMap>> Maps => _maps;
         public ToggleItemListViewModel MapsViewModel { get; set; }
 
-        private IObservableList<ToggleModel<DowMap>> _addonMaps;
-        internal IObservableList<ToggleModel<DowMap>> AddonMaps => _addonMaps;
-        public ToggleItemListViewModel AddonMapsViewModel { get; set; }
-
         private IObservableList<ToggleModel<GameRule>> _winConditions;
         internal IObservableList<ToggleModel<GameRule>> WinConditions => _winConditions;
         public ToggleItemListViewModel WinConditionsViewModel { get; set; }
@@ -125,6 +119,9 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<ToggleItemViewModel> MapTypes { get; set; }
 
         public ObservableCollection<ToggleItemViewModel> MapSizes { get; set; }
+
+        [Reactive]
+        public bool IsAddonAllowed { get; set; }
 
         private ToggleModel<DowMap> MapToViewModelTransform(DowMap map) =>
             new(

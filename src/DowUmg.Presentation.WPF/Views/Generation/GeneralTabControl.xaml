@@ -6,78 +6,70 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="404.256"
     d:DesignWidth="733.07"
     x:TypeArguments="vm:GeneralTabViewModel"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.Resources>
-            <Style TargetType="GroupBox">
-                <Setter Property="Padding" Value="5,0,5,5" />
-                <Setter Property="Margin" Value="0,0,10,10" />
-            </Style>
-        </Grid.Resources>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" MinHeight="300" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" MinWidth="100" />
-            <ColumnDefinition Width="*" MinWidth="100" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-        <GroupBox Grid.Row="1" Grid.Column="0">
-            <GroupBox.Header>
-                <Label FontStyle="Italic">Map Filter</Label>
-            </GroupBox.Header>
+    <DockPanel>
+        <ScrollViewer DockPanel.Dock="Left">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="25" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0">
-                    <Label Content="Type" />
-                    <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}">
-                        <ItemsControl.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="FrameworkElement.Margin" Value="5" />
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                    </ItemsControl>
-                </StackPanel>
-
-                <StackPanel Grid.Column="2">
-                    <Label Content="Size" />
-                    <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}">
-                        <ItemsControl.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="FrameworkElement.Margin" Value="5" />
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                    </ItemsControl>
-                </StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ui:Card
+                    Grid.Row="0"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Top">
+                    <StackPanel>
+                        <ui:TextBlock
+                            Margin="0,0,0,5"
+                            FontTypography="Subtitle"
+                            Text="Addon Maps" />
+                        <ui:ToggleSwitch
+                            x:Name="AddonMapsToggle"
+                            OffContent="Off"
+                            OnContent="On" />
+                    </StackPanel>
+                </ui:Card>
+                <ui:Card
+                    Grid.Row="2"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Top">
+                    <StackPanel>
+                        <ui:TextBlock
+                            Margin="0,0,0,5"
+                            FontTypography="Subtitle"
+                            Text="Map Type" />
+                        <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
+                    </StackPanel>
+                </ui:Card>
+                <ui:Card
+                    Grid.Row="4"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Top">
+                    <StackPanel>
+                        <ui:TextBlock
+                            Margin="0,0,0,5"
+                            FontTypography="Subtitle"
+                            Text="Map Size" />
+                        <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
+                    </StackPanel>
+                </ui:Card>
             </Grid>
-        </GroupBox>
+        </ScrollViewer>
+        <c:ToggleItemListView x:Name="WinConditions" DockPanel.Dock="Right" />
 
-        <c:ToggleItemListView
-            x:Name="Maps"
-            Grid.Row="1"
-            Grid.Column="1" />
-        <c:ToggleItemListView
-            x:Name="AddonMaps"
-            Grid.Row="1"
-            Grid.Column="2" />
-        <c:ToggleItemListView
-            x:Name="WinConditions"
-            Grid.Row="1"
-            Grid.Column="3" />
-    </Grid>
+        <Grid Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <c:ToggleItemListView x:Name="Maps" Grid.Column="0" />
+        </Grid>
+    </DockPanel>
 </rxui:ReactiveUserControl>

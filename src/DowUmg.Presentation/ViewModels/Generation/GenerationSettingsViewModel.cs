@@ -44,8 +44,7 @@ namespace DowUmg.Presentation.ViewModels
                 {
                     Mod = ModViewModel.SelectedItem.GetItem<DowMod>(),
                     Maps = GeneralTabViewModel
-                        .Maps.Items.Concat(GeneralTabViewModel.AddonMaps.Items)
-                        .Where(map => map.ToggleItem.IsToggled)
+                        .Maps.Items.Where(map => map.ToggleItem.IsToggled)
                         .Select(map => map.Model)
                         .ToList(),
                     Rules = GeneralTabViewModel
