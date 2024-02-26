@@ -72,12 +72,11 @@
                     Text="Additional" />
 
                 <ui:Card Grid.Row="3" Margin="0,10,0,5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl
-                            x:Name="ModsList"
-                            HorizontalContentAlignment="Stretch"
-                            ScrollViewer.VerticalScrollBarVisibility="Visible" />
-                    </ScrollViewer>
+                    <ItemsControl
+                        x:Name="ModsList"
+                        HorizontalContentAlignment="Stretch"
+                        ItemsPanel="{StaticResource ItemsControlVSPTemplate}"
+                        Template="{StaticResource ItemsControlVirtualTemplate}" />
                 </ui:Card>
 
                 <ProgressBar

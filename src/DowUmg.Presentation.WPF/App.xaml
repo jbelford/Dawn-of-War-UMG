@@ -16,6 +16,24 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
+            <ItemsPanelTemplate x:Key="ItemsControlVSPTemplate">
+                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
+            </ItemsPanelTemplate>
+
+            <ControlTemplate x:Key="ItemsControlVirtualTemplate" TargetType="ItemsControl">
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <ScrollViewer
+                        Padding="{TemplateBinding Padding}"
+                        CanContentScroll="True"
+                        Focusable="False">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+
             <DataTemplate x:Key="NumberInputSliderTemplate" DataType="{x:Type vm:NumberInputViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
