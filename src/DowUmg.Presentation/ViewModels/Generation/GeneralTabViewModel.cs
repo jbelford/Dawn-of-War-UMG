@@ -46,7 +46,7 @@ namespace DowUmg.Presentation.ViewModels
             MapsViewModel = new ToggleItemListViewModel(
                 "Maps",
                 generationState
-                    .ConnectMainMaps()
+                    .ConnectMaps()
                     .Sort(MapSort)
                     .Transform(MapToViewModelTransform)
                     .BindToObservableList(out _maps)
@@ -94,6 +94,7 @@ namespace DowUmg.Presentation.ViewModels
                 }
 
                 this.WhenAnyValue(x => x.IsAddonAllowed)
+                    .ObserveOn(RxApp.TaskpoolScheduler)
                     .Subscribe(isAddonAlowed =>
                     {
                         generationState.IsAddonAllowed = isAddonAlowed;

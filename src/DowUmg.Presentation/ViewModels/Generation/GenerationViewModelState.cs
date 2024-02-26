@@ -37,7 +37,7 @@ namespace DowUmg.Presentation.ViewModels
             RefreshFilters();
         }
 
-        public IObservable<IChangeSet<DowMap>> ConnectMainMaps() => _allowedMaps.Connect();
+        public IObservable<IChangeSet<DowMap>> ConnectMaps() => _allowedMaps.Connect();
 
         public IObservable<IChangeSet<GameRule>> ConnectRules() => _rules.Connect();
 
