@@ -24,9 +24,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock
+            <ui:TextBlock
                 Grid.Column="0"
-                FontSize="{StaticResource FontSizeXLarge}"
+                FontTypography="TitleLarge"
                 Text="Generation Settings" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <ui:TextBlock
