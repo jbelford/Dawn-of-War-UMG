@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -22,16 +23,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image
+            <ui:Image
                 x:Name="MapImage"
                 Grid.Column="1"
                 Width="200"
-                Height="200" />
+                Height="200"
+                d:Source="/Resources/missingImage.png"
+                BorderThickness="1"
+                CornerRadius="5" />
 
             <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
@@ -59,18 +63,18 @@
                             </Style>
                         </StackPanel.Resources>
 
-                        <TextBlock
+                        <ui:TextBlock
                             x:Name="ModName"
-                            FontSize="{StaticResource FontSizeSmall}"
+                            FontTypography="BodyStrong"
                             Text="Mod: Dawn of War Soulstorm" />
-                        <TextBlock
+                        <ui:TextBlock
                             x:Name="MapName"
-                            FontSize="{StaticResource FontSizeLarge}"
+                            FontTypography="TitleLarge"
                             Text="Abandon All Hope (8)" />
-                        <TextBlock
+                        <ui:TextBlock
                             x:Name="MapDesc"
                             MaxWidth="500"
-                            FontSize="{StaticResource FontSizeRegular}"
+                            FontTypography="Body"
                             Text="*This is a description about the modffffffffffffffffffffffffffffffffffffffg ffffffffffffffffffffffffffffff*"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
@@ -78,7 +82,7 @@
                     <ItemsControl x:Name="WinConditions" Grid.Column="2">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Mode=OneTime}" />
+                                <ui:TextBlock FontTypography="Caption" Text="{Binding Mode=OneTime}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -112,23 +116,20 @@
         </Grid>
 
         <Grid Grid.Row="3">
-            <Grid.Resources>
-                <Style BasedOn="{StaticResource RegularButton}" TargetType="Button" />
-            </Grid.Resources>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button
+            <ui:Button
                 x:Name="BackButton"
                 Grid.Column="0"
                 Content="Back" />
-            <Button
+            <ui:Button
                 x:Name="RegenerateButton"
                 Grid.Column="2"
+                Width="100"
                 Content="Regenerate!" />
         </Grid>
     </Grid>
