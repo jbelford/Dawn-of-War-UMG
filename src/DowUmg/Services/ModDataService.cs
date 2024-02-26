@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DowUmg.Data;
 using DowUmg.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,15 +10,15 @@ namespace DowUmg.Services
     public interface IModDataService
     {
         public List<DowMod> GetMods();
-        public List<DowMod> GetPlayableMods();
-        public List<DowMap> GetAddonMaps();
+        public Task<List<DowMod>> GetPlayableMods();
+        public Task<List<DowMap>> GetAddonMaps();
 
         public void Add(IEnumerable<DowMod> mods);
 
         public void DropModData();
 
-        public List<DowMap> GetModMaps(int modId);
-        public List<GameRule> GetModRules(int modId);
+        public Task<List<DowMap>> GetModMaps(int modId);
+        public Task<List<GameRule>> GetModRules(int modId);
 
         public DowMap GetDefaultMap();
     }
@@ -49,7 +50,7 @@ namespace DowUmg.Services
             context.SaveChanges();
         }
 
-        public List<DowMap> GetAddonMaps()
+        public Task<List<DowMap>> GetAddonMaps()
         {
             using var context = new ModsContext();
             return context
@@ -57,7 +58,7 @@ namespace DowUmg.Services
                 .Where(mod => mod.Data.ModFolder == "dxp2" || mod.Data.ModFolder == "w40k")
                 .SelectMany(mod => mod.Data.Maps)
                 .Include(map => map.Mod)
-                .ToList();
+                .ToListAsync();
         }
 
         public DowMap GetDefaultMap()
@@ -66,7 +67,7 @@ namespace DowUmg.Services
             return context.Maps.Include(map => map.Mod).First();
         }
 
-        public List<DowMap> GetModMaps(int modId)
+        public Task<List<DowMap>> GetModMaps(int modId)
         {
             using var context = new ModsContext();
             return context
@@ -82,10 +83,10 @@ namespace DowUmg.Services
                     """
                 )
                 .Include(map => map.Mod)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<GameRule> GetModRules(int modId)
+        public Task<List<GameRule>> GetModRules(int modId)
         {
             using var context = new ModsContext();
             return context
@@ -100,7 +101,7 @@ namespace DowUmg.Services
                     group by Name
                     """
                 )
-                .ToList();
+                .ToListAsync();
         }
 
         public List<DowMod> GetMods()
@@ -109,7 +110,7 @@ namespace DowUmg.Services
             return context.Mods.ToList();
         }
 
-        public List<DowMod> GetPlayableMods()
+        public Task<List<DowMod>> GetPlayableMods()
         {
             using var context = new ModsContext();
             return context
@@ -117,7 +118,7 @@ namespace DowUmg.Services
                 .Where(mod =>
                     mod.Data.Maps.Count > 0 || mod.Data.Rules.Count > 0 || mod.Data.Races.Count > 0
                 )
-                .ToList();
+                .ToListAsync();
         }
     }
 }

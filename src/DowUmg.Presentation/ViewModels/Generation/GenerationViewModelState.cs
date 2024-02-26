@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using DynamicData;
@@ -12,27 +13,34 @@ namespace DowUmg.Presentation.ViewModels
     {
         private readonly IModDataService modDataService;
 
-        private List<DowMap> _addonMaps;
-        private List<DowMap> _maps;
+        private List<DowMap> _addonMaps = new();
+        private List<DowMap> _maps = new();
         private SourceList<DowMap> _allowedMaps = new();
         private SourceList<GameRule> _rules = new();
         private Dictionary<int, bool> _allowedPlayers = new();
         private Dictionary<int, bool> _allowedSizes = new();
         private bool _isAddonAllowed = true;
+        private bool fetchedAddon = false;
 
-        public GenerationViewModelState(List<DowMap> addonMaps)
+        public GenerationViewModelState()
         {
             modDataService = Locator.Current.GetService<IModDataService>()!;
-            _addonMaps = addonMaps;
         }
 
-        public void RefreshForMod(int modId)
+        public async Task RefreshForMod(int modId)
         {
-            _maps = modDataService.GetModMaps(modId);
+            if (!fetchedAddon)
+            {
+                _addonMaps = await modDataService.GetAddonMaps();
+                fetchedAddon = true;
+            }
+
+            _maps = await modDataService.GetModMaps(modId);
+            var rules = await modDataService.GetModRules(modId);
             _rules.Edit(inner =>
             {
                 inner.Clear();
-                inner.AddRange(modDataService.GetModRules(modId));
+                inner.AddRange(rules);
             });
             RefreshFilters();
         }

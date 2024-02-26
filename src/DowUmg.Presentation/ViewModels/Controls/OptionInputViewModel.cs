@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DynamicData;
@@ -9,7 +10,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class OptionInputViewModel : ActivatableReactiveObject, IDisposable
     {
-        private IDisposable subscription;
+        private IDisposable? subscription;
 
         public OptionInputViewModel(
             IObservable<IChangeSet<OptionInputItemViewModel>> items,
@@ -21,6 +22,15 @@ namespace DowUmg.Presentation.ViewModels
             SelectedItem = selectLast ? Items.Last() : Items.First();
         }
 
+        public OptionInputViewModel(
+            IEnumerable<OptionInputItemViewModel> items,
+            bool selectLast = false
+        )
+        {
+            _items = new(new ObservableCollection<OptionInputItemViewModel>(items));
+            SelectedItem = selectLast ? Items.Last() : Items.First();
+        }
+
         [Reactive]
         public OptionInputItemViewModel SelectedItem { get; set; }
 
@@ -29,7 +39,7 @@ namespace DowUmg.Presentation.ViewModels
 
         public void Dispose()
         {
-            subscription.Dispose();
+            subscription?.Dispose();
         }
     }
 

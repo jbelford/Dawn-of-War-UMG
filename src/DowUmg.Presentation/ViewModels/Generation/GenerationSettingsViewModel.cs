@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using DowUmg.Data.Entities;
 using DowUmg.Models;
 using DowUmg.Services;
-using DynamicData;
 using ReactiveUI;
 using Splat;
 
@@ -21,20 +20,24 @@ namespace DowUmg.Presentation.ViewModels
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
-            var generationState = new GenerationViewModelState(modDataService.GetAddonMaps());
+            var generationState = new GenerationViewModelState();
 
             GeneralTabViewModel = new GeneralTabViewModel(generationState);
 
-            var playableMods = new SourceList<DowMod>();
-            playableMods.AddRange(modDataService.GetPlayableMods());
-            ModViewModel = new OptionInputViewModel(
-                playableMods.Connect().Transform(mod => new OptionInputItemViewModel(mod.Name, mod))
-            );
+            var loadMods = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var mods = await modDataService.GetPlayableMods();
+                ModViewModel = new OptionInputViewModel(
+                    mods.Select(mod => new OptionInputItemViewModel(mod.Name, mod))
+                );
+            });
 
-            RefreshMod = ReactiveCommand.Create(
+            loadMods.Execute();
+
+            RefreshMod = ReactiveCommand.CreateFromTask(
                 (DowMod mod) =>
                 {
-                    generationState.RefreshForMod(mod.Id);
+                    return generationState.RefreshForMod(mod.Id);
                 }
             );
 
@@ -90,7 +93,6 @@ namespace DowUmg.Presentation.ViewModels
 
                 GeneralTabViewModel.DisposeWith(d);
                 TeamTabViewModel.DisposeWith(d);
-                ModViewModel.DisposeWith(d);
             });
         }
 
@@ -100,7 +102,7 @@ namespace DowUmg.Presentation.ViewModels
 
         public TeamTabViewModel TeamTabViewModel { get; }
 
-        public OptionInputViewModel ModViewModel { get; }
+        public OptionInputViewModel ModViewModel { get; set; }
 
         public ReactiveCommand<DowMod, Unit> RefreshMod { get; }
 
