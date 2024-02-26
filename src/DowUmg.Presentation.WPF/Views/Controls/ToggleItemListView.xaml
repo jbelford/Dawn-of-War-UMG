@@ -41,13 +41,32 @@
                 VerticalAlignment="Center"
                 AcceptsReturn="False"
                 PlaceholderText="Filter results..." />
-            <ScrollViewer Grid.Row="2">
-                <ItemsControl
-                    x:Name="ToggleItemList"
-                    Margin="0,0,10,0"
-                    ItemTemplate="{StaticResource ToggleItemTemplate}"
-                    VirtualizingStackPanel.IsVirtualizing="True" />
-            </ScrollViewer>
+            <ItemsControl
+                x:Name="ToggleItemList"
+                Grid.Row="2"
+                Padding="0,0,10,0"
+                ItemTemplate="{StaticResource ToggleItemTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer
+                                Padding="{TemplateBinding Padding}"
+                                CanContentScroll="True"
+                                Focusable="False">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
         </Grid>
         <ui:Card.Footer>
             <ui:Button
