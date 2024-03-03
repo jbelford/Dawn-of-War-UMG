@@ -17,7 +17,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     internal record ToggleModel<T>(T Model, ToggleItemViewModel ToggleItem);
 
-    public class GeneralTabViewModel : ActivatableReactiveObject, IDisposable
+    public class GeneralTabViewModel : ActivatableReactiveObject
     {
         private DowModLoader _modLoader;
 
@@ -101,12 +101,6 @@ namespace DowUmg.Presentation.ViewModels
                     })
                     .DisposeWith(d);
             });
-        }
-
-        public void Dispose()
-        {
-            MapsViewModel.Dispose();
-            WinConditionsViewModel.Dispose();
         }
 
         private IObservableList<ToggleModel<DowMap>> _maps;

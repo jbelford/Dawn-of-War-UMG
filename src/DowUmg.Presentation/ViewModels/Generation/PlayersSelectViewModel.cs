@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -9,7 +8,7 @@ using ReactiveUI;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class PlayersSelectViewModel : ActivatableReactiveObject, IDisposable
+    public class PlayersSelectViewModel : ActivatableReactiveObject
     {
         public PlayersSelectViewModel(string label, IEnumerable<int> humans, RangeViewModel minMax)
         {
@@ -55,11 +54,5 @@ namespace DowUmg.Presentation.ViewModels
         public RangeViewModel MinMax { get; }
 
         public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForHumanPlayers { get; }
-
-        public void Dispose()
-        {
-            Humans.Dispose();
-            MinMax.Dispose();
-        }
     }
 }

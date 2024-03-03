@@ -24,15 +24,16 @@ namespace DowUmg.Presentation.ViewModels
 
             GeneralTabViewModel = new GeneralTabViewModel(generationState);
 
-            var loadMods = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var mods = await modDataService.GetPlayableMods();
-                ModViewModel = new OptionInputViewModel(
-                    mods.Select(mod => new OptionInputItemViewModel(mod.Name, mod))
-                );
-            });
-
-            loadMods.Execute();
+            Observable.StartAsync(
+                async () =>
+                {
+                    var mods = await modDataService.GetPlayableMods();
+                    ModViewModel = new OptionInputViewModel(
+                        mods.Select(mod => new OptionInputItemViewModel(mod.Name, mod))
+                    );
+                },
+                RxApp.TaskpoolScheduler
+            );
 
             RefreshMod = ReactiveCommand.CreateFromTask(
                 (DowMod mod) =>
@@ -90,9 +91,6 @@ namespace DowUmg.Presentation.ViewModels
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .InvokeCommand(RefreshMod)
                     .DisposeWith(d);
-
-                GeneralTabViewModel.DisposeWith(d);
-                TeamTabViewModel.DisposeWith(d);
             });
         }
 

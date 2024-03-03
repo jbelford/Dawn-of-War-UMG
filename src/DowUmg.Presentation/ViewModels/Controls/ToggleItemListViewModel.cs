@@ -9,10 +9,8 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemListViewModel : ReactiveObject, IDisposable
+    public class ToggleItemListViewModel : ReactiveObject
     {
-        private IDisposable subscription;
-
         public ToggleItemListViewModel(
             string label,
             IObservable<IChangeSet<ToggleItemViewModel>> items
@@ -44,7 +42,7 @@ namespace DowUmg.Presentation.ViewModels
                 }
             );
 
-            subscription = items.ObserveOn(RxApp.MainThreadScheduler).Bind(out _items).Subscribe();
+            items.ObserveOn(RxApp.MainThreadScheduler).Bind(out _items).Subscribe();
 
             this.WhenAnyValue(x => x.Search).InvokeCommand(FilterItems);
         }
@@ -60,7 +58,5 @@ namespace DowUmg.Presentation.ViewModels
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }
 
         public ReactiveCommand<string, Unit> FilterItems { get; }
-
-        public void Dispose() => subscription.Dispose();
     }
 }

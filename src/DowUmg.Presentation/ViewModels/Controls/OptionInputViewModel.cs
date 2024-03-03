@@ -8,16 +8,14 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class OptionInputViewModel : ActivatableReactiveObject, IDisposable
+    public class OptionInputViewModel : ActivatableReactiveObject
     {
-        private IDisposable? subscription;
-
         public OptionInputViewModel(
             IObservable<IChangeSet<OptionInputItemViewModel>> items,
             bool selectLast = false
         )
         {
-            subscription = items.Bind(out _items).Subscribe();
+            items.Bind(out _items).Subscribe();
 
             SelectedItem = selectLast ? Items.Last() : Items.First();
         }
@@ -36,11 +34,6 @@ namespace DowUmg.Presentation.ViewModels
 
         private ReadOnlyObservableCollection<OptionInputItemViewModel>? _items;
         public ReadOnlyObservableCollection<OptionInputItemViewModel>? Items => _items;
-
-        public void Dispose()
-        {
-            subscription?.Dispose();
-        }
     }
 
     public class OptionInputItemViewModel(string label, object obj) : ReactiveObject
