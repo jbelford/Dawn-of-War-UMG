@@ -42,17 +42,14 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenAnyValue(x => x.Matchup)
                 .Select(match =>
-                    match.Players.Select(
-                        (player, idx) =>
-                            new MatchupPlayerViewModel()
-                            {
-                                Position = idx + 1,
-                                Name = player.Name,
-                                Team = $"Team {player.Team + 1}",
-                                Race = player.Race,
-                                ShowRace = player.Race != null,
-                            }
-                    )
+                    match.Players.Select(player => new MatchupPlayerViewModel()
+                    {
+                        Position = player.Position + 1,
+                        Name = player.Name,
+                        Team = $"Team {player.Team + 1}",
+                        Race = player.Race,
+                        ShowRace = player.Race != null,
+                    })
                 )
                 .Select(mapped => new ObservableCollection<MatchupPlayerViewModel>(mapped))
                 .ToPropertyEx(this, x => x.MatchupPlayers);

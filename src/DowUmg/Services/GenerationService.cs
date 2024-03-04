@@ -40,6 +40,9 @@ namespace DowUmg.Services
                 settings.Players.Select(
                     (player, idx) =>
                         new MatchupPlayer(player.Length > 0 ? player : $"Player {idx + 1}", 0)
+                        {
+                            Position = idx
+                        }
                 )
             );
 
@@ -75,14 +78,21 @@ namespace DowUmg.Services
                 }
             }
 
-            if (settings.RandomPositions)
+            int startIdx = settings.RandomPositions ? 1 : humans;
+            var positions = Enumerable.Range(startIdx, map.Players - startIdx).ToList();
+
+            for (int i = 0; i < positions.Count; ++i)
             {
-                for (int i = 1; i < playerList.Count; ++i)
-                {
-                    int randomIdx = random.Next(1, playerList.Count);
-                    (playerList[randomIdx], playerList[i]) = (playerList[i], playerList[randomIdx]);
-                }
+                int randomIdx = random.Next(0, positions.Count);
+                (positions[randomIdx], positions[i]) = (positions[i], positions[randomIdx]);
             }
+
+            for (int i = startIdx; i < playerList.Count; ++i)
+            {
+                playerList[i].Position = positions[i - startIdx];
+            }
+
+            playerList.Sort((a, b) => a.Position - b.Position);
 
             return new Matchup(map, info, playerList);
         }
