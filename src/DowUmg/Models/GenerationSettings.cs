@@ -10,27 +10,19 @@ namespace DowUmg.Models
         public DowMod Mod { get; set; }
         public List<DowMap> Maps { get; set; }
         public List<GameRule> Rules { get; set; }
+        public List<DowRace> Races { get; set; }
 
-        #region Team Settings
+        public List<string> Players { get; set; }
 
-        public TeamSettings? Teams { get; }
+        public int MinComputer { get; set; }
+        public int MaxComputer { get; set; }
 
-        public class TeamSettings
-        {
-            public bool EvenDistribution { get; }
-            public List<TeamPlayerSettings> Players { get; } = new List<TeamPlayerSettings>();
-        }
+        public int MinTeams { get; set; }
+        public int MaxTeams { get; set; }
 
-        public class TeamPlayerSettings
-        {
-            public int Min { get; }
-            public int Max { get; }
-            public int Humans { get; }
-        }
+        public bool RandomPositions { get; set; }
 
-        #endregion Team Settings
-
-        #region Game Options
+        public bool OneRaceTeams { get; set; }
 
         public int[] GameDifficultyTickets { get; } =
             new int[Enum.GetValues(typeof(GameDifficulty)).Length];
@@ -39,7 +31,5 @@ namespace DowUmg.Models
             new int[Enum.GetValues(typeof(GameResourceRate)).Length];
         public int[] StartResourceTickets { get; } =
             new int[Enum.GetValues(typeof(GameStartResource)).Length];
-
-        #endregion Game Options
     }
 }

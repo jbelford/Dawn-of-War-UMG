@@ -19,6 +19,7 @@ namespace DowUmg.Services
 
         public Task<List<DowMap>> GetModMaps(int modId);
         public Task<List<GameRule>> GetModRules(int modId);
+        public Task<List<DowRace>> GetRaces(int modId);
 
         public DowMap GetDefaultMap();
     }
@@ -94,6 +95,24 @@ namespace DowUmg.Services
                     $"""
                     select r.*
                     from GameRules r join (
+                        select m.ModDataId
+                        from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
+                        where dm.DependentsId = {modId}
+                    ) dep on r.ModDataId = dep.ModDataId
+                    group by Name
+                    """
+                )
+                .ToListAsync();
+        }
+
+        public Task<List<DowRace>> GetRaces(int modId)
+        {
+            using var context = new ModsContext();
+            return context
+                .Races.FromSql(
+                    $"""
+                    select r.*
+                    from Races r join (
                         select m.ModDataId
                         from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
                         where dm.DependentsId = {modId}

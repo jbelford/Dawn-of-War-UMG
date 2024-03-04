@@ -1,4 +1,6 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using DowUmg.Presentation.ViewModels;
 using ReactiveUI;
 
@@ -15,32 +17,34 @@ namespace DowUmg.Presentation.WPF.Views
 
             this.WhenActivated(d =>
             {
-                this.Bind(ViewModel, vm => vm.Enabled, v => v.EnabledCheckBox.IsChecked)
+                this.OneWayBind(ViewModel, vm => vm.Players, v => v.PlayerItems.ItemsSource)
                     .DisposeWith(d);
 
-                this.OneWayBind(
+                this.OneWayBind(ViewModel, vm => vm.RacesViewModel, v => v.Races.ViewModel)
+                    .DisposeWith(d);
+
+                this.Bind(
                         ViewModel,
-                        vm => vm.GlobalPlayerOptions,
-                        v => v.GlobalPlayerOptions.Content
+                        vm => vm.RandomPositions,
+                        v => v.RandomPositionsToggle.IsChecked
                     )
                     .DisposeWith(d);
 
-                this.Bind(ViewModel, vm => vm.TeamIsEven, v => v.EvenRadio.IsChecked)
-                    .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.TeamNum, v => v.TeamNum.ViewModel)
+                this.Bind(ViewModel, vm => vm.OneRaceTeams, v => v.OneRaceTeamToggle.IsChecked)
                     .DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.TeamPlayerOptions, v => v.Teams.ItemsSource)
-                    .DisposeWith(d);
-
-                this.OneWayBind(ViewModel, vm => vm.Enabled, v => v.MainContent.IsEnabled)
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Do(vm =>
+                    {
+                        PlayersOption.ViewModel = vm.PlayerCountInput;
+                        MinComputersOption.ViewModel = vm.MinComputers;
+                        MaxComputersOption.ViewModel = vm.MaxComputers;
+                        MinTeamsOption.ViewModel = vm.MinTeams;
+                        MaxTeamsOption.ViewModel = vm.MaxTeams;
+                    })
+                    .Subscribe()
                     .DisposeWith(d);
             });
-        }
-
-        private void SetViewModels(TeamTabViewModel vm)
-        {
-            GlobalPlayerOptions.Content = vm.GlobalPlayerOptions;
         }
     }
 }

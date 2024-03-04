@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DowUmg.Data.Entities;
 using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -11,90 +11,94 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class TeamTabViewModel : ActivatableReactiveObject
     {
-        public TeamTabViewModel()
+        public TeamTabViewModel(GenerationViewModelState generationState)
         {
-            GlobalPlayerOptions = new PlayersSelectViewModel(
-                "Players",
-                Enumerable.Range(1, 8),
-                new RangeViewModel(2, 8)
+            var totalPlayers = Enumerable.Range(1, 8);
+
+            PlayerCountInput = new OptionInputViewModel(
+                totalPlayers.Select(name => new OptionInputItemViewModel($"{name}p", name)).ToList()
             );
 
-            var teamNums = new SourceList<int>();
-            teamNums.AddRange(Enumerable.Range(2, 7));
-            TeamNum = new OptionInputViewModel(
-                teamNums
-                    .Connect()
-                    .Transform(num => new OptionInputItemViewModel(num.ToString(), num))
+            MinComputers = new OptionInputViewModel(
+                totalPlayers.Select(name => new OptionInputItemViewModel($"{name}p", name)).ToList()
+            );
+            MaxComputers = new OptionInputViewModel(
+                totalPlayers
+                    .Select(name => new OptionInputItemViewModel($"{name}p", name))
+                    .ToList(),
+                true
             );
 
-            RefreshForMin = ReactiveCommand.Create(
-                (OptionInputItemViewModel min) =>
-                {
-                    foreach (var teamItem in TeamNum.Items)
-                    {
-                        teamItem.IsEnabled = teamItem.GetItem<int>() <= min.GetItem<int>();
-                    }
-                    if (!TeamNum.SelectedItem.IsEnabled)
-                    {
-                        TeamNum.SelectedItem = TeamNum.Items.Last(x => x.IsEnabled);
-                    }
-                }
+            var totalTeams = Enumerable.Range(1, 7);
+            MinTeams = new OptionInputViewModel(
+                totalTeams.Select(name => new OptionInputItemViewModel($"{name}", name)).ToList()
+            );
+            MaxTeams = new OptionInputViewModel(
+                totalTeams.Select(name => new OptionInputItemViewModel($"{name}", name)).ToList(),
+                true
             );
 
-            RefreshTeamList = ReactiveCommand.Create(
-                (int teams) =>
-                {
-                    if (TeamPlayerOptions.Count < teams)
-                    {
-                        for (int i = TeamPlayerOptions.Count; i < teams; ++i)
-                        {
-                            var teamOptions = new PlayersSelectViewModel(
-                                $"Team {i + 1}",
-                                Enumerable.Range(0, 7).ToArray(),
-                                new RangeViewModel(1, 7)
-                            );
+            generationState
+                .ConnectRaces()
+                .Transform(race => new ToggleModel<DowRace>(
+                    race,
+                    new ToggleItemViewModel(race.Name)
+                ))
+                .BindToObservableList(out _race);
 
-                            TeamPlayerOptions.Add(teamOptions);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = TeamPlayerOptions.Count - 1; i >= teams; --i)
-                        {
-                            TeamPlayerOptions.RemoveAt(i);
-                        }
-                    }
-                }
+            RacesViewModel = new ToggleItemListViewModel(
+                "Races",
+                _race.Connect().Transform(model => model.ToggleItem)
             );
 
-            this.WhenActivated(d =>
-            {
-                this.WhenAnyValue(x => x.TeamNum.SelectedItem)
-                    .WhereNotNull()
-                    .DistinctUntilChanged()
-                    .Select(item => item.GetItem<int>())
-                    .InvokeCommand(RefreshTeamList)
-                    .DisposeWith(d);
+            var players = totalPlayers
+                .Select(idx => new TeamTabPlayerViewModel($"Player {idx}"))
+                .ToList();
 
-                this.WhenAnyValue(x => x.GlobalPlayerOptions.MinMax.MinInputViewModel.SelectedItem)
-                    .DistinctUntilChanged()
-                    .InvokeCommand(RefreshForMin)
-                    .DisposeWith(d);
-            });
+            this.WhenAnyValue(x => x.PlayerCountInput.SelectedItem)
+                .Select(item => item.GetItem<int>())
+                .Select(numPlayers => players[0..numPlayers])
+                .Select(items => new ObservableCollection<TeamTabPlayerViewModel>(items))
+                .ToPropertyEx(this, x => x.Players);
         }
 
         [Reactive]
-        public bool Enabled { get; set; } = false;
+        public OptionInputViewModel PlayerCountInput { get; set; }
+
+        [ObservableAsProperty]
+        public ObservableCollection<TeamTabPlayerViewModel> Players { get; set; }
+
+        private IObservableList<ToggleModel<DowRace>> _race;
+        internal IObservableList<ToggleModel<DowRace>> Races => _race;
+        public ToggleItemListViewModel RacesViewModel { get; set; }
 
         [Reactive]
-        public bool TeamIsEven { get; set; } = true;
+        public OptionInputViewModel MinComputers { get; set; }
 
-        public OptionInputViewModel TeamNum { get; }
+        [Reactive]
+        public OptionInputViewModel MaxComputers { get; set; }
 
-        public PlayersSelectViewModel GlobalPlayerOptions { get; }
-        public ObservableCollection<PlayersSelectViewModel> TeamPlayerOptions { get; } = new();
-        public ReactiveCommand<OptionInputItemViewModel, Unit> RefreshForMin { get; }
-        public ReactiveCommand<int, Unit> RefreshTeamList { get; }
-        public ReactiveCommand<int, Unit> RefreshForMod { get; }
+        [Reactive]
+        public OptionInputViewModel MinTeams { get; set; }
+
+        [Reactive]
+        public OptionInputViewModel MaxTeams { get; set; }
+
+        [Reactive]
+        public bool RandomPositions { get; set; }
+
+        [Reactive]
+        public bool OneRaceTeams { get; set; }
+    }
+
+    public class TeamTabPlayerViewModel : ReactiveObject
+    {
+        public TeamTabPlayerViewModel(string name)
+        {
+            Name = name;
+        }
+
+        [Reactive]
+        public string Name { get; set; }
     }
 }

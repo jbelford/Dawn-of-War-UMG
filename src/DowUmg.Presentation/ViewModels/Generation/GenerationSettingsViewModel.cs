@@ -16,12 +16,12 @@ namespace DowUmg.Presentation.ViewModels
             : base(screen, "generation")
         {
             GameTabViewModel = new GameTabViewModel();
-            TeamTabViewModel = new TeamTabViewModel();
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
             var generationState = new GenerationViewModelState();
 
+            TeamTabViewModel = new TeamTabViewModel(generationState);
             GeneralTabViewModel = new GeneralTabViewModel(generationState);
 
             Observable.StartAsync(
@@ -54,7 +54,18 @@ namespace DowUmg.Presentation.ViewModels
                     Rules = GeneralTabViewModel
                         .WinConditions.Items.Where(rule => rule.ToggleItem.IsToggled)
                         .Select(rule => rule.Model)
-                        .ToList()
+                        .ToList(),
+                    Races = TeamTabViewModel
+                        .Races.Items.Where(race => race.ToggleItem.IsToggled)
+                        .Select(race => race.Model)
+                        .ToList(),
+                    Players = TeamTabViewModel.Players.Select(player => player.Name).ToList(),
+                    MinComputer = TeamTabViewModel.MinComputers.SelectedItem.GetItem<int>(),
+                    MaxComputer = TeamTabViewModel.MaxComputers.SelectedItem.GetItem<int>(),
+                    MinTeams = TeamTabViewModel.MinTeams.SelectedItem.GetItem<int>(),
+                    MaxTeams = TeamTabViewModel.MaxTeams.SelectedItem.GetItem<int>(),
+                    RandomPositions = TeamTabViewModel.RandomPositions,
+                    OneRaceTeams = TeamTabViewModel.OneRaceTeams,
                 };
 
                 foreach (var diff in GameTabViewModel.DiffOption)

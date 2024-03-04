@@ -17,6 +17,7 @@ namespace DowUmg.Presentation.ViewModels
         private List<DowMap> _maps = new();
         private SourceList<DowMap> _allowedMaps = new();
         private SourceList<GameRule> _rules = new();
+        private SourceList<DowRace> _races = new();
         private Dictionary<int, bool> _allowedPlayers = new();
         private Dictionary<int, bool> _allowedSizes = new();
         private bool _isAddonAllowed = true;
@@ -36,18 +37,29 @@ namespace DowUmg.Presentation.ViewModels
             }
 
             _maps = await modDataService.GetModMaps(modId);
+
             var rules = await modDataService.GetModRules(modId);
             _rules.Edit(inner =>
             {
                 inner.Clear();
                 inner.AddRange(rules);
             });
+
+            var races = await modDataService.GetRaces(modId);
+            _races.Edit(inner =>
+            {
+                inner.Clear();
+                inner.AddRange(races);
+            });
+
             RefreshFilters();
         }
 
         public IObservable<IChangeSet<DowMap>> ConnectMaps() => _allowedMaps.Connect();
 
         public IObservable<IChangeSet<GameRule>> ConnectRules() => _rules.Connect();
+
+        public IObservable<IChangeSet<DowRace>> ConnectRaces() => _races.Connect();
 
         public void SetPlayersAllowed(int players, bool allowed)
         {

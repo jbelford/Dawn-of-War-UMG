@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using DowUmg.Models;
 using DowUmg.Services;
 using ReactiveUI;
@@ -36,6 +39,23 @@ namespace DowUmg.Presentation.ViewModels
             GenerateMatchup.Execute().Subscribe();
 
             GoBack = HostScreen.Router.NavigateBack;
+
+            this.WhenAnyValue(x => x.Matchup)
+                .Select(match =>
+                    match.Players.Select(
+                        (player, idx) =>
+                            new MatchupPlayerViewModel()
+                            {
+                                Position = idx + 1,
+                                Name = player.Name,
+                                Team = $"Team {player.Team + 1}",
+                                Race = player.Race,
+                                ShowRace = player.Race != null,
+                            }
+                    )
+                )
+                .Select(mapped => new ObservableCollection<MatchupPlayerViewModel>(mapped))
+                .ToPropertyEx(this, x => x.MatchupPlayers);
         }
 
         public ReactiveCommand<Unit, Unit> GenerateMatchup { get; }
@@ -45,7 +65,28 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public Matchup Matchup { get; set; }
 
+        [ObservableAsProperty]
+        public ObservableCollection<MatchupPlayerViewModel> MatchupPlayers { get; set; }
+
         [Reactive]
         public string MapImagePath { get; set; }
+    }
+
+    public class MatchupPlayerViewModel : ReactiveObject
+    {
+        [Reactive]
+        public int Position { get; set; }
+
+        [Reactive]
+        public string Name { get; set; }
+
+        [Reactive]
+        public string Team { get; set; }
+
+        [Reactive]
+        public string? Race { get; set; }
+
+        [Reactive]
+        public bool ShowRace { get; set; }
     }
 }

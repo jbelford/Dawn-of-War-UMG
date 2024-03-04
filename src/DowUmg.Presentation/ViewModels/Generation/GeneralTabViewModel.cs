@@ -15,7 +15,7 @@ using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    internal record ToggleModel<T>(T Model, ToggleItemViewModel ToggleItem);
+    internal record class ToggleModel<T>(T Model, ToggleItemViewModel ToggleItem);
 
     public class GeneralTabViewModel : ActivatableReactiveObject
     {
@@ -43,27 +43,29 @@ namespace DowUmg.Presentation.ViewModels
             MapSizes = new(mapSizes.Select(item => item.ToggleItem));
             IsAddonAllowed = generationState.IsAddonAllowed;
 
+            generationState
+                .ConnectMaps()
+                .Sort(MapSort)
+                .Transform(MapToViewModelTransform)
+                .BindToObservableList(out _maps);
+
             MapsViewModel = new ToggleItemListViewModel(
                 "Maps",
-                generationState
-                    .ConnectMaps()
-                    .Sort(MapSort)
-                    .Transform(MapToViewModelTransform)
-                    .BindToObservableList(out _maps)
-                    .Transform(item => item.ToggleItem)
+                _maps.Connect().Transform(item => item.ToggleItem)
             );
+
+            generationState
+                .ConnectRules()
+                .Filter(rule => rule.IsWinCondition)
+                .Transform(rule => new ToggleModel<GameRule>(
+                    rule,
+                    new ToggleItemViewModel(rule.Name) { ToolTip = rule.Details }
+                ))
+                .BindToObservableList(out _winConditions);
 
             WinConditionsViewModel = new ToggleItemListViewModel(
                 "Win Conditions",
-                generationState
-                    .ConnectRules()
-                    .Filter(rule => rule.IsWinCondition)
-                    .Transform(rule => new ToggleModel<GameRule>(
-                        rule,
-                        new ToggleItemViewModel(rule.Name) { ToolTip = rule.Details }
-                    ))
-                    .BindToObservableList(out _winConditions)
-                    .Transform(item => item.ToggleItem)
+                _winConditions.Connect().Transform(item => item.ToggleItem)
             );
 
             this.WhenActivated(d =>

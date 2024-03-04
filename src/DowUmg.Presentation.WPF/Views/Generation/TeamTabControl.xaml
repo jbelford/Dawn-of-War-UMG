@@ -6,135 +6,118 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="558.5"
     d:DesignWidth="936.913"
     x:TypeArguments="vm:TeamTabViewModel"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <DataTemplate x:Key="PlayersTemplate" DataType="{x:Type vm:PlayersSelectViewModel}">
-            <GroupBox Padding="10,5">
-                <GroupBox.Header>
-                    <Label Content="{Binding Label, Mode=OneTime}" />
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" MinWidth="5" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" MinWidth="5" />
-                        <ColumnDefinition Width="50" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0">Humans</Label>
-                    <c:OptionInputView
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        ViewModel="{Binding Humans}" />
-                    <c:RangeView
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="2"
-                        ViewModel="{Binding MinMax}" />
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="4"
-                        Content="Races" />
-                </Grid>
-            </GroupBox>
-        </DataTemplate>
-    </UserControl.Resources>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <CheckBox
-            x:Name="EnabledCheckBox"
-            Grid.Row="0"
-            Content="Enabled" />
-
-        <Grid x:Name="MainContent" Grid.Row="1">
+    <DockPanel>
+        <ui:Card
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Top"
+            DockPanel.Dock="Left">
+            <StackPanel>
+                <ui:TextBlock
+                    Margin="0,0,0,5"
+                    FontTypography="Subtitle"
+                    Text="Players" />
+                <c:OptionInputView x:Name="PlayersOption" />
+                <ItemsControl x:Name="PlayerItems">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:TeamTabPlayerViewModel">
+                            <StackPanel>
+                                <ui:TextBlock Text="Name" />
+                                <ui:TextBox Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ui:Card>
+        <Grid DockPanel.Dock="Right">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <ContentControl x:Name="GlobalPlayerOptions" ContentTemplate="{StaticResource PlayersTemplate}" />
-                <GroupBox Padding="10">
-                    <GroupBox.Header>
-                        <Label>Teams</Label>
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" MinWidth="10" />
-                            <ColumnDefinition Width="Auto" MinWidth="50" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
-                            Grid.Column="0"
-                            VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" MinHeight="5" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <RadioButton
-                                x:Name="EvenRadio"
-                                Grid.Row="0"
-                                GroupName="distgrp">
-                                Even Distribution
-                            </RadioButton>
-                            <RadioButton Grid.Row="2" GroupName="distgrp">Random Distribution</RadioButton>
-                        </Grid>
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            Content="Num" />
-                        <c:OptionInputView
-                            x:Name="TeamNum"
-                            Grid.Row="1"
-                            Grid.Column="2" />
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
-
-            <Grid Grid.Row="1" Margin="5,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Label
-                    Grid.Row="0"
-                    HorizontalContentAlignment="Center"
-                    Content="Customize Team Composition" />
-                <Separator Grid.Row="1" />
-            </Grid>
-
-            <ItemsControl
-                x:Name="Teams"
+            <ui:Card
+                Grid.Row="0"
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Top">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0,0,0,5"
+                        FontTypography="Subtitle"
+                        Text="Computers" />
+                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <ui:TextBlock
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Text="Min" />
+                        <c:OptionInputView x:Name="MinComputersOption" Margin="0,0,0,5" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <ui:TextBlock
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Text="Max" />
+                        <c:OptionInputView x:Name="MaxComputersOption" Margin="0,0,0,5" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+            <ui:Card
                 Grid.Row="2"
-                Margin="10"
-                ItemTemplate="{StaticResource PlayersTemplate}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Top">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0,0,0,5"
+                        FontTypography="Subtitle"
+                        Text="Teams" />
+                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <ui:TextBlock
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Text="Min" />
+                        <c:OptionInputView x:Name="MinTeamsOption" Margin="0,0,0,5" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <ui:TextBlock
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Text="Max" />
+                        <c:OptionInputView x:Name="MaxTeamsOption" Margin="0,0,0,5" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+            <ui:Card
+                Grid.Row="4"
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Top">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0,0,0,5"
+                        FontTypography="Subtitle"
+                        Text="Options" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:TextBlock Text="Random Positions" />
+                        <ui:ToggleSwitch x:Name="RandomPositionsToggle" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:TextBlock Text="One race teams" />
+                        <ui:ToggleSwitch x:Name="OneRaceTeamToggle" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
         </Grid>
-    </Grid>
+        <Grid Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <c:ToggleItemListView x:Name="Races" Grid.Column="0" />
+        </Grid>
+    </DockPanel>
 </rxui:ReactiveUserControl>

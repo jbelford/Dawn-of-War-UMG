@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DowUmg.Constants;
 using DowUmg.Data.Entities;
@@ -16,36 +17,73 @@ namespace DowUmg.Services
 
             DowMap map = settings.Maps[random.Next(settings.Maps.Count)];
 
-            var info = new GameInfo()
+            var options = new GameOptions()
             {
-                Options = new GameOptions()
-                {
-                    Difficulty = (GameDifficulty)RandomOption(
-                        settings.GameDifficultyTickets,
-                        random
-                    ),
-                    Speed = (GameSpeed)RandomOption(settings.GameSpeedTickets, random),
-                    ResourceRate = (GameResourceRate)RandomOption(
-                        settings.ResourceRateTickets,
-                        random
-                    ),
-                    StartingResources = (GameStartResource)RandomOption(
-                        settings.StartResourceTickets,
-                        random
-                    )
-                }
+                Difficulty = (GameDifficulty)RandomOption(settings.GameDifficultyTickets, random),
+                Speed = (GameSpeed)RandomOption(settings.GameSpeedTickets, random),
+                ResourceRate = (GameResourceRate)RandomOption(settings.ResourceRateTickets, random),
+                StartingResources = (GameStartResource)RandomOption(
+                    settings.StartResourceTickets,
+                    random
+                )
             };
+            var info = new GameInfo(options);
 
             info.Rules.Add(settings.Rules[random.Next(settings.Rules.Count)]);
 
-            var matchup = new Matchup(map, info);
+            var playerList = new List<MatchupPlayer>();
 
-            if (settings.Teams != null)
+            int maxPlayers = 8;
+            int humans = settings.Players.Count;
+            int remainingPlayers = maxPlayers - humans;
+
+            foreach (var player in settings.Players)
             {
-                // TODO generate the team compositions
+                playerList.Add(new MatchupPlayer(player, 0));
             }
 
-            return matchup;
+            if (remainingPlayers > 0)
+            {
+                int maxComputers = Math.Min(remainingPlayers, settings.MaxComputer);
+                int minComputers = Math.Min(remainingPlayers, settings.MinComputer);
+                int computers = random.Next(minComputers, maxComputers + 1);
+
+                int teams = random.Next(settings.MinTeams, settings.MaxTeams + 1);
+
+                Dictionary<int, DowRace> teamRaces = [];
+
+                for (int i = 0; i < computers; ++i)
+                {
+                    int team = random.Next(teams) + 1;
+                    DowRace? race = null;
+                    if (settings.OneRaceTeams)
+                    {
+                        teamRaces.TryGetValue(team, out race);
+                    }
+
+                    if (race == null)
+                    {
+                        race = settings.Races[random.Next(settings.Races.Count)];
+                        if (settings.OneRaceTeams)
+                        {
+                            teamRaces.Add(team, race);
+                        }
+                    }
+
+                    playerList.Add(new MatchupPlayer($"Computer {i + 1}", team, race.Name));
+                }
+            }
+
+            if (settings.RandomPositions)
+            {
+                for (int i = 1; i < playerList.Count; ++i)
+                {
+                    int randomIdx = random.Next(1, playerList.Count);
+                    (playerList[randomIdx], playerList[i]) = (playerList[i], playerList[randomIdx]);
+                }
+            }
+
+            return new Matchup(map, info, playerList);
         }
 
         private int RandomOption(int[] enumeration, Random random)
