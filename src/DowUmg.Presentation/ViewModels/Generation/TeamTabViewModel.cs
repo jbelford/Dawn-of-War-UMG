@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using DowUmg.Data.Entities;
@@ -13,28 +14,34 @@ namespace DowUmg.Presentation.ViewModels
     {
         public TeamTabViewModel(GenerationViewModelState generationState)
         {
-            var totalPlayers = Enumerable.Range(1, 8);
+            var totalPlayers = Enumerable.Range(1, 7);
+            var totalComputers = Enumerable.Range(1, 7);
 
             PlayerCountInput = new OptionInputViewModel(
                 totalPlayers.Select(name => new OptionInputItemViewModel($"{name}p", name)).ToList()
             );
 
             MinComputers = new OptionInputViewModel(
-                totalPlayers.Select(name => new OptionInputItemViewModel($"{name}p", name)).ToList()
+                totalComputers
+                    .Select(name => new OptionInputItemViewModel($"{name}p", name))
+                    .ToList()
             );
             MaxComputers = new OptionInputViewModel(
-                totalPlayers
+                totalComputers
                     .Select(name => new OptionInputItemViewModel($"{name}p", name))
                     .ToList(),
                 true
             );
 
-            var totalTeams = Enumerable.Range(1, 7);
             MinTeams = new OptionInputViewModel(
-                totalTeams.Select(name => new OptionInputItemViewModel($"{name}", name)).ToList()
+                totalComputers
+                    .Select(name => new OptionInputItemViewModel($"{name}", name))
+                    .ToList()
             );
             MaxTeams = new OptionInputViewModel(
-                totalTeams.Select(name => new OptionInputItemViewModel($"{name}", name)).ToList(),
+                totalComputers
+                    .Select(name => new OptionInputItemViewModel($"{name}", name))
+                    .ToList(),
                 true
             );
 
@@ -60,6 +67,26 @@ namespace DowUmg.Presentation.ViewModels
                 .Select(numPlayers => players[0..numPlayers])
                 .Select(items => new ObservableCollection<TeamTabPlayerViewModel>(items))
                 .ToPropertyEx(this, x => x.Players);
+
+            this.WhenAnyValue(x => x.PlayerCountInput.SelectedItem)
+                .DistinctUntilChanged()
+                .Select(item => item.GetItem<int>())
+                .Subscribe(players =>
+                {
+                    for (int i = 0; i < 7; ++i)
+                    {
+                        MinComputers.Items[i].IsEnabled = i + players < 8;
+                        MaxComputers.Items[i].IsEnabled = i + players < 8;
+                    }
+                    if (!MinComputers.SelectedItem.IsEnabled)
+                    {
+                        MinComputers.SelectedItem = MinComputers.Items[0];
+                    }
+                    if (!MaxComputers.SelectedItem.IsEnabled)
+                    {
+                        MaxComputers.SelectedItem = MaxComputers.Items[7 - players];
+                    }
+                });
         }
 
         [Reactive]
