@@ -18,7 +18,7 @@ namespace DowUmg.Presentation.ViewModels
                 .Cast<GameDifficulty>()
                 .Select(diff => new EnumModel<GameDifficulty>(
                     diff,
-                    new NumberInputViewModel(diff.ToString(), 100)
+                    new NumberInputViewModel(diff.GetName(), 100)
                 ))
                 .ToList();
 
@@ -26,7 +26,7 @@ namespace DowUmg.Presentation.ViewModels
                 .Cast<GameSpeed>()
                 .Select(speed => new EnumModel<GameSpeed>(
                     speed,
-                    new NumberInputViewModel(speed.ToString(), 100)
+                    new NumberInputViewModel(speed.GetName(), 100)
                 ))
                 .ToList();
 
@@ -34,7 +34,7 @@ namespace DowUmg.Presentation.ViewModels
                 .Cast<GameResourceRate>()
                 .Select(rate => new EnumModel<GameResourceRate>(
                     rate,
-                    new NumberInputViewModel(rate.ToString(), 100)
+                    new NumberInputViewModel(rate.GetName(), 100)
                 ))
                 .ToList();
 
@@ -42,7 +42,7 @@ namespace DowUmg.Presentation.ViewModels
                 .Cast<GameStartResource>()
                 .Select(starting => new EnumModel<GameStartResource>(
                     starting,
-                    new NumberInputViewModel(starting.ToString(), 100)
+                    new NumberInputViewModel(starting.GetName(), 100)
                 ))
                 .ToList();
 

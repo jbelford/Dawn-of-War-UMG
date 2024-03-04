@@ -12,7 +12,7 @@ namespace DowUmg.Constants
 
     public static class GameSpeedEx
     {
-        public static string ToString(this GameSpeed val) =>
+        public static string GetName(this GameSpeed val) =>
             val switch
             {
                 GameSpeed.VERY_SLOW => "Very Slow",

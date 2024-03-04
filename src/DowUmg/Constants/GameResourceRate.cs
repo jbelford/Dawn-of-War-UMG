@@ -11,7 +11,7 @@ namespace DowUmg.Constants
 
     public static class GameResourceRateEx
     {
-        public static string ToString(this GameResourceRate val) =>
+        public static string GetName(this GameResourceRate val) =>
             val switch
             {
                 GameResourceRate.LOW => "Low",

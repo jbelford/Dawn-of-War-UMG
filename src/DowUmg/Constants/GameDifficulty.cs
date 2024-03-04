@@ -13,7 +13,7 @@ namespace DowUmg.Constants
 
     public static class GameDifficultyEx
     {
-        public static string ToString(this GameDifficulty val) =>
+        public static string GetName(this GameDifficulty val) =>
             val switch
             {
                 GameDifficulty.EASY => "Easy",

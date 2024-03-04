@@ -10,7 +10,7 @@ namespace DowUmg.Constants
 
     public static class GameStartResourceEx
     {
-        public static string ToString(this GameStartResource val) =>
+        public static string GetName(this GameStartResource val) =>
             val switch
             {
                 GameStartResource.STANDARD => "Standard",

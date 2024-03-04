@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
     d:DesignHeight="558.5"
     d:DesignWidth="936.913"
@@ -12,42 +13,36 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="GameOptionTemplate" DataType="{x:Type vm:ProportionalOptionsViewModel}">
-            <GroupBox Padding="5">
-                <GroupBox.Header>
-                    <Label Content="{Binding Path=Name, Mode=OneTime}" />
-                </GroupBox.Header>
+            <ui:Card
+                Margin="2.5"
+                VerticalAlignment="Stretch"
+                VerticalContentAlignment="Top">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0,0,0,5"
+                        FontTypography="Subtitle"
+                        Text="{Binding Path=Name, Mode=OneTime}" />
 
-                <ItemsControl ItemTemplate="{StaticResource NumberInputSliderTemplate}" ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemContainerStyle>
-                        <Style>
-                            <Setter Property="FrameworkElement.Margin" Value="5" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
-            </GroupBox>
+                    <ItemsControl ItemTemplate="{StaticResource NumberInputSliderTemplate}" ItemsSource="{Binding Items}">
+                        <ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="FrameworkElement.Margin" Value="5" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:Card>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <WrapPanel Grid.Row="0">
-            <ContentControl
-                x:Name="DiffOption"
-                Margin="10"
-                ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl
-                x:Name="SpeedOption"
-                Margin="10"
-                ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl
-                x:Name="RateOption"
-                Margin="10"
-                ContentTemplate="{StaticResource GameOptionTemplate}" />
-            <ContentControl
-                x:Name="StartingOption"
-                Margin="10"
-                ContentTemplate="{StaticResource GameOptionTemplate}" />
+        <WrapPanel Grid.Row="0" Margin="-2.5">
+            <ContentControl x:Name="DiffOption" ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl x:Name="SpeedOption" ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl x:Name="RateOption" ContentTemplate="{StaticResource GameOptionTemplate}" />
+            <ContentControl x:Name="StartingOption" ContentTemplate="{StaticResource GameOptionTemplate}" />
         </WrapPanel>
     </Grid>
 </rxui:ReactiveUserControl>
