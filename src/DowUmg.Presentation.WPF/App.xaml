@@ -64,6 +64,7 @@
                 <CheckBox
                     Content="{Binding Path=Label, Mode=OneTime}"
                     IsChecked="{Binding Path=IsToggled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    IsEnabled="{Binding Path=IsEnabled, Mode=OneWay}"
                     Visibility="{Binding Path=IsShown, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <CheckBox.ToolTip>
                         <ToolTip>

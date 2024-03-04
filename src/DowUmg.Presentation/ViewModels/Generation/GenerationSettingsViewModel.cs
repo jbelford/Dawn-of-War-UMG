@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -103,6 +104,18 @@ namespace DowUmg.Presentation.ViewModels
                     .Select(mod => mod.GetItem<DowMod>())
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .InvokeCommand(RefreshMod)
+                    .DisposeWith(d);
+
+                this.WhenAnyValue(x => x.TeamTabViewModel.PlayerCountInput.SelectedItem)
+                    .Select(item => item.GetItem<int>())
+                    .ObserveOn(RxApp.TaskpoolScheduler)
+                    .Subscribe(players =>
+                    {
+                        for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
+                        {
+                            GeneralTabViewModel.MapTypes[i].IsEnabled = players < i + 2;
+                        }
+                    })
                     .DisposeWith(d);
             });
         }

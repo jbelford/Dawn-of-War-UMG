@@ -74,11 +74,13 @@ namespace DowUmg.Presentation.ViewModels
                 {
                     var item = players.Model;
                     players
-                        .ToggleItem.WhenAnyValue(x => x.IsToggled)
+                        .ToggleItem.WhenAnyValue(x => x.IsToggled, x => x.IsEnabled)
+                        .DistinctUntilChanged()
                         .ObserveOn(RxApp.TaskpoolScheduler)
-                        .Subscribe(toggled =>
+                        .Subscribe(result =>
                         {
-                            generationState.SetPlayersAllowed(item, toggled);
+                            var (toggled, enabled) = result;
+                            generationState.SetPlayersAllowed(item, toggled && enabled);
                         })
                         .DisposeWith(d);
                 }

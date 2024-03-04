@@ -10,10 +10,14 @@ namespace DowUmg.Presentation.ViewModels
             Label = label;
             IsToggled = true;
             IsShown = true;
+            IsEnabled = true;
         }
 
         [Reactive]
         public bool IsToggled { get; set; }
+
+        [Reactive]
+        public bool IsEnabled { get; set; }
 
         [Reactive]
         public string Label { get; set; }
