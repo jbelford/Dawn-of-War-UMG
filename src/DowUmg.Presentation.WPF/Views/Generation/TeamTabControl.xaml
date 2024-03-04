@@ -14,26 +14,39 @@
     mc:Ignorable="d">
     <DockPanel>
         <ui:Card
+            MinWidth="200"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Top"
             DockPanel.Dock="Left">
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <ui:TextBlock
-                    Margin="0,0,0,5"
+                    Grid.Row="0"
                     FontTypography="Subtitle"
-                    Text="Players" />
-                <c:OptionInputView x:Name="PlayersOption" />
-                <ItemsControl x:Name="PlayerItems">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="vm:TeamTabPlayerViewModel">
-                            <StackPanel>
-                                <ui:TextBlock Text="Name" />
-                                <ui:TextBox Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+                    Text="Human Players" />
+                <c:OptionInputView x:Name="PlayersOption" Grid.Row="2" />
+                <ScrollViewer Grid.Row="4">
+                    <ItemsControl x:Name="PlayerItems">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:TeamTabPlayerViewModel">
+                                <StackPanel Margin="0,5">
+                                    <ui:TextBlock Margin="0,0,0,5" Text="{Binding Path=Label, Mode=OneTime}" />
+                                    <ui:TextBox
+                                        MaxLength="25"
+                                        PlaceholderText="Name"
+                                        Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
         </ui:Card>
         <Grid DockPanel.Dock="Right">
             <Grid.RowDefinitions>
@@ -52,20 +65,36 @@
                         Margin="0,0,0,5"
                         FontTypography="Subtitle"
                         Text="Computers" />
-                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <ui:TextBlock
-                            Margin="0,0,5,0"
+                            Grid.Row="0"
+                            Grid.Column="0"
                             VerticalAlignment="Center"
                             Text="Min" />
-                        <c:OptionInputView x:Name="MinComputersOption" Margin="0,0,0,5" />
-                    </StackPanel>
-                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <c:OptionInputView
+                            x:Name="MinComputersOption"
+                            Grid.Row="0"
+                            Grid.Column="2" />
                         <ui:TextBlock
-                            Margin="0,0,5,0"
+                            Grid.Row="2"
+                            Grid.Column="0"
                             VerticalAlignment="Center"
                             Text="Max" />
-                        <c:OptionInputView x:Name="MaxComputersOption" Margin="0,0,0,5" />
-                    </StackPanel>
+                        <c:OptionInputView
+                            x:Name="MaxComputersOption"
+                            Grid.Row="2"
+                            Grid.Column="2" />
+                    </Grid>
                 </StackPanel>
             </ui:Card>
             <ui:Card
@@ -77,20 +106,37 @@
                         Margin="0,0,0,5"
                         FontTypography="Subtitle"
                         Text="Teams" />
-                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <ui:TextBlock
-                            Margin="0,0,5,0"
+                            Grid.Row="0"
+                            Grid.Column="0"
                             VerticalAlignment="Center"
                             Text="Min" />
-                        <c:OptionInputView x:Name="MinTeamsOption" Margin="0,0,0,5" />
-                    </StackPanel>
-                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                        <c:OptionInputView
+                            x:Name="MinTeamsOption"
+                            Grid.Row="0"
+                            Grid.Column="2" />
                         <ui:TextBlock
-                            Margin="0,0,5,0"
+                            Grid.Row="2"
+                            Grid.Column="0"
                             VerticalAlignment="Center"
                             Text="Max" />
-                        <c:OptionInputView x:Name="MaxTeamsOption" Margin="0,0,0,5" />
-                    </StackPanel>
+                        <c:OptionInputView
+                            x:Name="MaxTeamsOption"
+                            Grid.Row="2"
+                            Grid.Column="2" />
+
+                    </Grid>
                 </StackPanel>
             </ui:Card>
             <ui:Card
@@ -102,14 +148,38 @@
                         Margin="0,0,0,5"
                         FontTypography="Subtitle"
                         Text="Options" />
-                    <StackPanel Orientation="Horizontal">
-                        <ui:TextBlock Text="Random Positions" />
-                        <ui:ToggleSwitch x:Name="RandomPositionsToggle" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <ui:TextBlock Text="One race teams" />
-                        <ui:ToggleSwitch x:Name="OneRaceTeamToggle" />
-                    </StackPanel>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ui:TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="Random positions" />
+                        <ui:ToggleSwitch
+                            x:Name="RandomPositionsToggle"
+                            Grid.Row="0"
+                            Grid.Column="2" />
+                        <ui:TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Text="One race teams"
+                            ToolTip="Computers will be same race as their team" />
+                        <ui:ToggleSwitch
+                            x:Name="OneRaceTeamToggle"
+                            Grid.Row="2"
+                            Grid.Column="2" />
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" />
+                    <StackPanel Orientation="Horizontal" />
                 </StackPanel>
             </ui:Card>
         </Grid>

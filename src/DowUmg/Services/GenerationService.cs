@@ -37,10 +37,12 @@ namespace DowUmg.Services
             int humans = settings.Players.Count;
             int remainingPlayers = maxPlayers - humans;
 
-            foreach (var player in settings.Players)
-            {
-                playerList.Add(new MatchupPlayer(player, 0));
-            }
+            playerList.AddRange(
+                settings.Players.Select(
+                    (player, idx) =>
+                        new MatchupPlayer(player.Length > 0 ? player : $"Player {idx + 1}", 0)
+                )
+            );
 
             if (remainingPlayers > 0)
             {

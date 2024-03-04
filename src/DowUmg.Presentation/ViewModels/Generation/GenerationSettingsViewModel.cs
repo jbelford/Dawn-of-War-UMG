@@ -59,7 +59,9 @@ namespace DowUmg.Presentation.ViewModels
                         .Races.Items.Where(race => race.ToggleItem.IsToggled)
                         .Select(race => race.Model)
                         .ToList(),
-                    Players = TeamTabViewModel.Players.Select(player => player.Name).ToList(),
+                    Players = TeamTabViewModel
+                        .Players.Select(player => player.Name.Trim())
+                        .ToList(),
                     MinComputer = TeamTabViewModel.MinComputers.SelectedItem.GetItem<int>(),
                     MaxComputer = TeamTabViewModel.MaxComputers.SelectedItem.GetItem<int>(),
                     MinTeams = TeamTabViewModel.MinTeams.SelectedItem.GetItem<int>(),

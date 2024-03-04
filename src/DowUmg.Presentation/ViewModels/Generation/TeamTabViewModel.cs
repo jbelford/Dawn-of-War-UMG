@@ -93,10 +93,14 @@ namespace DowUmg.Presentation.ViewModels
 
     public class TeamTabPlayerViewModel : ReactiveObject
     {
-        public TeamTabPlayerViewModel(string name)
+        public TeamTabPlayerViewModel(string label)
         {
-            Name = name;
+            Label = label;
+            Name = "";
         }
+
+        [Reactive]
+        public string Label { get; set; }
 
         [Reactive]
         public string Name { get; set; }
