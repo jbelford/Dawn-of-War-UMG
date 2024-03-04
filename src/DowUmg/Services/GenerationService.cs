@@ -33,9 +33,8 @@ namespace DowUmg.Services
 
             var playerList = new List<MatchupPlayer>();
 
-            int maxPlayers = 8;
             int humans = settings.Players.Count;
-            int remainingPlayers = maxPlayers - humans;
+            int remainingPlayers = map.Players - humans;
 
             playerList.AddRange(
                 settings.Players.Select(
