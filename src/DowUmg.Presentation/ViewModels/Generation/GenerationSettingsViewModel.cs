@@ -106,14 +106,20 @@ namespace DowUmg.Presentation.ViewModels
                     .InvokeCommand(RefreshMod)
                     .DisposeWith(d);
 
-                this.WhenAnyValue(x => x.TeamTabViewModel.PlayerCountInput.SelectedItem)
-                    .Select(item => item.GetItem<int>())
+                this.WhenAnyValue(
+                        x => x.TeamTabViewModel.PlayerCountInput.SelectedItem,
+                        x => x.TeamTabViewModel.MinComputers.SelectedItem
+                    )
+                    .DistinctUntilChanged()
                     .ObserveOn(RxApp.TaskpoolScheduler)
-                    .Subscribe(players =>
+                    .Subscribe(result =>
                     {
+                        var (selectedPlayers, selectedMinComputer) = result;
+                        int minType =
+                            selectedPlayers.GetItem<int>() + selectedMinComputer.GetItem<int>();
                         for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
                         {
-                            GeneralTabViewModel.MapTypes[i].IsEnabled = players < i + 2;
+                            GeneralTabViewModel.MapTypes[i].IsEnabled = minType <= i + 2;
                         }
                     })
                     .DisposeWith(d);
