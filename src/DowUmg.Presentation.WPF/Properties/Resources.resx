@@ -118,7 +118,100 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="adeptusMechanicus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\adeptusMechanicus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="blackTemplars" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\blackTemplars.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bloodAngels" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bloodAngels.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="chaosDemons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\chaosDemons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="chaosMarines" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\chaosMarines.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="daemonhunters" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\daemonhunters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="darkAngels" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\darkAngels.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="darkEldar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\darkEldar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deathGuard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\deathGuard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deathKorps" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\deathKorps.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eldar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eldar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="emperorsChildren" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\emperorsChildren.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="genericRace" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\genericRace.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="harlequins" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\harlequins.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="imperialFists" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\imperialFists.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="imperialGuard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\imperialGuard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="legionOfTheDamned" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\legionOfTheDamned.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="missingImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\missingImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="necrons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\necrons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="orks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\orks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="salamanders" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\salamanders.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sistersOfBattle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sistersOfBattle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="spaceMarine" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\spaceMarine.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="steelLegion" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\steelLegion.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tau" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tau.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="thousandSons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thousandSons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tyranids" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tyranids.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="witchHunters" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\witchHunters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="worldEaters" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\worldEaters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ynnari" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ynnari.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_13thcompany" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\13thcompany.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

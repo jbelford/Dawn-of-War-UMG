@@ -1,7 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Converters">
-
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DowUmg.Presentation.WPF.Converters">
     <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <local:MapPathToSourceConverter x:Key="MapPathToSourceConverter" />
+    <local:RaceNameToSourceConverter x:Key="RaceNameToSourceConverter" />
 </ResourceDictionary>

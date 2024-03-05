@@ -74,7 +74,7 @@ namespace DowUmg.Services
                         }
                     }
 
-                    playerList.Add(new MatchupPlayer($"Computer {i + 1}", team, race.Name));
+                    playerList.Add(new MatchupPlayer("Computer", team, race.Name));
                 }
             }
 

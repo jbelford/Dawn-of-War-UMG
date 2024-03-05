@@ -13,6 +13,18 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class MatchupViewModel : RoutableReactiveObject
     {
+        private static string[] TeamColours =
+        [
+            "DarkCyan",
+            "DarkOrange",
+            "DarkSalmon",
+            "DarkTurquoise",
+            "DarkOrchid",
+            "DarkSlateBlue",
+            "DarkKhaki",
+            "DarkOliveGreen",
+        ];
+
         private readonly GenerationSettings settings;
         private readonly GenerationService generationService;
         private readonly DowModLoader modLoader;
@@ -49,6 +61,7 @@ namespace DowUmg.Presentation.ViewModels
                         Team = $"Team {player.Team + 1}",
                         Race = player.Race,
                         ShowRace = player.Race != null,
+                        TeamColor = TeamColours[player.Team],
                     })
                 )
                 .Select(mapped => new ObservableCollection<MatchupPlayerViewModel>(mapped))
@@ -85,5 +98,8 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public bool ShowRace { get; set; }
+
+        [Reactive]
+        public string TeamColor { get; set; }
     }
 }

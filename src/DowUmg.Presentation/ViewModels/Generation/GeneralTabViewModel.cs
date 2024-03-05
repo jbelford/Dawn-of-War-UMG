@@ -68,23 +68,22 @@ namespace DowUmg.Presentation.ViewModels
                 _winConditions.Connect().Transform(item => item.ToggleItem)
             );
 
+            foreach (var players in mapTypes)
+            {
+                var item = players.Model;
+                players
+                    .ToggleItem.WhenAnyValue(x => x.IsToggled, x => x.IsEnabled)
+                    .DistinctUntilChanged()
+                    .ObserveOn(RxApp.TaskpoolScheduler)
+                    .Subscribe(result =>
+                    {
+                        var (toggled, enabled) = result;
+                        generationState.SetPlayersAllowed(item, toggled && enabled);
+                    });
+            }
+
             this.WhenActivated(d =>
             {
-                foreach (var players in mapTypes)
-                {
-                    var item = players.Model;
-                    players
-                        .ToggleItem.WhenAnyValue(x => x.IsToggled, x => x.IsEnabled)
-                        .DistinctUntilChanged()
-                        .ObserveOn(RxApp.TaskpoolScheduler)
-                        .Subscribe(result =>
-                        {
-                            var (toggled, enabled) = result;
-                            generationState.SetPlayersAllowed(item, toggled && enabled);
-                        })
-                        .DisposeWith(d);
-                }
-
                 foreach (var size in mapSizes)
                 {
                     var item = size.Model;
