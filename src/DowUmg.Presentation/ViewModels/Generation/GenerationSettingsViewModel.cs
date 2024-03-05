@@ -117,9 +117,16 @@ namespace DowUmg.Presentation.ViewModels
                         var (selectedPlayers, selectedMinComputer) = result;
                         int minType =
                             selectedPlayers.GetItem<int>() + selectedMinComputer.GetItem<int>();
+                        bool updated = false;
                         for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
                         {
-                            GeneralTabViewModel.MapTypes[i].IsEnabled = minType <= i + 2;
+                            var isEnabled = minType <= i + 2;
+                            GeneralTabViewModel.MapTypes[i].IsEnabled = isEnabled;
+                            updated |= generationState.SetPlayersAllowed(i + 2, isEnabled);
+                        }
+                        if (updated)
+                        {
+                            generationState.RefreshFilters();
                         }
                     })
                     .DisposeWith(d);

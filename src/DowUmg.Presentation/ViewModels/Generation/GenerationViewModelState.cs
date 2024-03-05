@@ -61,13 +61,13 @@ namespace DowUmg.Presentation.ViewModels
 
         public IObservable<IChangeSet<DowRace>> ConnectRaces() => _races.Connect();
 
-        public void SetPlayersAllowed(int players, bool allowed)
+        public bool SetPlayersAllowed(int players, bool allowed)
         {
             if (_allowedPlayers.GetValueOrDefault(players, true) == allowed)
-                return;
+                return false;
 
             _allowedPlayers[players] = allowed;
-            RefreshFilters();
+            return true;
         }
 
         public void SetSizeAllowed(int size, bool allowed)
@@ -84,12 +84,15 @@ namespace DowUmg.Presentation.ViewModels
             get => _isAddonAllowed;
             set
             {
-                _isAddonAllowed = value;
-                RefreshFilters();
+                if (_isAddonAllowed != value)
+                {
+                    _isAddonAllowed = value;
+                    RefreshFilters();
+                }
             }
         }
 
-        private void RefreshFilters()
+        public void RefreshFilters()
         {
             _allowedMaps.Edit(inner =>
             {
