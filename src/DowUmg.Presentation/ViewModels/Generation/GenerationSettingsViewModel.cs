@@ -13,14 +13,14 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationSettingsViewModel : RoutableReactiveObject
     {
+        private readonly GenerationViewModelState generationState = new();
+
         public GenerationSettingsViewModel(IScreen screen)
             : base(screen, "generation")
         {
             GameTabViewModel = new GameTabViewModel();
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
-
-            var generationState = new GenerationViewModelState();
 
             TeamTabViewModel = new TeamTabViewModel(generationState);
             GeneralTabViewModel = new GeneralTabViewModel(generationState);
@@ -115,22 +115,29 @@ namespace DowUmg.Presentation.ViewModels
                     .Subscribe(result =>
                     {
                         var (selectedPlayers, selectedMinComputer) = result;
-                        int minType =
-                            selectedPlayers.GetItem<int>() + selectedMinComputer.GetItem<int>();
-                        bool updated = false;
-                        for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
-                        {
-                            var isEnabled = minType <= i + 2;
-                            GeneralTabViewModel.MapTypes[i].IsEnabled = isEnabled;
-                            updated |= generationState.SetPlayersAllowed(i + 2, isEnabled);
-                        }
-                        if (updated)
-                        {
-                            generationState.RefreshFilters();
-                        }
+                        OnTeamUpdated(
+                            selectedPlayers.GetItem<int>(),
+                            selectedMinComputer.GetItem<int>()
+                        );
                     })
                     .DisposeWith(d);
             });
+        }
+
+        private void OnTeamUpdated(int selectedPlayers, int selectedMinComputer)
+        {
+            int minType = selectedPlayers + selectedMinComputer;
+            bool updated = false;
+            for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
+            {
+                var isEnabled = minType <= i + 2;
+                GeneralTabViewModel.MapTypes[i].IsEnabled = isEnabled;
+                updated |= generationState.SetPlayersAllowed(i + 2, isEnabled);
+            }
+            if (updated)
+            {
+                generationState.RefreshFilters();
+            }
         }
 
         public GeneralTabViewModel GeneralTabViewModel { get; }
