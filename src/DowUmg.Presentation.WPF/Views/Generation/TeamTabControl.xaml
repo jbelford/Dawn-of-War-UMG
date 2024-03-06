@@ -38,6 +38,7 @@
                                 <StackPanel Margin="0,5">
                                     <ui:TextBlock Margin="0,0,0,5" Text="{Binding Path=Label, Mode=OneTime}" />
                                     <ui:TextBox
+                                        ClearButtonEnabled="False"
                                         MaxLength="25"
                                         PlaceholderText="Name"
                                         Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
