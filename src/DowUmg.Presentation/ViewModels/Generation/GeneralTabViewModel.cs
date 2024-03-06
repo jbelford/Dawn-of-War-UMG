@@ -59,7 +59,7 @@ namespace DowUmg.Presentation.ViewModels
                 .Filter(rule => rule.IsWinCondition)
                 .Transform(rule => new ToggleModel<GameRule>(
                     rule,
-                    new ToggleItemViewModel(rule.Name) { ToolTip = rule.Details }
+                    new ToggleItemViewModel(rule.Name, rule.Details)
                 ))
                 .BindToObservableList(out _winConditions);
 
@@ -128,11 +128,11 @@ namespace DowUmg.Presentation.ViewModels
         private ToggleModel<DowMap> MapToViewModelTransform(DowMap map) =>
             new(
                 map,
-                new ToggleItemViewModel($"{map.Name} [{map.Size}]")
-                {
-                    ToolTip = map.Details,
-                    MapPath = _modLoader.GetMapImagePath(map)
-                }
+                new ToggleItemViewModel(
+                    $"{map.Name} [{map.Size}]",
+                    map.Details,
+                    _modLoader.GetMapImagePath(map)
+                )
             );
 
         private static SortExpressionComparer<DowMap> MapSort =>

@@ -52,7 +52,7 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public string Search { get; set; }
 
-        private ReadOnlyObservableCollection<ToggleItemViewModel> _items;
+        private readonly ReadOnlyObservableCollection<ToggleItemViewModel> _items;
         public ReadOnlyObservableCollection<ToggleItemViewModel> Items => _items;
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }

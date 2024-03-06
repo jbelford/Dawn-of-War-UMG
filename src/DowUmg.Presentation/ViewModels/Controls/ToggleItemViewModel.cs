@@ -3,32 +3,22 @@ using ReactiveUI.Fody.Helpers;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class ToggleItemViewModel : ReactiveObject
+    public class ToggleItemViewModel(string label, string? tooltip = null, string? mapPath = null)
+        : ReactiveObject
     {
-        public ToggleItemViewModel(string label)
-        {
-            Label = label;
-            IsToggled = true;
-            IsShown = true;
-            IsEnabled = true;
-        }
+        [Reactive]
+        public bool IsToggled { get; set; } = true;
 
         [Reactive]
-        public bool IsToggled { get; set; }
+        public bool IsEnabled { get; set; } = true;
+
+        public string Label { get; } = label;
 
         [Reactive]
-        public bool IsEnabled { get; set; }
+        public bool IsShown { get; set; } = true;
 
-        [Reactive]
-        public string Label { get; set; }
+        public string? ToolTip { get; } = tooltip;
 
-        [Reactive]
-        public bool IsShown { get; set; }
-
-        [Reactive]
-        public string ToolTip { get; set; }
-
-        [Reactive]
-        public string MapPath { get; set; }
+        public string? MapPath { get; } = mapPath;
     }
 }
