@@ -141,14 +141,13 @@
                             <ui:Card
                                 MaxWidth="250"
                                 Margin="5"
-                                Padding="0"
-                                HorizontalContentAlignment="Stretch">
-                                <ui:Image
-                                    MaxHeight="250"
-                                    CornerRadius="5 5 0 0"
-                                    Source="{Binding Path=Race, Converter={StaticResource RaceNameToSourceConverter}}" />
+                                Padding="0">
+                                <ui:Image CornerRadius="5 5 0 0" Source="{Binding Path=Race, Converter={StaticResource RaceNameToSourceConverter}}" />
                                 <ui:Card.Footer>
-                                    <DockPanel MinHeight="70" Margin="15,10">
+                                    <DockPanel
+                                        MinHeight="70"
+                                        Margin="15,10"
+                                        VerticalAlignment="Stretch">
                                         <ui:TextBlock
                                             Margin="0,0,15,0"
                                             VerticalAlignment="Center"
@@ -169,6 +168,7 @@
                                                 FontTypography="BodyStrong"
                                                 Foreground="{Binding Path=TeamColor, Mode=OneTime}"
                                                 Text="{Binding Path=Race, Mode=OneTime}"
+                                                TextWrapping="WrapWithOverflow"
                                                 Visibility="{Binding Path=ShowRace, Converter={StaticResource BoolToVisibilityConverter}}" />
                                         </StackPanel>
                                     </DockPanel>
