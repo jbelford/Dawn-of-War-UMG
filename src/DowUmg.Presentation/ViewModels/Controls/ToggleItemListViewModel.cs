@@ -44,6 +44,12 @@ namespace DowUmg.Presentation.ViewModels
 
             items.ObserveOn(RxApp.MainThreadScheduler).Bind(out _items).Subscribe();
 
+            items
+                .AutoRefresh(item => item.IsToggled)
+                .ToCollection()
+                .Select(list => list.Where(item => item.IsToggled && item.IsEnabled).Count())
+                .ToPropertyEx(this, x => x.ToggledCount);
+
             this.WhenAnyValue(x => x.Search).InvokeCommand(FilterItems);
         }
 
@@ -54,6 +60,9 @@ namespace DowUmg.Presentation.ViewModels
 
         private readonly ReadOnlyObservableCollection<ToggleItemViewModel> _items;
         public ReadOnlyObservableCollection<ToggleItemViewModel> Items => _items;
+
+        [ObservableAsProperty]
+        public int ToggledCount { get; }
 
         public ReactiveCommand<Unit, Unit> ToggleItems { get; }
 

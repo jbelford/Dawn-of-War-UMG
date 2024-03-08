@@ -46,10 +46,11 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenActivated(d =>
             {
-                var canGenerateMatchup = this.WhenAnyObservable(x =>
-                        x.GeneralTabViewModel.Maps.CountChanged
+                var canGenerateMatchup = this.WhenAnyValue(
+                        x => x.GeneralTabViewModel.MapsViewModel.ToggledCount,
+                        x => x.TeamTabViewModel.RacesViewModel.ToggledCount
                     )
-                    .Select(count => count > 0)
+                    .Select(result => result.Item1 > 0 && result.Item2 > 0)
                     .ObserveOn(RxApp.MainThreadScheduler);
 
                 GenerateMatchupAction = ReactiveCommand.CreateFromObservable(
