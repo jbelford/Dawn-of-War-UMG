@@ -191,6 +191,15 @@ namespace DowUmg.Presentation.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to true.
+        /// </summary>
+        internal static string EnableCampaign {
+            get {
+                return ResourceManager.GetString("EnableCampaign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap genericRace {
