@@ -7,6 +7,7 @@ using DowUmg.Data.Entities;
 using DowUmg.Models;
 using DowUmg.Services;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace DowUmg.Presentation.ViewModels
@@ -149,6 +150,9 @@ namespace DowUmg.Presentation.ViewModels
                 generationState.RefreshFilters();
             }
         }
+
+        [Reactive]
+        public int SelectedTab { get; set; } = 0;
 
         public GeneralTabViewModel GeneralTabViewModel { get; }
 

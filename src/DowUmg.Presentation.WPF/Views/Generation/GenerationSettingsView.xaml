@@ -37,7 +37,10 @@
                 <c:OptionInputView x:Name="ModOption" />
             </StackPanel>
         </Grid>
-        <TabControl Grid.Row="1" Margin="0,5">
+        <TabControl
+            x:Name="GenerationTabControl"
+            Grid.Row="1"
+            Margin="0,5">
             <TabItem Header="General">
                 <c:GeneralTabControl
                     x:Name="GeneralTab"

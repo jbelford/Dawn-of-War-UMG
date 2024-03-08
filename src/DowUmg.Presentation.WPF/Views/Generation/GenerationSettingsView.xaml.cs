@@ -23,6 +23,13 @@ namespace DowUmg.Presentation.WPF.Views
                     .Subscribe()
                     .DisposeWith(d);
 
+                this.Bind(
+                        ViewModel,
+                        vm => vm.SelectedTab,
+                        v => v.GenerationTabControl.SelectedIndex
+                    )
+                    .DisposeWith(d);
+
                 this.BindCommand(ViewModel, vm => vm.GenerateMatchupAction, v => v.GenerateButton)
                     .DisposeWith(d);
             });
