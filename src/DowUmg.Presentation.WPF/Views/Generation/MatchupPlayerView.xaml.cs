@@ -15,14 +15,14 @@ namespace DowUmg.Presentation.WPF.Views
     {
         private static string[] TeamColours =
         [
-            "DarkCyan",
-            "DarkOrange",
-            "DarkSalmon",
-            "DarkTurquoise",
-            "DarkOrchid",
-            "DarkSlateBlue",
-            "DarkKhaki",
-            "DarkOliveGreen",
+            "#DDDDDD",
+            "#44BB99",
+            "#77AADD",
+            "#EEDD88",
+            "#FFAABB",
+            "#EE8866",
+            "#BBCC33",
+            "#99DDFF",
         ];
 
         public MatchupPlayerView()
