@@ -136,46 +136,6 @@
                             <WrapPanel Margin="-5" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="vm:MatchupPlayerViewModel">
-                            <ui:Card
-                                MaxWidth="250"
-                                Margin="5"
-                                Padding="0">
-                                <ui:Image CornerRadius="5 5 0 0" Source="{Binding Path=Race, Converter={StaticResource RaceNameToSourceConverter}}" />
-                                <ui:Card.Footer>
-                                    <DockPanel
-                                        MinHeight="70"
-                                        Margin="15,10"
-                                        VerticalAlignment="Stretch">
-                                        <ui:TextBlock
-                                            Margin="0,0,15,0"
-                                            VerticalAlignment="Center"
-                                            DockPanel.Dock="Left"
-                                            FontTypography="Title"
-                                            Foreground="{Binding Path=TeamColor, Mode=OneTime}"
-                                            Text="{Binding Path=Position, Mode=OneTime}" />
-                                        <StackPanel VerticalAlignment="Center">
-                                            <ui:TextBlock
-                                                FontTypography="Subtitle"
-                                                Foreground="{Binding Path=TeamColor, Mode=OneTime}"
-                                                Text="{Binding Path=Name, Mode=OneTime}" />
-                                            <ui:TextBlock
-                                                FontTypography="BodyStrong"
-                                                Foreground="{Binding Path=TeamColor, Mode=OneTime}"
-                                                Text="{Binding Path=Team, Mode=OneTime}" />
-                                            <ui:TextBlock
-                                                FontTypography="BodyStrong"
-                                                Foreground="{Binding Path=TeamColor, Mode=OneTime}"
-                                                Text="{Binding Path=Race, Mode=OneTime}"
-                                                TextWrapping="WrapWithOverflow"
-                                                Visibility="{Binding Path=ShowRace, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                        </StackPanel>
-                                    </DockPanel>
-                                </ui:Card.Footer>
-                            </ui:Card>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
         </ScrollViewer>

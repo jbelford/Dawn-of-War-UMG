@@ -1,0 +1,41 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="DowUmg.Presentation.WPF.Views.MatchupPlayerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:DowUmg.Presentation.ViewModels;assembly=DowUmg.Presentation"
+    d:DesignHeight="450"
+    d:DesignWidth="200"
+    x:TypeArguments="vm:MatchupPlayerViewModel"
+    mc:Ignorable="d">
+    <ui:Card
+        MaxWidth="250"
+        Margin="5"
+        Padding="0">
+        <ui:Image x:Name="RaceImage" CornerRadius="5 5 0 0" />
+        <ui:Card.Footer>
+            <DockPanel
+                MinHeight="70"
+                Margin="15,10"
+                VerticalAlignment="Stretch">
+                <ui:TextBlock
+                    x:Name="PositionText"
+                    Margin="0,0,15,0"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    FontTypography="Title" />
+                <StackPanel VerticalAlignment="Center">
+                    <ui:TextBlock x:Name="PlayerNameText" FontTypography="Subtitle" />
+                    <ui:TextBlock x:Name="TeamText" FontTypography="BodyStrong" />
+                    <ui:TextBlock
+                        x:Name="RaceText"
+                        FontTypography="BodyStrong"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </DockPanel>
+        </ui:Card.Footer>
+    </ui:Card>
+</rxui:ReactiveUserControl>
