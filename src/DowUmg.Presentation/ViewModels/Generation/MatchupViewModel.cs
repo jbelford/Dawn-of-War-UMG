@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using DowUmg.Models;
+﻿using DowUmg.Models;
 using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.ViewModels
 {
     public class MatchupViewModel : RoutableReactiveObject
     {
-        private static string[] TeamColours =
-        [
-            "DarkCyan",
-            "DarkOrange",
-            "DarkSalmon",
-            "DarkTurquoise",
-            "DarkOrchid",
-            "DarkSlateBlue",
-            "DarkKhaki",
-            "DarkOliveGreen",
-        ];
-
         private readonly GenerationSettings settings;
         private readonly GenerationService generationService;
         private readonly DowModLoader modLoader;
@@ -54,15 +42,12 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenAnyValue(x => x.Matchup)
                 .Select(match =>
-                    match.Players.Select(player => new MatchupPlayerViewModel()
-                    {
-                        Position = player.Position + 1,
-                        Name = player.Name,
-                        Team = $"Team {player.Team + 1}",
-                        Race = player.Race,
-                        ShowRace = player.Race != null,
-                        TeamColor = TeamColours[player.Team],
-                    })
+                    match.Players.Select(player => new MatchupPlayerViewModel(
+                        player.Position + 1,
+                        player.Name,
+                        player.Team,
+                        player.Race
+                    ))
                 )
                 .Select(mapped => new ObservableCollection<MatchupPlayerViewModel>(mapped))
                 .ToPropertyEx(this, x => x.MatchupPlayers);
@@ -82,24 +67,15 @@ namespace DowUmg.Presentation.ViewModels
         public string MapImagePath { get; set; }
     }
 
-    public class MatchupPlayerViewModel : ReactiveObject
+    public class MatchupPlayerViewModel(int position, string name, int team, string? race = null)
+        : ReactiveObject
     {
-        [Reactive]
-        public int Position { get; set; }
+        public int Position { get; } = position;
 
-        [Reactive]
-        public string Name { get; set; }
+        public string Name { get; } = name;
 
-        [Reactive]
-        public string Team { get; set; }
+        public int Team { get; } = team;
 
-        [Reactive]
-        public string? Race { get; set; }
-
-        [Reactive]
-        public bool ShowRace { get; set; }
-
-        [Reactive]
-        public string TeamColor { get; set; }
+        public string? Race { get; } = race;
     }
 }

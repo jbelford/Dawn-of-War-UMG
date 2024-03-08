@@ -13,6 +13,18 @@ namespace DowUmg.Presentation.WPF.Views
     /// </summary>
     public partial class MatchupPlayerView : ReactiveUserControl<MatchupPlayerViewModel>
     {
+        private static string[] TeamColours =
+        [
+            "DarkCyan",
+            "DarkOrange",
+            "DarkSalmon",
+            "DarkTurquoise",
+            "DarkOrchid",
+            "DarkSlateBlue",
+            "DarkKhaki",
+            "DarkOliveGreen",
+        ];
+
         public MatchupPlayerView()
         {
             InitializeComponent();
@@ -22,10 +34,10 @@ namespace DowUmg.Presentation.WPF.Views
                 this.WhenAnyValue(x => x.ViewModel)
                     .Do(vm =>
                     {
-                        RaceImage.Source = RaceBitMap.GetBitmapSource(vm.Race ?? "");
+                        RaceImage.Source = RaceNameToSourceConverter.GetBitmapSource(vm.Race ?? "");
                         PositionText.Text = vm.Position.ToString();
                         PlayerNameText.Text = vm.Name;
-                        TeamText.Text = vm.Team;
+                        TeamText.Text = $"Team {vm.Team + 1}";
 
                         if (vm.Race != null)
                         {
@@ -37,7 +49,7 @@ namespace DowUmg.Presentation.WPF.Views
                         }
 
                         var teamColor =
-                            new BrushConverter().ConvertFromString(vm.TeamColor) as Brush;
+                            new BrushConverter().ConvertFromString(TeamColours[vm.Team]) as Brush;
                         PositionText.Foreground = teamColor;
                         PlayerNameText.Foreground = teamColor;
                         TeamText.Foreground = teamColor;
