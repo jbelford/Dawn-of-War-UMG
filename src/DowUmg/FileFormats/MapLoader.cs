@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using DowUmg.Constants;
 using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
@@ -132,9 +133,18 @@ namespace DowUmg.FileFormats
                 Name = name,
                 Description = description,
                 Players = players,
-                Size = size,
+                Size = (int)RoundMapSize(size),
                 FileName = Path.GetFileNameWithoutExtension(filePath)
             };
         }
+
+        private MapSize RoundMapSize(int mapSize) =>
+            mapSize switch
+            {
+                (< 192) => MapSize.TINY,
+                (< 386) => MapSize.SMALL,
+                (< 769) => MapSize.MEDIUM,
+                _ => MapSize.LARGE
+            };
     }
 }
