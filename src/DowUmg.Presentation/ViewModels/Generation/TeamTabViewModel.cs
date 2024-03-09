@@ -76,7 +76,6 @@ namespace DowUmg.Presentation.ViewModels
                     for (int i = 0; i < 7; ++i)
                     {
                         MinComputers.Items[i].IsEnabled = i + players < 8;
-                        MaxComputers.Items[i].IsEnabled = i + players < 8;
                     }
                     if (!MinComputers.SelectedItem.IsEnabled)
                     {
@@ -85,6 +84,28 @@ namespace DowUmg.Presentation.ViewModels
                     if (!MaxComputers.SelectedItem.IsEnabled)
                     {
                         MaxComputers.SelectedItem = MaxComputers.Items[7 - players];
+                    }
+                });
+
+            this.WhenAnyValue(
+                    x => x.MinComputers.SelectedItem,
+                    x => x.PlayerCountInput.SelectedItem
+                )
+                .DistinctUntilChanged()
+                .Subscribe(result =>
+                {
+                    var minComputers = result.Item1.GetItem<int>();
+                    var playerCount = result.Item2.GetItem<int>();
+                    for (int i = 0; i < 7; ++i)
+                    {
+                        MaxComputers.Items[i].IsEnabled =
+                            i + 1 >= minComputers && i + playerCount < 8;
+                    }
+                    if (!MaxComputers.SelectedItem.IsEnabled)
+                    {
+                        MaxComputers.SelectedItem = MaxComputers
+                            .Items.Where(item => item.IsEnabled)
+                            .Last();
                     }
                 });
         }
