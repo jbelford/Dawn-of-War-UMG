@@ -144,8 +144,9 @@ namespace DowUmg.Presentation.ViewModels
             for (int i = 0; i < GeneralTabViewModel.MapTypes.Count; ++i)
             {
                 var isEnabled = minType <= i + 2;
+                bool isToggled = GeneralTabViewModel.MapTypes[i].IsToggled;
                 GeneralTabViewModel.MapTypes[i].IsEnabled = isEnabled;
-                updated |= generationState.SetPlayersAllowed(i + 2, isEnabled);
+                updated |= generationState.SetPlayersAllowed(i + 2, isEnabled && isToggled);
             }
             if (updated)
             {

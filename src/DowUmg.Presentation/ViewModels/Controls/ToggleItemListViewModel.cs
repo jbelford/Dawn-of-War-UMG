@@ -45,9 +45,9 @@ namespace DowUmg.Presentation.ViewModels
             items.ObserveOn(RxApp.MainThreadScheduler).Bind(out _items).Subscribe();
 
             items
-                .AutoRefresh(item => item.IsToggled)
+                .AutoRefresh(x => x.IsToggled)
                 .ToCollection()
-                .Select(list => list.Where(item => item.IsToggled && item.IsEnabled).Count())
+                .Select(list => list.Where(item => item.IsToggled).Count())
                 .ToPropertyEx(this, x => x.ToggledCount);
 
             this.WhenAnyValue(x => x.Search).InvokeCommand(FilterItems);
