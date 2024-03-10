@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DowUmg.Constants;
 using DowUmg.Presentation.ViewModels;
 using DowUmg.Presentation.WPF.Converters;
 using ReactiveUI;
@@ -31,11 +32,11 @@ namespace DowUmg.Presentation.WPF.Views
                             matchup.GameInfo.Rules.Select(rule => rule.Name)
                         );
 
-                        Difficulty.Text = matchup.GameInfo.Options.Difficulty.ToString();
-                        GameSpeed.Text = matchup.GameInfo.Options.Speed.ToString();
-                        ResourceRate.Text = matchup.GameInfo.Options.ResourceRate.ToString();
+                        Difficulty.Text = matchup.GameInfo.Options.Difficulty?.GetName();
+                        GameSpeed.Text = matchup.GameInfo.Options.Speed?.GetName();
+                        ResourceRate.Text = matchup.GameInfo.Options.ResourceRate?.GetName();
                         StartingResources.Text =
-                            matchup.GameInfo.Options.StartingResources.ToString();
+                            matchup.GameInfo.Options.StartingResources?.GetName();
                     })
                     .Subscribe()
                     .DisposeWith(d);
