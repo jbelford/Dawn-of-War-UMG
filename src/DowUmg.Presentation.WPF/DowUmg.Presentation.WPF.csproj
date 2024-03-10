@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublisherName>Jack Belford</PublisherName>
-    <PublishSingleFile>true</PublishSingleFile>
+    <PublishSingleFile>false</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
     <AssemblyName>DawnOfWarUMG</AssemblyName>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
