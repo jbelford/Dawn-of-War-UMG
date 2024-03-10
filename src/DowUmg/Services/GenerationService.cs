@@ -101,12 +101,15 @@ namespace DowUmg.Services
         {
             int idx = random.Next(enumeration.Sum() + 1);
 
-            int i = 0;
-            while (idx > 0)
+            for (int i = 0; i < enumeration.Length; ++i)
             {
-                idx -= enumeration[i++];
+                idx -= enumeration[i];
+                if (idx < 0)
+                {
+                    return i;
+                }
             }
-            return --i;
+            return 0;
         }
     }
 }
