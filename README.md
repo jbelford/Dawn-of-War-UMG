@@ -6,8 +6,6 @@ relevant custom data a user might have in their Dawn of War install folder. (Ex:
 
 Once all this data is loaded I used it to create a simple matchup generator where you can filter out certain types of maps.
 
-Still a work in progress as a lot of the functionality isn't even fully implemented like having the team compositions generated.
-
 
 ## Some pics
 
@@ -19,6 +17,7 @@ Still a work in progress as a lot of the functionality isn't even fully implemen
 
 > Generation Configuration
 ![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation.png)
+![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/generation_team.png)
 
 > Matchup
 ![](https://raw.githubusercontent.com/jbelford/Dawn-of-War-UMG/master/pics/matchup.png)
