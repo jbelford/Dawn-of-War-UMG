@@ -32,8 +32,8 @@ namespace DowUmg.Presentation.ViewModels
         [Reactive]
         public OptionInputItemViewModel SelectedItem { get; set; }
 
-        private ReadOnlyObservableCollection<OptionInputItemViewModel>? _items;
-        public ReadOnlyObservableCollection<OptionInputItemViewModel>? Items => _items;
+        private ReadOnlyObservableCollection<OptionInputItemViewModel> _items;
+        public ReadOnlyObservableCollection<OptionInputItemViewModel> Items => _items;
     }
 
     public class OptionInputItemViewModel(string label, object obj) : ReactiveObject

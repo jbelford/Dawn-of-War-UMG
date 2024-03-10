@@ -108,6 +108,21 @@ namespace DowUmg.Presentation.ViewModels
                             .Last();
                     }
                 });
+
+            this.WhenAnyValue(x => x.MinTeams.SelectedItem)
+                .DistinctUntilChanged()
+                .Select(item => item.GetItem<int>())
+                .Subscribe(minTeams =>
+                {
+                    for (int i = 0; i < 7; ++i)
+                    {
+                        MaxTeams.Items[i].IsEnabled = i + 1 >= minTeams;
+                    }
+                    if (!MaxTeams.SelectedItem.IsEnabled)
+                    {
+                        MaxTeams.SelectedItem = MaxTeams.Items[minTeams - 1];
+                    }
+                });
         }
 
         [Reactive]
