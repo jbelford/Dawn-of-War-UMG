@@ -7,8 +7,6 @@ namespace DowUmg.Presentation.WPF.Services
 {
     public class WindowsFilePathProvider : IFilePathProvider
     {
-        private string AppDataLocation { get; }
-
         public WindowsFilePathProvider()
         {
             RegistryKey key = Environment.Is64BitOperatingSystem
@@ -26,6 +24,8 @@ namespace DowUmg.Presentation.WPF.Services
 
             Directory.CreateDirectory(AppDataLocation);
         }
+
+        public string AppDataLocation { get; }
 
         public string ModCacheLocation => Path.Combine(AppDataLocation, "mod_cache");
 

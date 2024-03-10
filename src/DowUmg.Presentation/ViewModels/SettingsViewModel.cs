@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using DowUmg.Interfaces;
 using DowUmg.Models;
 using DowUmg.Services;
 using ReactiveUI;
@@ -19,14 +20,20 @@ namespace DowUmg.Presentation.ViewModels
             this.settingsService =
                 settingsService ?? Locator.Current.GetService<AppSettingsService>()!;
 
+            var filePathProvider = Locator.Current.GetService<IFilePathProvider>()!;
+
             SavedSettings = this.settingsService.GetSettings();
 
             SelectDirectory = ReactiveCommand.CreateFromObservable(
                 () => GetDirectory.Handle(SoulstormDirectory)
             );
 
+            OpenAppSettingsAction = ReactiveCommand.CreateFromObservable(
+                () => OpenAppSettingsFolder.Handle(filePathProvider.AppDataLocation)
+            );
+
             SelectDirectory
-                .Where(dir => dir != null)
+                .WhereNotNull()
                 .ToPropertyEx(
                     this,
                     x => x.SoulstormDirectory,
@@ -58,14 +65,14 @@ namespace DowUmg.Presentation.ViewModels
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
         public ReactiveCommand<Unit, string?> SelectDirectory { get; }
 
-        public Interaction<string, string?> GetDirectory { get; } =
-            new Interaction<string, string?>();
+        public ReactiveCommand<Unit, Unit> OpenAppSettingsAction { get; }
 
-        public extern string SoulstormDirectory
-        {
-            [ObservableAsProperty]
-            get;
-        }
+        public Interaction<string?, string?> GetDirectory { get; } = new();
+
+        public Interaction<string, Unit> OpenAppSettingsFolder { get; } = new();
+
+        [ObservableAsProperty]
+        public string? SoulstormDirectory { get; }
 
         [Reactive]
         public AppSettings SavedSettings { get; set; }

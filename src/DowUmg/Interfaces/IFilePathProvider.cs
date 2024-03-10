@@ -2,6 +2,8 @@
 {
     public interface IFilePathProvider
     {
+        string AppDataLocation { get; }
+
         string ModCacheLocation { get; }
 
         string SettingsLocation { get; }

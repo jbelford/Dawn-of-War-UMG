@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Windows.Forms;
 using DowUmg.Presentation.ViewModels;
@@ -26,11 +28,25 @@ namespace DowUmg.Presentation.WPF.Views
                     .DisposeWith(d);
 
                 ViewModel.GetDirectory.RegisterHandler(GetDirectoryHandler).DisposeWith(d);
+                ViewModel
+                    .OpenAppSettingsFolder.RegisterHandler(context =>
+                    {
+                        Process.Start("explorer.exe", context.Input);
+                        context.SetOutput(Unit.Default);
+                    })
+                    .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.SelectDirectory, v => v.SelectDirectoryButton)
                     .DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.SaveSettings, v => v.SaveButton)
+                    .DisposeWith(d);
+
+                this.BindCommand(
+                        ViewModel,
+                        vm => vm.OpenAppSettingsAction,
+                        v => v.AppSettingsButton
+                    )
                     .DisposeWith(d);
 
                 this.WhenAnyObservable(x => x.ViewModel.SaveSettings.CanExecute)
@@ -50,7 +66,8 @@ namespace DowUmg.Presentation.WPF.Views
         {
             using var folderDialog = new FolderBrowserDialog
             {
-                RootFolder = System.Environment.SpecialFolder.ProgramFilesX86
+                RootFolder = System.Environment.SpecialFolder.ProgramFilesX86,
+                InitialDirectory = interaction.Input
             };
             switch (folderDialog.ShowDialog())
             {
