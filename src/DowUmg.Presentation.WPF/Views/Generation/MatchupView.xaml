@@ -109,6 +109,19 @@
                         </StackPanel>
                     </Grid>
 
+                    <Grid Margin="10,0" DockPanel.Dock="Bottom">
+                        <ui:Button
+                            x:Name="CollapseButton"
+                            Appearance="Transparent"
+                            BorderThickness="0"
+                            ToolTip="Show/Hide Race Image"
+                            ToolTipService.InitialShowDelay="300">
+                            <ui:Button.Icon>
+                                <ui:SymbolIcon x:Name="CollapseSymbol" Symbol="ArrowMinimize24" />
+                            </ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
                     <Grid Margin="10,0" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" MinWidth="250" />

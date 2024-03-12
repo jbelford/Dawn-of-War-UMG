@@ -7,6 +7,7 @@ using DowUmg.Constants;
 using DowUmg.Presentation.ViewModels;
 using DowUmg.Presentation.WPF.Converters;
 using ReactiveUI;
+using Wpf.Ui.Controls;
 
 namespace DowUmg.Presentation.WPF.Views
 {
@@ -55,6 +56,18 @@ namespace DowUmg.Presentation.WPF.Views
                 this.BindCommand(ViewModel, vm => vm.GenerateMatchup, v => v.RegenerateButton)
                     .DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.GoBack, v => v.BackButton).DisposeWith(d);
+
+                this.BindCommand(ViewModel, vm => vm.CollapsePlayers, v => v.CollapseButton)
+                    .DisposeWith(d);
+
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.ImageVisible,
+                        v => v.CollapseSymbol.Symbol,
+                        visible =>
+                            visible ? SymbolRegular.ArrowMinimize24 : SymbolRegular.ArrowExpand24
+                    )
+                    .DisposeWith(d);
             });
         }
     }

@@ -1,13 +1,13 @@
-﻿using DowUmg.Models;
-using DowUmg.Services;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using Splat;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using DowUmg.Models;
+using DowUmg.Services;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
@@ -38,6 +38,15 @@ namespace DowUmg.Presentation.ViewModels
 
             GenerateMatchup.Execute().Subscribe();
 
+            CollapsePlayers = ReactiveCommand.Create(() =>
+            {
+                ImageVisible = !ImageVisible;
+                foreach (var player in MatchupPlayers)
+                {
+                    player.ImageVisible = ImageVisible;
+                }
+            });
+
             GoBack = HostScreen.Router.NavigateBack;
 
             this.WhenAnyValue(x => x.Matchup)
@@ -46,6 +55,7 @@ namespace DowUmg.Presentation.ViewModels
                         player.Position + 1,
                         player.Name,
                         player.Team,
+                        ImageVisible,
                         player.Race
                     ))
                 )
@@ -57,6 +67,8 @@ namespace DowUmg.Presentation.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> GoBack { get; }
 
+        public ReactiveCommand<Unit, Unit> CollapsePlayers { get; }
+
         [Reactive]
         public Matchup Matchup { get; set; }
 
@@ -65,10 +77,18 @@ namespace DowUmg.Presentation.ViewModels
 
         [Reactive]
         public string MapImagePath { get; set; }
+
+        [Reactive]
+        public bool ImageVisible { get; set; } = true;
     }
 
-    public class MatchupPlayerViewModel(int position, string name, int team, string? race = null)
-        : ReactiveObject
+    public class MatchupPlayerViewModel(
+        int position,
+        string name,
+        int team,
+        bool imageVisible,
+        string? race = null
+    ) : ReactiveObject
     {
         public int Position { get; } = position;
 
@@ -77,5 +97,8 @@ namespace DowUmg.Presentation.ViewModels
         public int Team { get; } = team;
 
         public string? Race { get; } = race;
+
+        [Reactive]
+        public bool ImageVisible { get; set; } = imageVisible;
     }
 }

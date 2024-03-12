@@ -1,10 +1,10 @@
-﻿using DowUmg.Presentation.ViewModels;
-using DowUmg.Presentation.WPF.Converters;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Media;
+using DowUmg.Presentation.ViewModels;
+using DowUmg.Presentation.WPF.Converters;
+using ReactiveUI;
 
 namespace DowUmg.Presentation.WPF.Views
 {
@@ -56,6 +56,9 @@ namespace DowUmg.Presentation.WPF.Views
                         RaceText.Foreground = teamColor;
                     })
                     .Subscribe()
+                    .DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.ImageVisible, v => v.RaceImage.Visibility)
                     .DisposeWith(d);
             });
         }
