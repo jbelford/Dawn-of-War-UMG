@@ -153,7 +153,7 @@ namespace DowUmg.Services
                 .Where(race => race.Playable)
                 .Select(race => new DowRace()
                 {
-                    Name = newLocales.Replace(race.Name),
+                    Name = newLocales.Replace(race.Name).Trim(),
                     Description = newLocales.Replace(race.Description)
                 })
                 .ToList();
