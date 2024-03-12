@@ -67,9 +67,9 @@
                     IsEnabled="{Binding Path=IsEnabled, Mode=OneWay}"
                     Visibility="{Binding Path=IsShown, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <CheckBox.ToolTip>
-                        <ToolTip>
+                        <ToolTip MaxWidth="500">
                             <ToolTip.Style>
-                                <Style TargetType="ToolTip">
+                                <Style BasedOn="{StaticResource {x:Type ToolTip}}" TargetType="ToolTip">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=ToolTip, Mode=OneTime}" Value="{x:Null}">
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -77,26 +77,32 @@
                                     </Style.Triggers>
                                 </Style>
                             </ToolTip.Style>
-                            <StackPanel Orientation="Horizontal">
-                                <Image
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:Image
+                                    Grid.Column="0"
                                     Width="150"
-                                    Margin="5"
+                                    CornerRadius="5"
                                     Source="{Binding Path=MapPath, Converter={StaticResource MapPathToSourceConverter}, Mode=OneTime}">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
+                                    <ui:Image.Style>
+                                        <Style BasedOn="{StaticResource {x:Type ui:Image}}" TargetType="ui:Image">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Path=MapPath, Mode=OneTime}" Value="{x:Null}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Image.Style>
-                                </Image>
+                                    </ui:Image.Style>
+                                </ui:Image>
                                 <TextBlock
-                                    MaxWidth="250"
+                                    Grid.Column="2"
                                     Text="{Binding Path=ToolTip, Mode=OneTime}"
                                     TextWrapping="WrapWithOverflow" />
-                            </StackPanel>
+                            </Grid>
                         </ToolTip>
                     </CheckBox.ToolTip>
                 </CheckBox>
