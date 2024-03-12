@@ -129,7 +129,8 @@
                         <ui:TextBlock
                             Grid.Column="0"
                             Text="Same race"
-                            ToolTip="Computers will be same race as their team" />
+                            ToolTip="Computers will be same race as their team"
+                            ToolTipService.InitialShowDelay="300" />
                         <ui:ToggleSwitch x:Name="OneRaceTeamToggle" Grid.Column="2" />
                     </Grid>
                     <Grid Margin="0,5,0,0">

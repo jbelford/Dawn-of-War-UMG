@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -49,16 +50,25 @@ namespace DowUmg.Presentation.WPF.Converters
             try
             {
                 using Pfim.IImage image = Pfim.Pfimage.FromFile(path);
-                return BitmapSource.Create(
-                    image.Width,
-                    image.Height,
-                    96.0,
-                    96.0,
-                    PixelFormat(image),
-                    null,
-                    image.Data,
-                    image.Stride
-                );
+                GCHandle pinnedData = GCHandle.Alloc(image.Data, GCHandleType.Pinned);
+                try
+                {
+                    return BitmapSource.Create(
+                        image.Width,
+                        image.Height,
+                        96.0,
+                        96.0,
+                        PixelFormat(image),
+                        null,
+                        pinnedData.AddrOfPinnedObject(),
+                        image.DataLen,
+                        image.Stride
+                    );
+                }
+                finally
+                {
+                    pinnedData.Free();
+                }
             }
             catch (Exception)
             {
