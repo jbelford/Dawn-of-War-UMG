@@ -21,6 +21,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="5" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="5" />
@@ -30,8 +31,20 @@
                     Grid.Row="0"
                     FontTypography="Subtitle"
                     Text="Human Players" />
-                <c:OptionInputView x:Name="PlayersOption" Grid.Row="2" />
-                <ScrollViewer Grid.Row="4">
+                <Grid
+                    Grid.Row="1"
+                    Margin="0,5"
+                    HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBlock Grid.Column="0" Text="Random positions" />
+                    <ui:ToggleSwitch x:Name="RandomPositionsToggle" Grid.Column="2" />
+                </Grid>
+                <c:OptionInputView x:Name="PlayersOption" Grid.Row="3" />
+                <ScrollViewer Grid.Row="5">
                     <ItemsControl x:Name="PlayerItems">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="vm:TeamTabPlayerViewModel">
@@ -106,8 +119,20 @@
                     <ui:TextBlock
                         Margin="0,0,0,5"
                         FontTypography="Subtitle"
-                        Text="Teams" />
-                    <Grid>
+                        Text="CPU Teams" />
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBlock
+                            Grid.Column="0"
+                            Text="Same race"
+                            ToolTip="Computers will be same race as their team" />
+                        <ui:ToggleSwitch x:Name="OneRaceTeamToggle" Grid.Column="2" />
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />
@@ -138,49 +163,6 @@
                             Grid.Column="2" />
 
                     </Grid>
-                </StackPanel>
-            </ui:Card>
-            <ui:Card
-                Grid.Row="4"
-                VerticalAlignment="Stretch"
-                VerticalContentAlignment="Top">
-                <StackPanel>
-                    <ui:TextBlock
-                        Margin="0,0,0,5"
-                        FontTypography="Subtitle"
-                        Text="Options" />
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="5" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <ui:TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Text="Random positions" />
-                        <ui:ToggleSwitch
-                            x:Name="RandomPositionsToggle"
-                            Grid.Row="0"
-                            Grid.Column="2" />
-                        <ui:TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Text="One race teams"
-                            ToolTip="Computers will be same race as their team" />
-                        <ui:ToggleSwitch
-                            x:Name="OneRaceTeamToggle"
-                            Grid.Row="2"
-                            Grid.Column="2" />
-                    </Grid>
-                    <StackPanel Orientation="Horizontal" />
-                    <StackPanel Orientation="Horizontal" />
                 </StackPanel>
             </ui:Card>
         </Grid>
