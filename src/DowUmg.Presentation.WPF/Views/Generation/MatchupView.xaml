@@ -32,99 +32,108 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
+                <DockPanel Grid.Row="0" Grid.Column="1">
                     <ui:Image
                         x:Name="MapImage"
-                        Grid.Column="0"
                         Width="250"
                         Height="250"
                         d:Source="/Resources/missingImage.png"
                         BorderThickness="1"
-                        CornerRadius="5" />
+                        CornerRadius="5"
+                        DockPanel.Dock="Left" />
 
-                    <Grid Grid.Column="2">
+
+                    <Grid DockPanel.Dock="Right">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                        <ui:TextBlock
+                            Grid.Row="0"
+                            FontTypography="Caption"
+                            Text="Win Condition"
+                            TextAlignment="Right" />
+                        <ItemsControl x:Name="WinConditions" Grid.Row="1">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ui:TextBlock
+                                        FontTypography="Subtitle"
+                                        Text="{Binding Mode=OneTime}"
+                                        TextAlignment="Right" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel x:Name="TextColumn" Grid.Column="0">
-                                <StackPanel.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Padding" Value="0,0,0,5" />
-                                    </Style>
-                                </StackPanel.Resources>
-
-                                <ui:TextBlock
-                                    x:Name="ModName"
-                                    FontTypography="BodyStrong"
-                                    Text="Mod: Dawn of War Soulstorm" />
-                                <ui:TextBlock
-                                    x:Name="MapName"
-                                    FontTypography="TitleLarge"
-                                    Text="Abandon All Hope (8)" />
-                                <ui:TextBlock
-                                    x:Name="MapDesc"
-                                    MaxWidth="500"
-                                    FontTypography="Body"
-                                    Text="*This is a description about the modffffffffffffffffffffffffffffffffffffffg ffffffffffffffffffffffffffffff*"
-                                    TextWrapping="WrapWithOverflow" />
-                            </StackPanel>
-
-                            <ItemsControl x:Name="WinConditions" Grid.Column="2">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <ui:TextBlock FontTypography="Caption" Text="{Binding Mode=OneTime}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <StackPanel.Resources>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}" />
-                                </Style>
-                            </StackPanel.Resources>
-
-                            <TextBlock Padding="0,0,15,0">
-                                D:
-                                <TextBlock x:Name="Difficulty" Text="Standard" />
-                            </TextBlock>
-                            <TextBlock Padding="0,0,15,0">
-                                GS:
-                                <TextBlock x:Name="GameSpeed" Text="Fast" />
-                            </TextBlock>
-                            <TextBlock Padding="0,0,15,0">
-                                RR:
-                                <TextBlock x:Name="ResourceRate" Text="Fast" />
-                            </TextBlock>
-                            <TextBlock>
-                                SR:
-                                <TextBlock x:Name="StartingResources" Text="Quick" />
-                            </TextBlock>
+                        <StackPanel Grid.Row="3">
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Text="Difficulty"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                x:Name="Difficulty"
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Standard"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Text="Game Speed"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                x:Name="GameSpeed"
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Fast"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Text="Resource Rate"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                x:Name="ResourceRate"
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Fast"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Text="Starting Resources"
+                                TextAlignment="Right" />
+                            <ui:TextBlock
+                                x:Name="StartingResources"
+                                FontTypography="Subtitle"
+                                Text="Quick"
+                                TextAlignment="Right" />
                         </StackPanel>
                     </Grid>
-                </Grid>
+
+                    <Grid Margin="10,0" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="250" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <ui:TextBlock
+                                x:Name="ModName"
+                                FontTypography="BodyStrong"
+                                Text="Mod: Dawn of War Soulstorm" />
+                            <ui:TextBlock
+                                x:Name="MapName"
+                                FontTypography="TitleLarge"
+                                Text="Abandon All Hope (8)"
+                                TextWrapping="WrapWithOverflow" />
+                            <ui:TextBlock
+                                x:Name="MapDesc"
+                                MaxWidth="500"
+                                HorizontalAlignment="Left"
+                                FontTypography="Body"
+                                Text="*This is a description about the modffffffffffffffffffffffffffffffffffffffg ffffffffffffffffffffffffffffff*"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
 
                 <ItemsControl
                     x:Name="Players"
