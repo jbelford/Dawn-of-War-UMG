@@ -236,21 +236,34 @@ namespace DowUmg.Services
         private IEnumerable<Locales> GetLocales(string modFolder)
         {
             string dowPath = this.filePathProvider.SoulstormLocation;
-            string localePath = Path.Combine(dowPath, modFolder, "Locale", "English");
 
             try
             {
-                string[] files = Directory.GetFiles(
+                string localePath = Path.Combine(dowPath, modFolder, "Locale", "English");
+
+                IEnumerable<string> files = Directory.GetFiles(
                     localePath,
                     "*.ucs",
                     SearchOption.AllDirectories
                 );
+
+                string subPath = Path.Combine(dowPath, modFolder, "Locale", "English_Chinese");
+                if (Directory.Exists(subPath))
+                {
+                    string[] subFiles = Directory.GetFiles(
+                        subPath,
+                        "*.ucs",
+                        SearchOption.AllDirectories
+                    );
+                    files = files.Concat(subFiles);
+                }
+
                 var ucsLoader = new LocaleLoader();
-                return files.Select(x => ucsLoader.Load(x));
+                return files.Select(ucsLoader.Load);
             }
             catch (DirectoryNotFoundException)
             {
-                return Enumerable.Empty<Locales>();
+                return [];
             }
         }
 
