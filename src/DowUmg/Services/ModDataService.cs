@@ -15,6 +15,8 @@ namespace DowUmg.Services
 
         public void Add(IEnumerable<DowMod> mods);
 
+        public void MigrateData();
+
         public void DropModData();
 
         public Task<List<DowMap>> GetModMaps(int modId);
@@ -42,6 +44,17 @@ namespace DowUmg.Services
             }
 
             context.SaveChanges();
+        }
+
+        public void MigrateData()
+        {
+            using var context = new ModsContext();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Data.RemoveRange(context.Data);
+                context.SaveChanges();
+                context.Database.Migrate();
+            }
         }
 
         public void DropModData()

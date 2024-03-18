@@ -1,10 +1,9 @@
 ﻿using System.Windows;
-using DowUmg.Data;
 using DowUmg.Interfaces;
 using DowUmg.Presentation.Handlers;
 using DowUmg.Presentation.WPF.Services;
 using DowUmg.Presentation.WPF.Views;
-using Microsoft.EntityFrameworkCore;
+using DowUmg.Services;
 using ReactiveUI;
 using Splat;
 
@@ -47,8 +46,7 @@ namespace DowUmg.Presentation.WPF
 
         private void MigrateDatabase()
         {
-            using var context = new ModsContext();
-            context.Database.Migrate();
+            Locator.Current.GetService<IModDataService>()?.MigrateData();
         }
     }
 }
