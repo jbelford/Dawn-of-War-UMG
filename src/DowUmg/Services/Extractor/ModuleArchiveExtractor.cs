@@ -76,8 +76,7 @@ namespace DowUmg.Services
             var raceLoader = new RaceLoader();
             return sgaFileReader
                 .GetRaces()
-                .Select(x => new MemoryStream(x.Data))
-                .Select(x => raceLoader.Load(x));
+                .Select(file => raceLoader.Load(file.Name, new MemoryStream(file.Data)));
         }
 
         private MapFile? LoadMap(MapLoader mapLoader, SgaRawFile scenario)

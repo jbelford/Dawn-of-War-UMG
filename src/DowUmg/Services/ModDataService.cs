@@ -112,7 +112,6 @@ namespace DowUmg.Services
                         from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
                         where dm.DependentsId = {modId}
                     ) dep on r.ModDataId = dep.ModDataId
-                    group by Name
                     """
                 )
                 .ToListAsync();
@@ -124,13 +123,14 @@ namespace DowUmg.Services
             return context
                 .Races.FromSql(
                     $"""
-                    select r.*
+                    select r.Id, r.Name, r.Description, MAX(r.ModDataId) as ModDataId, r.FileName
                     from Races r join (
                         select m.ModDataId
                         from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
                         where dm.DependentsId = {modId}
                     ) dep on r.ModDataId = dep.ModDataId
-                    group by Name
+                    group by r.FileName
+                    order by r.Name
                     """
                 )
                 .ToListAsync();

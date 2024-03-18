@@ -154,7 +154,8 @@ namespace DowUmg.Services
                 .Select(race => new DowRace()
                 {
                     Name = newLocales.Replace(race.Name).Trim(),
-                    Description = newLocales.Replace(race.Description)
+                    Description = newLocales.Replace(race.Description),
+                    FileName = race.FileName,
                 })
                 .ToList();
 

@@ -94,7 +94,7 @@ namespace DowUmg.Services
             var raceLoader = new RaceLoader();
             string path = Path.Combine(rootDir, "Data", "attrib", "racebps");
             return GetFiles(path, "*.rgd", SearchOption.TopDirectoryOnly)
-                .Select(file => raceLoader.Load(file))
+                .Select(raceLoader.Load)
                 .Concat(ArchiveExtractors.SelectMany(extractor => extractor.GetRaces()));
         }
 

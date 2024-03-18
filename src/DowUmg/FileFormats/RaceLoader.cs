@@ -4,19 +4,7 @@ using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
 {
-    internal class RaceFile
-    {
-        public RaceFile(string name, string desc, bool playable)
-        {
-            Name = name;
-            Description = desc;
-            Playable = playable;
-        }
-
-        public string Description { get; }
-        public string Name { get; }
-        public bool Playable { get; }
-    }
+    internal record RaceFile(string FileName, string Name, string Description, bool Playable);
 
     internal class RaceLoader : IFileLoader<RaceFile>
     {
@@ -27,10 +15,10 @@ namespace DowUmg.FileFormats
 
         public RaceFile Load(string filePath)
         {
-            return Load(File.OpenRead(filePath));
+            return Load(Path.GetFileName(filePath), File.OpenRead(filePath));
         }
 
-        public RaceFile Load(Stream stream)
+        public RaceFile Load(string fileName, Stream stream)
         {
             var rgd = new RgdReader();
             RgdFile file = rgd.Read(stream);
@@ -43,7 +31,7 @@ namespace DowUmg.FileFormats
                     && details.Value[PlayableHash] is RgdEntry<bool> playable
                 )
                 {
-                    return new RaceFile(name.Value, desc.Value, playable.Value);
+                    return new RaceFile(fileName, name.Value, desc.Value, playable.Value);
                 }
                 throw new IOException("Race details is malformatted");
             }
