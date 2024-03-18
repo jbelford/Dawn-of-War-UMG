@@ -38,7 +38,8 @@ namespace DowUmg.Presentation.WPF.Converters
             {
                 "13th company" => @"/Resources/13thcompany.png",
                 "black templars" => @"/Resources/blackTemplars.png",
-                "adeptus mechanicus explorators" => @"/Resources/adeptusMechanicus.png",
+                "adeptus mechanicus explorators" => @"/Resources/explorators.png",
+                "adeptus mechanicus" => @"/Resources/adeptusMechanicus.png",
                 "blood angels" => @"/Resources/bloodAngels.png",
                 "chaos" => @"/Resources/chaosMarines.png",
                 "chaos daemons" => @"/Resources/chaosDemons.png",

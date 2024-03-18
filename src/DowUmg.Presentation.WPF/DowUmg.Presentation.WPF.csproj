@@ -24,6 +24,7 @@
     <None Remove="Resources\deathKorps.png" />
     <None Remove="Resources\eldar.png" />
     <None Remove="Resources\emperorsChildren.png" />
+    <None Remove="Resources\explorators.png" />
     <None Remove="Resources\genericRace.png" />
     <None Remove="Resources\harlequins.png" />
     <None Remove="Resources\imperialFists.png" />
@@ -75,6 +76,7 @@
     <Resource Include="Resources\deathKorps.png" />
     <Resource Include="Resources\eldar.png" />
     <Resource Include="Resources\emperorsChildren.png" />
+    <Resource Include="Resources\explorators.png" />
     <Resource Include="Resources\genericRace.png" />
     <Resource Include="Resources\harlequins.png" />
     <Resource Include="Resources\imperialFists.png" />

@@ -193,6 +193,16 @@ namespace DowUmg.Presentation.WPF.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap explorators {
+            get {
+                object obj = ResourceManager.GetObject("explorators", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap genericRace {
             get {
                 object obj = ResourceManager.GetObject("genericRace", resourceCulture);
