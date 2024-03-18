@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
@@ -29,44 +30,50 @@ namespace DowUmg.Presentation.WPF.Converters
 
         public static BitmapSource GetBitmapSource(string name)
         {
-            var filename = GetRaceImage(name.ToLower());
+            var filename = GetRaceImage(Path.GetFileNameWithoutExtension(name).ToLower());
             return new BitmapImage(new Uri(filename, UriKind.RelativeOrAbsolute));
         }
 
         private static string GetRaceImage(string race) =>
             race switch
             {
-                "13th company" => @"/Resources/13thcompany.png",
-                "black templars" => @"/Resources/blackTemplars.png",
-                "adeptus mechanicus explorators" => @"/Resources/explorators.png",
-                "adeptus mechanicus" => @"/Resources/adeptusMechanicus.png",
-                "blood angels" => @"/Resources/bloodAngels.png",
-                "chaos" => @"/Resources/chaosMarines.png",
-                "chaos daemons" => @"/Resources/chaosDemons.png",
-                "chaos marines" => @"/Resources/chaosMarines.png",
-                "daemon hunters" => @"/Resources/daemonhunters.png",
-                "dark angels" => @"/Resources/darkAngels.png",
-                "dark eldar" => @"/Resources/darkEldar.png",
-                "death guard" => @"/Resources/deathGuard.png",
-                "death korps of krieg" => @"/Resources/deathKorps.png",
-                "eldar" => @"/Resources/eldar.png",
-                "emperor's children" => @"/Resources/emperorsChildren.png",
-                "harlequins" => @"/Resources/harlequins.png",
-                "imperial fists siege vanguard" => @"/Resources/imperialFists.png",
-                "imperial guard" => @"/Resources/imperialGuard.png",
-                "legion of the damned" => @"/Resources/legionOfTheDamned.png",
-                "necrons" => @"/Resources/necrons.png",
-                "orks" => @"/Resources/orks.png",
-                "salamanders" => @"/Resources/salamanders.png",
-                "sisters of battle" => @"/Resources/sistersOfBattle.png",
-                "space marines" => @"/Resources/spaceMarine.png",
-                "steel legion" => @"/Resources/steelLegion.png",
-                "tau empire" => @"/Resources/tau.png",
-                "thousand sons" => @"/Resources/thousandSons.png",
-                "tyranids" => @"/Resources/tyranids.png",
-                "witch hunters" => @"/Resources/witchHunters.png",
-                "world eaters" => @"/Resources/worldEaters.png",
-                "ynarri" => @"/Resources/ynnari.png",
+                "chaos_marine_race" => @"/Resources/chaosMarines.png",
+                "dark_eldar_race" => @"/Resources/darkEldar.png",
+                "darkangels_race" => @"/Resources/darkAngels.png",
+                "deamonkin_race" => @"/Resources/worldEaters.png",
+                "deamons_race" => @"/Resources/chaosDemons.png",
+                "death_angels_race" => @"/Resources/darkAngels.png",
+                "death_guard_race" => @"/Resources/deathGuard.png",
+                "eldar_race" => @"/Resources/eldar.png",
+                "emperors_children_race" => @"/Resources/emperorsChildren.png",
+                "guard_race" => @"/Resources/imperialGuard.png",
+                "harlequin_race" => @"/Resources/harlequins.png",
+                "imperial_fists_race" => @"/Resources/imperialFists.png",
+                "inquisition_daemonhunt_race" => @"/Resources/daemonhunters.png",
+                "khorne_marine_race" => @"/Resources/worldEaters.png",
+                "krieg_race" => @"/Resources/deathKorps.png",
+                "lotd_race" => @"/Resources/legionOfTheDamned.png",
+                "mech_guard_race" => @"/Resources/adeptusMechanicus.png",
+                "mechanicus_race" => @"/Resources/explorators.png",
+                "necron_race" => @"/Resources/necrons.png",
+                "ork_race" => @"/Resources/orks.png",
+                "renegade_race" => @"/Resources/renegade.png",
+                "salamanders_race" => @"/Resources/salamanders.png",
+                "sisters_race" => @"/Resources/sistersOfBattle.png",
+                "space_angels_race" => @"/Resources/bloodAngels.png",
+                "space_knight_race" => @"/Resources/greyKnights.png",
+                "space_marine_race" => @"/Resources/spaceMarine.png",
+                "space_wolves_race" => @"/Resources/spaceWolves.png",
+                "ss_blood_angels_race" => @"/Resources/bloodAngels.png",
+                "steel_legion_race" => @"/Resources/steelLegion.png",
+                "tau_race" => @"/Resources/tau.png",
+                "templar_race" => @"/Resources/blackTemplars.png",
+                "thirteenth_company_race" => @"/Resources/13thcompany.png",
+                "thousand_sons_race" => @"/Resources/thousandSons.png",
+                "tyranids_race" => @"/Resources/tyranids.png",
+                "warp_daemons_race" => @"/Resources/chaosDemons.png",
+                "witch_hunters_race" => @"/Resources/witchHunters.png",
+                "ynnari_race" => @"/Resources/ynnari.png",
                 _ => @"/Resources/genericRace.png"
             };
     }

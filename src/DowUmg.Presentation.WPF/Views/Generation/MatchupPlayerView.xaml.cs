@@ -34,14 +34,16 @@ namespace DowUmg.Presentation.WPF.Views
                 this.WhenAnyValue(x => x.ViewModel)
                     .Do(vm =>
                     {
-                        RaceImage.Source = RaceNameToSourceConverter.GetBitmapSource(vm.Race ?? "");
+                        RaceImage.Source = RaceNameToSourceConverter.GetBitmapSource(
+                            vm.Race?.FileName ?? ""
+                        );
                         PositionText.Text = vm.Position.ToString();
                         PlayerNameText.Text = vm.Name;
                         TeamText.Text = $"Team {vm.Team + 1}";
 
                         if (vm.Race != null)
                         {
-                            RaceText.Text = vm.Race;
+                            RaceText.Text = vm.Race.Name;
                         }
                         else
                         {

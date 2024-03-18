@@ -5,14 +5,16 @@ namespace DowUmg.Models
 {
     public record Matchup(DowMap Map, GameInfo GameInfo, List<MatchupPlayer> Players);
 
-    public class MatchupPlayer(string name, int team, string? race = null)
+    public record MatchupPlayer(string name, int team, MatchupPlayerRace? race = null)
     {
         public string Name { get; set; } = name;
 
         public int Team { get; set; } = team;
 
-        public string? Race { get; set; } = race;
+        public MatchupPlayerRace? Race { get; set; } = race;
 
         public int Position { get; set; }
     }
+
+    public record MatchupPlayerRace(string Name, string FileName);
 }

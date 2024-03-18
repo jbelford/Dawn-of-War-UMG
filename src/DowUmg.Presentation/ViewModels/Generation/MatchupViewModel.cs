@@ -87,7 +87,7 @@ namespace DowUmg.Presentation.ViewModels
         string name,
         int team,
         bool imageVisible,
-        string? race = null
+        MatchupPlayerRace? race = null
     ) : ReactiveObject
     {
         public int Position { get; } = position;
@@ -96,7 +96,7 @@ namespace DowUmg.Presentation.ViewModels
 
         public int Team { get; } = team;
 
-        public string? Race { get; } = race;
+        public MatchupPlayerRace? Race { get; } = race;
 
         [Reactive]
         public bool ImageVisible { get; set; } = imageVisible;

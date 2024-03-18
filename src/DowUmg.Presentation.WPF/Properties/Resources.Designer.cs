@@ -213,6 +213,16 @@ namespace DowUmg.Presentation.WPF.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap greyKnights {
+            get {
+                object obj = ResourceManager.GetObject("greyKnights", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap harlequins {
             get {
                 object obj = ResourceManager.GetObject("harlequins", resourceCulture);
@@ -293,6 +303,16 @@ namespace DowUmg.Presentation.WPF.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap renegade {
+            get {
+                object obj = ResourceManager.GetObject("renegade", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap salamanders {
             get {
                 object obj = ResourceManager.GetObject("salamanders", resourceCulture);
@@ -316,6 +336,16 @@ namespace DowUmg.Presentation.WPF.Properties {
         internal static System.Drawing.Bitmap spaceMarine {
             get {
                 object obj = ResourceManager.GetObject("spaceMarine", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap spaceWolves {
+            get {
+                object obj = ResourceManager.GetObject("spaceWolves", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

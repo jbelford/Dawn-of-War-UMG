@@ -26,6 +26,7 @@
     <None Remove="Resources\emperorsChildren.png" />
     <None Remove="Resources\explorators.png" />
     <None Remove="Resources\genericRace.png" />
+    <None Remove="Resources\greyKnights.png" />
     <None Remove="Resources\harlequins.png" />
     <None Remove="Resources\imperialFists.png" />
     <None Remove="Resources\imperialGuard.png" />
@@ -33,9 +34,11 @@
     <None Remove="Resources\missingImage.png" />
     <None Remove="Resources\necrons.png" />
     <None Remove="Resources\orks.png" />
+    <None Remove="Resources\renegade.png" />
     <None Remove="Resources\salamanders.png" />
     <None Remove="Resources\sistersOfBattle.png" />
     <None Remove="Resources\spaceMarine.png" />
+    <None Remove="Resources\spaceWolves.png" />
     <None Remove="Resources\steelLegion.png" />
     <None Remove="Resources\tau.png" />
     <None Remove="Resources\thousandSons.png" />
@@ -78,6 +81,7 @@
     <Resource Include="Resources\emperorsChildren.png" />
     <Resource Include="Resources\explorators.png" />
     <Resource Include="Resources\genericRace.png" />
+    <Resource Include="Resources\greyKnights.png" />
     <Resource Include="Resources\harlequins.png" />
     <Resource Include="Resources\imperialFists.png" />
     <Resource Include="Resources\imperialGuard.png" />
@@ -85,9 +89,11 @@
     <Resource Include="Resources\missingImage.png" />
     <Resource Include="Resources\necrons.png" />
     <Resource Include="Resources\orks.png" />
+    <Resource Include="Resources\renegade.png" />
     <Resource Include="Resources\salamanders.png" />
     <Resource Include="Resources\sistersOfBattle.png" />
     <Resource Include="Resources\spaceMarine.png" />
+    <Resource Include="Resources\spaceWolves.png" />
     <Resource Include="Resources\steelLegion.png" />
     <Resource Include="Resources\tau.png" />
     <Resource Include="Resources\thousandSons.png" />
