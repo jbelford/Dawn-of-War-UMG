@@ -7,6 +7,74 @@ using DowUmg.Models;
 
 namespace DowUmg.Services
 {
+    internal class TeamGeneration(GenerationSettings settings)
+    {
+        private readonly Random random = new();
+        private readonly GenerationSettings settings = settings;
+
+        public IEnumerable<MatchupPlayer> GenerateComputers(int remainingPlayers)
+        {
+            int maxComputers = Math.Min(remainingPlayers, settings.MaxComputer);
+            int minComputers = Math.Min(remainingPlayers, settings.MinComputer);
+            int numComputers = random.Next(minComputers, maxComputers + 1);
+
+            int minTeams = Math.Min(numComputers, settings.MinTeams);
+            int maxTeams = Math.Min(numComputers, settings.MaxTeams);
+            int numTeams = random.Next(minTeams, maxTeams + 1);
+
+            Dictionary<int, int> defaultTeams = CreateDefaultTeamAssignment(numTeams, numComputers);
+            Dictionary<int, DowRace> teamRaces = [];
+
+            for (int computer = 0; computer < numComputers; ++computer)
+            {
+                if (!defaultTeams.TryGetValue(computer, out int team))
+                {
+                    team = random.Next(numTeams) + 1;
+                }
+
+                DowRace? race = GenerateRace(teamRaces, team);
+
+                yield return new MatchupPlayer("Computer", team, new(race.Name, race.FileName));
+            }
+        }
+
+        private DowRace GenerateRace(Dictionary<int, DowRace> teamRaces, int team)
+        {
+            DowRace? race = null;
+            if (settings.OneRaceTeams)
+            {
+                teamRaces.TryGetValue(team, out race);
+            }
+
+            if (race == null)
+            {
+                race = settings.Races[random.Next(settings.Races.Count)];
+                if (settings.OneRaceTeams)
+                {
+                    teamRaces.Add(team, race);
+                }
+            }
+
+            return race;
+        }
+
+        private Dictionary<int, int> CreateDefaultTeamAssignment(int numTeams, int numComputers)
+        {
+            Dictionary<int, int> defaultTeams = [];
+            List<int> computerList = Enumerable.Range(0, numComputers).ToList();
+
+            for (int team = 0; team < numTeams; ++team)
+            {
+                int selectedIdx = random.Next(computerList.Count);
+                int computer = computerList[selectedIdx];
+                defaultTeams[computer] = team + 1;
+                computerList.RemoveAt(selectedIdx);
+            }
+
+            return defaultTeams;
+        }
+    }
+
     public class GenerationService
     {
         public GenerationService() { }
@@ -48,36 +116,8 @@ namespace DowUmg.Services
 
             if (remainingPlayers > 0)
             {
-                int maxComputers = Math.Min(remainingPlayers, settings.MaxComputer);
-                int minComputers = Math.Min(remainingPlayers, settings.MinComputer);
-                int computers = random.Next(minComputers, maxComputers + 1);
-
-                int teams = random.Next(settings.MinTeams, settings.MaxTeams + 1);
-
-                Dictionary<int, DowRace> teamRaces = [];
-
-                for (int i = 0; i < computers; ++i)
-                {
-                    int team = random.Next(teams) + 1;
-                    DowRace? race = null;
-                    if (settings.OneRaceTeams)
-                    {
-                        teamRaces.TryGetValue(team, out race);
-                    }
-
-                    if (race == null)
-                    {
-                        race = settings.Races[random.Next(settings.Races.Count)];
-                        if (settings.OneRaceTeams)
-                        {
-                            teamRaces.Add(team, race);
-                        }
-                    }
-
-                    playerList.Add(
-                        new MatchupPlayer("Computer", team, new(race.Name, race.FileName))
-                    );
-                }
+                TeamGeneration teamGeneration = new(settings);
+                playerList.AddRange(teamGeneration.GenerateComputers(remainingPlayers));
             }
 
             int startIdx = settings.RandomPositions ? 1 : humans;
