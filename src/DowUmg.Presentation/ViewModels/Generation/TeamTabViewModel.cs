@@ -63,6 +63,7 @@ namespace DowUmg.Presentation.ViewModels
                 .ToList();
 
             this.WhenAnyValue(x => x.PlayerCountInput.SelectedItem)
+                .DistinctUntilChanged()
                 .Select(item => item.GetItem<int>())
                 .Select(numPlayers => players[0..numPlayers])
                 .Select(items => new ObservableCollection<TeamTabPlayerViewModel>(items))
@@ -70,59 +71,82 @@ namespace DowUmg.Presentation.ViewModels
 
             this.WhenAnyValue(x => x.PlayerCountInput.SelectedItem)
                 .DistinctUntilChanged()
-                .Select(item => item.GetItem<int>())
                 .Subscribe(players =>
                 {
-                    for (int i = 0; i < 7; ++i)
-                    {
-                        MinComputers.Items[i].IsEnabled = i + players < 8;
-                    }
-                    if (!MinComputers.SelectedItem.IsEnabled)
-                    {
-                        MinComputers.SelectedItem = MinComputers.Items[0];
-                    }
-                    if (!MaxComputers.SelectedItem.IsEnabled)
-                    {
-                        MaxComputers.SelectedItem = MaxComputers.Items[7 - players];
-                    }
+                    UpdateMinComputers(
+                        players.GetItem<int>(),
+                        MinTeams.SelectedItem.GetItem<int>()
+                    );
                 });
 
-            this.WhenAnyValue(
-                    x => x.MinComputers.SelectedItem,
-                    x => x.PlayerCountInput.SelectedItem
-                )
+            this.WhenAnyValue(x => x.MinComputers.SelectedItem)
                 .DistinctUntilChanged()
-                .Subscribe(result =>
+                .Subscribe(minComputers =>
                 {
-                    var minComputers = result.Item1.GetItem<int>();
-                    var playerCount = result.Item2.GetItem<int>();
-                    for (int i = 0; i < 7; ++i)
-                    {
-                        MaxComputers.Items[i].IsEnabled =
-                            i + 1 >= minComputers && i + playerCount < 8;
-                    }
-                    if (!MaxComputers.SelectedItem.IsEnabled)
-                    {
-                        MaxComputers.SelectedItem = MaxComputers
-                            .Items.Where(item => item.IsEnabled)
-                            .Last();
-                    }
+                    UpdateMaxComputers(
+                        minComputers.GetItem<int>(),
+                        PlayerCountInput.SelectedItem.GetItem<int>()
+                    );
                 });
 
             this.WhenAnyValue(x => x.MinTeams.SelectedItem)
                 .DistinctUntilChanged()
-                .Select(item => item.GetItem<int>())
                 .Subscribe(minTeams =>
                 {
-                    for (int i = 0; i < 7; ++i)
-                    {
-                        MaxTeams.Items[i].IsEnabled = i + 1 >= minTeams;
-                    }
-                    if (!MaxTeams.SelectedItem.IsEnabled)
-                    {
-                        MaxTeams.SelectedItem = MaxTeams.Items[minTeams - 1];
-                    }
+                    UpdateMinPlayers(minTeams.GetItem<int>());
                 });
+        }
+
+        private void UpdateMinPlayers(int minTeams)
+        {
+            for (int i = 0; i < 7; ++i)
+            {
+                PlayerCountInput.Items[i].IsEnabled = i < 8 - minTeams;
+                MaxTeams.Items[i].IsEnabled = i + 1 >= minTeams;
+            }
+            if (!MaxTeams.SelectedItem.IsEnabled)
+            {
+                MaxTeams.SelectedItem = MaxTeams.Items[minTeams - 1];
+            }
+            if (!PlayerCountInput.SelectedItem.IsEnabled)
+            {
+                var lastItem = PlayerCountInput.Items.Where(item => item.IsEnabled).Last();
+                PlayerCountInput.SelectedItem = lastItem;
+            }
+            else
+            {
+                UpdateMinComputers(PlayerCountInput.SelectedItem.GetItem<int>(), minTeams);
+            }
+        }
+
+        private void UpdateMinComputers(int players, int minTeams)
+        {
+            for (int i = 0; i < 7; ++i)
+            {
+                MinComputers.Items[i].IsEnabled = i + players < 8 && i + 1 >= minTeams;
+            }
+            if (!MinComputers.SelectedItem.IsEnabled)
+            {
+                MinComputers.SelectedItem = MinComputers
+                    .Items.Where(item => item.IsEnabled)
+                    .First();
+            }
+            else
+            {
+                UpdateMaxComputers(MinComputers.SelectedItem.GetItem<int>(), players);
+            }
+        }
+
+        private void UpdateMaxComputers(int minComputers, int playerCount)
+        {
+            for (int i = 0; i < 7; ++i)
+            {
+                MaxComputers.Items[i].IsEnabled = i + 1 >= minComputers && i + playerCount < 8;
+            }
+            if (!MaxComputers.SelectedItem.IsEnabled)
+            {
+                MaxComputers.SelectedItem = MaxComputers.Items.Where(item => item.IsEnabled).Last();
+            }
         }
 
         [Reactive]
