@@ -25,11 +25,21 @@ namespace DowUmg.Services
             Dictionary<int, int> defaultTeams = CreateDefaultTeamAssignment(numTeams, numComputers);
             Dictionary<int, DowRace> teamRaces = [];
 
+            int teamCounter = 0;
+
             for (int computer = 0; computer < numComputers; ++computer)
             {
                 if (!defaultTeams.TryGetValue(computer, out int team))
                 {
-                    team = random.Next(numTeams) + 1;
+                    if (settings.EvenTeams)
+                    {
+                        team = teamCounter + 1;
+                        teamCounter = team % numTeams;
+                    }
+                    else
+                    {
+                        team = random.Next(numTeams) + 1;
+                    }
                 }
 
                 DowRace? race = GenerateRace(teamRaces, team);

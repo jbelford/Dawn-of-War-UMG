@@ -175,6 +175,9 @@ namespace DowUmg.Presentation.ViewModels
         public bool RandomPositions { get; set; }
 
         [Reactive]
+        public bool EvenTeams { get; set; }
+
+        [Reactive]
         public bool OneRaceTeams { get; set; }
     }
 

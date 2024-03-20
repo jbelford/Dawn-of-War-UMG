@@ -22,6 +22,7 @@ namespace DowUmg.Models
 
         public bool RandomPositions { get; set; }
 
+        public bool EvenTeams { get; set; }
         public bool OneRaceTeams { get; set; }
 
         public int[] GameDifficultyTickets { get; } =

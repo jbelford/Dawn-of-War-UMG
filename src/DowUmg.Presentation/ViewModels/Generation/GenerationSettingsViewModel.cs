@@ -111,6 +111,7 @@ namespace DowUmg.Presentation.ViewModels
                 MinTeams = TeamTabViewModel.MinTeams.SelectedItem.GetItem<int>(),
                 MaxTeams = TeamTabViewModel.MaxTeams.SelectedItem.GetItem<int>(),
                 RandomPositions = TeamTabViewModel.RandomPositions,
+                EvenTeams = TeamTabViewModel.EvenTeams,
                 OneRaceTeams = TeamTabViewModel.OneRaceTeams,
             };
 

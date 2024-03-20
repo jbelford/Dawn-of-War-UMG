@@ -33,6 +33,9 @@ namespace DowUmg.Presentation.WPF.Views
                 this.Bind(ViewModel, vm => vm.OneRaceTeams, v => v.OneRaceTeamToggle.IsChecked)
                     .DisposeWith(d);
 
+                this.Bind(ViewModel, vm => vm.EvenTeams, v => v.EvenTeamsToggle.IsChecked)
+                    .DisposeWith(d);
+
                 this.WhenAnyValue(x => x.ViewModel)
                     .Do(vm =>
                     {
