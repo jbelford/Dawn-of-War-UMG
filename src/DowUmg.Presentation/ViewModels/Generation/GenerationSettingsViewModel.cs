@@ -14,7 +14,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class GenerationSettingsViewModel : RoutableReactiveObject
     {
-        private readonly GenerationViewModelState generationState = new();
+        private readonly ModGenerationState modState = new();
 
         public GenerationSettingsViewModel(IScreen screen)
             : base(screen, "generation")
@@ -23,8 +23,8 @@ namespace DowUmg.Presentation.ViewModels
 
             IModDataService modDataService = Locator.Current.GetService<IModDataService>()!;
 
-            TeamTabViewModel = new TeamTabViewModel(generationState);
-            GeneralTabViewModel = new GeneralTabViewModel(generationState);
+            TeamTabViewModel = new TeamTabViewModel(modState);
+            GeneralTabViewModel = new GeneralTabViewModel(modState);
 
             Observable.StartAsync(
                 async () =>
@@ -40,7 +40,7 @@ namespace DowUmg.Presentation.ViewModels
             RefreshMod = ReactiveCommand.CreateFromTask(
                 (DowMod mod) =>
                 {
-                    return generationState.RefreshForMod(mod.Id);
+                    return modState.RefreshForMod(mod.Id);
                 }
             );
 
@@ -146,11 +146,11 @@ namespace DowUmg.Presentation.ViewModels
                 var isEnabled = minType <= i + 2;
                 bool isToggled = GeneralTabViewModel.MapTypes[i].IsToggled;
                 GeneralTabViewModel.MapTypes[i].IsEnabled = isEnabled;
-                updated |= generationState.SetPlayersAllowed(i + 2, isEnabled && isToggled);
+                updated |= modState.SetPlayersAllowed(i + 2, isEnabled && isToggled);
             }
             if (updated)
             {
-                generationState.RefreshFilters();
+                modState.RefreshFilters();
             }
         }
 

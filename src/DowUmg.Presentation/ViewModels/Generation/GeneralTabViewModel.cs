@@ -21,7 +21,7 @@ namespace DowUmg.Presentation.ViewModels
     {
         private DowModLoader _modLoader;
 
-        public GeneralTabViewModel(GenerationViewModelState generationState)
+        public GeneralTabViewModel(ModGenerationState modState)
         {
             _modLoader = Locator.Current.GetService<DowModLoader>()!;
 
@@ -41,9 +41,9 @@ namespace DowUmg.Presentation.ViewModels
 
             MapTypes = new(mapTypes.Select(item => item.ToggleItem));
             MapSizes = new(mapSizes.Select(item => item.ToggleItem));
-            IsAddonAllowed = generationState.IsAddonAllowed;
+            IsAddonAllowed = modState.IsAddonAllowed;
 
-            generationState
+            modState
                 .ConnectMaps()
                 .Sort(MapSort)
                 .Transform(MapToViewModelTransform)
@@ -54,7 +54,7 @@ namespace DowUmg.Presentation.ViewModels
                 _maps.Connect().Transform(item => item.ToggleItem)
             );
 
-            generationState
+            modState
                 .ConnectRules()
                 .Filter(rule => rule.IsWinCondition)
                 .Transform(rule => new ToggleModel<GameRule>(
@@ -80,9 +80,9 @@ namespace DowUmg.Presentation.ViewModels
                         .Subscribe(result =>
                         {
                             var (toggled, enabled) = result;
-                            if (generationState.SetPlayersAllowed(item, toggled && enabled))
+                            if (modState.SetPlayersAllowed(item, toggled && enabled))
                             {
-                                generationState.RefreshFilters();
+                                modState.RefreshFilters();
                             }
                         })
                         .DisposeWith(d);
@@ -95,7 +95,7 @@ namespace DowUmg.Presentation.ViewModels
                         .ObserveOn(RxApp.TaskpoolScheduler)
                         .Subscribe(toggled =>
                         {
-                            generationState.SetSizeAllowed(item, toggled);
+                            modState.SetSizeAllowed(item, toggled);
                         })
                         .DisposeWith(d);
                 }
@@ -104,7 +104,7 @@ namespace DowUmg.Presentation.ViewModels
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .Subscribe(isAddonAlowed =>
                     {
-                        generationState.IsAddonAllowed = isAddonAlowed;
+                        modState.IsAddonAllowed = isAddonAlowed;
                     })
                     .DisposeWith(d);
             });

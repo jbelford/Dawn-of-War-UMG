@@ -9,7 +9,11 @@ using Splat;
 
 namespace DowUmg.Presentation.ViewModels
 {
-    public class GenerationViewModelState
+    /// <summary>
+    /// Stores details about current selected mod. Allowing connecting and subscribing
+    /// to these details when mod is changed.
+    /// </summary>
+    public class ModGenerationState
     {
         private readonly IModDataService modDataService;
 
@@ -24,7 +28,7 @@ namespace DowUmg.Presentation.ViewModels
         private bool _isAddonAllowed = true;
         private bool fetchedAddon = false;
 
-        public GenerationViewModelState()
+        public ModGenerationState()
         {
             modDataService = Locator.Current.GetService<IModDataService>()!;
         }

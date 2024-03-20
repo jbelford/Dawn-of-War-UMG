@@ -12,7 +12,7 @@ namespace DowUmg.Presentation.ViewModels
 {
     public class TeamTabViewModel : ActivatableReactiveObject
     {
-        public TeamTabViewModel(GenerationViewModelState generationState)
+        public TeamTabViewModel(ModGenerationState modState)
         {
             var totalPlayers = Enumerable.Range(1, 7);
             var totalComputers = Enumerable.Range(1, 7);
@@ -45,7 +45,7 @@ namespace DowUmg.Presentation.ViewModels
                 true
             );
 
-            generationState
+            modState
                 .ConnectRaces()
                 .Transform(race => new ToggleModel<DowRace>(
                     race,
