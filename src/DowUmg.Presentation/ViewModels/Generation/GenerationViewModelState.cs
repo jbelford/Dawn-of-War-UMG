@@ -13,6 +13,7 @@ namespace DowUmg.Presentation.ViewModels
     {
         private readonly IModDataService modDataService;
 
+        private int? currentModId;
         private List<DowMap> _addonMaps = new();
         private List<DowMap> _maps = new();
         private SourceList<DowMap> _allowedMaps = new();
@@ -30,6 +31,12 @@ namespace DowUmg.Presentation.ViewModels
 
         public async Task RefreshForMod(int modId)
         {
+            if (modId == currentModId)
+            {
+                return;
+            }
+            currentModId = modId;
+
             if (!fetchedAddon)
             {
                 _addonMaps = await modDataService.GetAddonMaps();
@@ -64,7 +71,9 @@ namespace DowUmg.Presentation.ViewModels
         public bool SetPlayersAllowed(int players, bool allowed)
         {
             if (_allowedPlayers.GetValueOrDefault(players, true) == allowed)
+            {
                 return false;
+            }
 
             _allowedPlayers[players] = allowed;
             return true;
@@ -73,7 +82,9 @@ namespace DowUmg.Presentation.ViewModels
         public void SetSizeAllowed(int size, bool allowed)
         {
             if (_allowedSizes.GetValueOrDefault(size, true) == allowed)
+            {
                 return;
+            }
 
             _allowedSizes[size] = allowed;
             RefreshFilters();
