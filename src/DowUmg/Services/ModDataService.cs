@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DowUmg.Data;
+﻿using DowUmg.Data;
 using DowUmg.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DowUmg.Services
 {
@@ -32,9 +32,9 @@ namespace DowUmg.Services
             using var context = new ModsContext();
             if (context.Database.GetPendingMigrations().Any())
             {
+                context.Database.Migrate();
                 context.Data.RemoveRange(context.Data);
                 context.SaveChanges();
-                context.Database.Migrate();
             }
         }
 
