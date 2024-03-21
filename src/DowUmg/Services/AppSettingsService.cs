@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DowUmg.FileFormats;
-using DowUmg.Interfaces;
 using DowUmg.Models;
+using DowUmg.Platform;
 using Splat;
 
 namespace DowUmg.Services

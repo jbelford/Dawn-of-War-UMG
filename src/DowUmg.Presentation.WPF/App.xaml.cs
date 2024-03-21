@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using DowUmg.Interfaces;
+using DowUmg.Platform;
 using DowUmg.Presentation.Handlers;
-using DowUmg.Presentation.WPF.Services;
+using DowUmg.Presentation.WPF.Platform;
 using DowUmg.Presentation.WPF.Views;
 using DowUmg.Services;
 using ReactiveUI;

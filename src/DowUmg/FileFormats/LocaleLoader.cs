@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
-using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
 {

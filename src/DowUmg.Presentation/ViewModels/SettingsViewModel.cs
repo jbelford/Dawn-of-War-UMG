@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using DowUmg.Interfaces;
 using DowUmg.Models;
+using DowUmg.Platform;
 using DowUmg.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

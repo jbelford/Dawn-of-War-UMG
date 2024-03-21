@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using DowUmg.Interfaces;
+using DowUmg.Platform;
 using Microsoft.Win32;
 
-namespace DowUmg.Presentation.WPF.Services
+namespace DowUmg.Presentation.WPF.Platform
 {
     public class WindowsFilePathProvider : IFilePathProvider
     {

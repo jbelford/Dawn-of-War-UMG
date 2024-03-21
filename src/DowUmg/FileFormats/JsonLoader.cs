@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using DowUmg.Interfaces;
 using Newtonsoft.Json;
 
 namespace DowUmg.FileFormats

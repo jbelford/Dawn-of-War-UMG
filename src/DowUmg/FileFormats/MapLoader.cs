@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using DowUmg.Constants;
-using DowUmg.Interfaces;
 
 namespace DowUmg.FileFormats
 {

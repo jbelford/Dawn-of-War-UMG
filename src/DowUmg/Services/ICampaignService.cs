@@ -1,6 +1,6 @@
 ﻿using DowUmg.Models;
 
-namespace DowUmg.Interfaces
+namespace DowUmg.Services
 {
     public interface ICampaignService
     {

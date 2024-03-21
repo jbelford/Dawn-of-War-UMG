@@ -1,4 +1,4 @@
-﻿namespace DowUmg.Interfaces
+﻿namespace DowUmg.Platform
 {
     public interface IFilePathProvider
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DowUmg.FileFormats;
 
-namespace DowUmg.Interfaces
+namespace DowUmg.Services
 {
     internal interface IModuleDataExtractor : IDisposable
     {

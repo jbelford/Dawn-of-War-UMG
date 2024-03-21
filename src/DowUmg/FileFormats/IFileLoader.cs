@@ -1,4 +1,4 @@
-﻿namespace DowUmg.Interfaces
+﻿namespace DowUmg.FileFormats
 {
     internal interface IFileLoader<T>
     {

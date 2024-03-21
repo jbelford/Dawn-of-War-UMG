@@ -1,5 +1,4 @@
-﻿using DowUmg.Interfaces;
-using DowUmg.Services;
+﻿using DowUmg.Services;
 using Splat;
 
 namespace DowUmg

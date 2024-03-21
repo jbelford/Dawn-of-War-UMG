@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DowUmg.Data.Entities;
 using DowUmg.FileFormats;
-using DowUmg.Interfaces;
+using DowUmg.Platform;
 using Splat;
 
 namespace DowUmg.Services
