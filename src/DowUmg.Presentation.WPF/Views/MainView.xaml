@@ -24,8 +24,7 @@
                 VerticalAlignment="Stretch"
                 Appearance="Transparent"
                 BorderThickness="0"
-                Content="Home"
-                Cursor="Hand">
+                Content="Home">
                 <ui:Button.Icon>
                     <ui:SymbolIcon Symbol="Home32" />
                 </ui:Button.Icon>
