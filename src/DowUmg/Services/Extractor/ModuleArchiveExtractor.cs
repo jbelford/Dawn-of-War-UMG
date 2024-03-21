@@ -28,9 +28,12 @@ namespace DowUmg.Services
         public IEnumerable<GameRuleFile> GetGameRules()
         {
             var gameRuleLoader = new GameRuleLoader();
-            foreach (var wincondition in sgaFileReader.GetWinConditions())
+            foreach (var rule in sgaFileReader.GetWinConditions())
             {
-                GameRuleFile? gameRule = gameRuleLoader.Load(new MemoryStream(wincondition.Data));
+                GameRuleFile? gameRule = gameRuleLoader.Load(
+                    rule.Name,
+                    new MemoryStream(rule.Data)
+                );
                 if (gameRule != null)
                 {
                     yield return gameRule;

@@ -199,6 +199,7 @@ namespace DowUmg.Services
                 {
                     Name = newLocales.Replace(rule.Title),
                     Details = newLocales.Replace(rule.Description),
+                    FileName = rule.FileName,
                     IsWinCondition = rule.VictoryCondition
                 })
                 .ToList();

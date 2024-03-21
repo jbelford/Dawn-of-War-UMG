@@ -87,12 +87,18 @@ namespace DowUmg.Services
             return context
                 .GameRules.FromSql(
                     $"""
-                    select r.*
-                    from GameRules r join (
-                        select m.ModDataId
-                        from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
-                        where dm.DependentsId = {modId}
-                    ) dep on r.ModDataId = dep.ModDataId
+                    select *
+                    from (
+                        select r.Id, r.Name, r.Details, r.FileName, MAX(r.ModDataId) as ModDataId, r.IsWinCondition
+                        from GameRules r join (
+                            select m.ModDataId
+                            from DowModDowMod dm join Mods m on dm.DependenciesId = m.Id or m.Id = {modId}
+                            where dm.DependentsId = {modId}
+                        ) dep on r.ModDataId = dep.ModDataId
+                        group by r.FileName
+                    )
+                    group by Name
+                    order by Name
                     """
                 )
                 .ToListAsync();
