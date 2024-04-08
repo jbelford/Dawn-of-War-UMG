@@ -51,7 +51,7 @@ namespace DowUmg.FileFormats
                 ModVersion = global["ModVersion"],
                 ArchiveFiles = global
                     .Where(x => archiveFileReg.IsMatch(x.KeyName))
-                    .Select(x => x.Value.ToLower())
+                    .Select(x => Path.ChangeExtension(x.Value.ToLower(), "sga"))
                     .ToArray(),
                 RequiredMods = global
                     .Where(x => requireModReg.IsMatch(x.KeyName))
