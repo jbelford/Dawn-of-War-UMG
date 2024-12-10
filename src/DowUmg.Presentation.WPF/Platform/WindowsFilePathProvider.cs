@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using DowUmg.Platform;
 using Microsoft.Win32;
 
@@ -15,7 +16,19 @@ namespace DowUmg.Presentation.WPF.Platform
                 )
                 : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
 
-            SoulstormLocation = key.GetValue("InstallLocation") as string;
+            SoulstormLocation = key?.GetValue("InstallLocation") as string;
+
+            if (string.IsNullOrEmpty(SoulstormLocation))
+            {
+                MessageBox.Show(
+                    "The install location for Dawn of War - Soulstorm could not be found.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+                Application.Current.Shutdown();
+                return;
+            }
 
             AppDataLocation = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
