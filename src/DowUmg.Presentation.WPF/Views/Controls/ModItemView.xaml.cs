@@ -23,8 +23,21 @@ namespace DowUmg.Presentation.WPF.Views
                     .Where(x => x != null)
                     .Do(vm =>
                     {
+                        this.Visibility = vm.Module.File.Playable
+                            ? System.Windows.Visibility.Visible
+                            : System.Windows.Visibility.Collapsed;
                         ModName.Text = vm.Module.File.UIName;
                         ModDesc.Text = vm.Module.File.Description;
+                        var deps = vm.Module.File.RequiredMods.Length;
+                        if (deps > 0)
+                        {
+                            ModDeps.Text = $"Dependencies: {deps}";
+                            ModDeps.Visibility = System.Windows.Visibility.Visible;
+                        }
+                        else
+                        {
+                            ModDeps.Visibility = System.Windows.Visibility.Collapsed;
+                        }
                     })
                     .Subscribe()
                     .DisposeWith(d);
@@ -42,6 +55,7 @@ namespace DowUmg.Presentation.WPF.Views
                         ModIcon.Foreground = color;
                         ModName.Foreground = color;
                         ModDesc.Foreground = color;
+                        ModDeps.Foreground = color;
                     })
                     .DisposeWith(d);
             });

@@ -44,6 +44,7 @@ namespace DowUmg.Presentation.ViewModels
                 {
                     ModItems.Clear();
                     ModItems.AddRange(mods);
+                    UnplayableMods = mods.Any(x => !x.Module.File.Playable);
                 });
 
             RefreshMods
@@ -61,6 +62,9 @@ namespace DowUmg.Presentation.ViewModels
             new ObservableCollectionExtended<ModItemViewModel>();
         public IObservableCollection<ModItemViewModel> BaseGameItems { get; } =
             new ObservableCollectionExtended<ModItemViewModel>();
+
+        [Reactive]
+        public bool UnplayableMods { get; set; }
 
         public extern bool Loading
         {

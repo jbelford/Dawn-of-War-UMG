@@ -10,7 +10,7 @@
 
         string DataLocation { get; }
 
-        string SoulstormLocation { get; }
+        string SoulstormLocation { get; set; }
 
         string CampaignsLocation { get; }
     }

@@ -10,24 +10,16 @@ namespace DowUmg.Presentation.WPF.Platform
     {
         public WindowsFilePathProvider()
         {
-            RegistryKey key = Environment.Is64BitOperatingSystem
-                ? Registry.LocalMachine.OpenSubKey(
-                    "SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm"
-                )
-                : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
-
+            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 3556750");
             SoulstormLocation = key?.GetValue("InstallLocation") as string;
-
             if (string.IsNullOrEmpty(SoulstormLocation))
             {
-                MessageBox.Show(
-                    "The install location for Dawn of War - Soulstorm could not be found.",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
-                );
-                Application.Current.Shutdown();
-                return;
+                key = Environment.Is64BitOperatingSystem
+                    ? Registry.LocalMachine.OpenSubKey(
+                        "SOFTWARE\\WOW6432Node\\THQ\\Dawn of War - Soulstorm"
+                    )
+                    : Registry.LocalMachine.OpenSubKey("SOFTWARE\\THQ\\Dawn of War - Soulstorm");
+                SoulstormLocation = key?.GetValue("InstallLocation") as string;
             }
 
             AppDataLocation = Path.Combine(
@@ -46,7 +38,7 @@ namespace DowUmg.Presentation.WPF.Platform
 
         public string DataLocation => Path.Combine(AppDataLocation, "data.db");
 
-        public string SoulstormLocation { get; }
+        public string SoulstormLocation { get; set; }
 
         public string CampaignsLocation => Path.Combine(AppDataLocation, "campaigns");
     }

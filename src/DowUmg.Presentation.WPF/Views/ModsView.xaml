@@ -71,12 +71,24 @@
                     FontTypography="Subtitle"
                     Text="Additional" />
 
-                <ui:Card Grid.Row="3" Margin="0,10,0,5">
-                    <ItemsControl
-                        x:Name="ModsList"
-                        HorizontalContentAlignment="Stretch"
-                        ItemsPanel="{StaticResource ItemsControlVSPTemplate}"
-                        Template="{StaticResource ItemsControlVirtualTemplate}" />
+                <ui:Card Grid.Row="3" VerticalAlignment="Top" Margin="0,10,0,5">
+                    <!-- Wrap ItemsControl & empty-state message in a Grid so we can overlay -->
+                    <Grid>
+                        <ItemsControl
+                            x:Name="ModsList"
+                            HorizontalContentAlignment="Stretch"
+                            ItemsPanel="{StaticResource ItemsControlVSPTemplate}"
+                            Template="{StaticResource ItemsControlVirtualTemplate}" />
+
+                        <TextBlock
+                            x:Name="ModsListPlaceholder"
+                            Text="No playable mods detected!"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Opacity="0.75"
+                            TextWrapping="Wrap"
+                            FontStyle="Italic"/>
+                    </Grid>
                 </ui:Card>
 
                 <ProgressBar

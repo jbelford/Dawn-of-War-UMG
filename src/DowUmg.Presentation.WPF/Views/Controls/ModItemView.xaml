@@ -24,10 +24,17 @@
                 FontSize="24"
                 Symbol="BoxCheckmark24" />
             <StackPanel Grid.Row="1" Margin="5">
-                <ui:TextBlock
-                    x:Name="ModName"
-                    FontTypography="Subtitle"
-                    Text="My Mod" />
+                <Grid>
+                    <ui:TextBlock
+                        x:Name="ModName"
+                        FontTypography="Subtitle"
+                        Text="My Mod" />
+                    <ui:TextBlock
+                        x:Name="ModDeps"
+                        FontTypography="Caption"
+                        HorizontalAlignment="Right"
+                        Text="Dependencies: 0" />
+                </Grid>
                 <ui:TextBlock
                     x:Name="ModDesc"
                     FontTypography="Body"

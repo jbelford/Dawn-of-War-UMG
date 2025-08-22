@@ -18,7 +18,7 @@ namespace DowUmg.FileFormats
             this.directLocales = locales;
         }
 
-        public List<LocaleStore> Dependencies { get; } = new List<LocaleStore>();
+        public List<LocaleStore> Dependencies { get; set; } = new List<LocaleStore>();
 
         public string Replace(string input)
         {

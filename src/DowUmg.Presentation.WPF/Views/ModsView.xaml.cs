@@ -1,7 +1,10 @@
-﻿using System;
-using System.Reactive.Disposables;
-using DowUmg.Presentation.ViewModels;
+﻿using DowUmg.Presentation.ViewModels;
+using DowUmg.Presentation.WPF.Converters;
 using ReactiveUI;
+using System;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DowUmg.Presentation.WPF.Views
 {
@@ -18,6 +21,14 @@ namespace DowUmg.Presentation.WPF.Views
             {
                 this.OneWayBind(ViewModel, vm => vm.ModItems, v => v.ModsList.ItemsSource)
                     .DisposeWith(d);
+
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.UnplayableMods,
+                        v => v.ModsListPlaceholder.Visibility,
+                        vmToViewConverterOverride: new BoolToVisibilityConverter())
+                    .DisposeWith(d);
+
                 this.OneWayBind(
                         ViewModel,
                         vm => vm.BaseGameItems,

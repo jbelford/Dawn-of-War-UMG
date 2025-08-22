@@ -13,6 +13,8 @@ namespace DowUmg.Services
         public AppSettingsService(IFilePathProvider? provider = null)
         {
             this.filePathProvider = provider ?? Locator.Current.GetService<IFilePathProvider>();
+            var settings = GetSettings();
+            this.filePathProvider.SoulstormLocation = settings.InstallLocation;
         }
 
         public AppSettings GetSettings()
@@ -41,6 +43,7 @@ namespace DowUmg.Services
 
         public void SaveSettings(AppSettings settings)
         {
+            this.filePathProvider.SoulstormLocation = settings.InstallLocation;
             new JsonLoader<AppSettings>().Write(this.filePathProvider.SettingsLocation, settings);
         }
     }

@@ -134,9 +134,6 @@ namespace DowUmg.Services
             using var context = new ModsContext();
             return context
                 .Mods.Where(mod => mod.Playable)
-                .Where(mod =>
-                    mod.Data.Maps.Count > 0 || mod.Data.Rules.Count > 0 || mod.Data.Races.Count > 0
-                )
                 .ToListAsync();
         }
     }

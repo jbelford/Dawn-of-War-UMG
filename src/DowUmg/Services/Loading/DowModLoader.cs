@@ -42,13 +42,16 @@ namespace DowUmg.Services
             Dictionary<string, DowModuleFile> modFiles = GetAllModules()
                 .ToDictionary(m => m.FileName, m => m);
 
+            string dowPath = this.filePathProvider.SoulstormLocation;
+            LocaleStore baseLocales = new(GetLocales(Path.Combine(dowPath, "Engine")).ToArray());
+
             // Mod data is stored in folders. Different mods may share the same mod folder for locales
             Dictionary<string, LocaleStore> modFolders = modFiles
                 .Values.Select(m => m.ModFolder)
                 .Distinct()
                 .ToDictionary(
                     folder => folder,
-                    folder => new LocaleStore(GetLocales(folder).ToArray())
+                    folder => new LocaleStore(GetLocales(folder).ToArray()) { Dependencies = [baseLocales] }
                 );
 
             // Create dictionary of unloaded mods by filename

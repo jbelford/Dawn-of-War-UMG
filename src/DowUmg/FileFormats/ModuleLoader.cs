@@ -38,7 +38,7 @@ namespace DowUmg.FileFormats
 
             var archiveFileReg = new Regex(@"^ArchiveFile\.\d+$");
             var requireModReg = new Regex(@"^RequiredMod\.\d+$");
-            string modFolder = global["ModFolder"];
+            string modFolder = global["ModFolder"].ToLower();
 
             return new DowModuleFile()
             {
@@ -46,8 +46,8 @@ namespace DowUmg.FileFormats
                 UIName = global["UIName"],
                 Description = global["Description"],
                 DllName = global["DllName"],
-                Playable = "1".Equals(global["Playable"]),
-                ModFolder = modFolder.ToLower(),
+                Playable = "1".Equals(global["Playable"]) || modFolder == "dowde",
+                ModFolder = modFolder,
                 ModVersion = global["ModVersion"],
                 ArchiveFiles = global
                     .Where(x => archiveFileReg.IsMatch(x.KeyName))
@@ -57,7 +57,7 @@ namespace DowUmg.FileFormats
                     .Where(x => requireModReg.IsMatch(x.KeyName))
                     .Select(x => x.Value.ToLower())
                     .ToArray(),
-                IsVanilla = DowConstants.IsVanilla(modFolder.ToLower())
+                IsVanilla = DowConstants.IsVanilla(modFolder)
             };
         }
     }

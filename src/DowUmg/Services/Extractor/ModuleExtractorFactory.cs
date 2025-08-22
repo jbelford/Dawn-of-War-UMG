@@ -23,8 +23,21 @@ namespace DowUmg.Services
 
             if (file.IsVanilla)
             {
+                var dataSgaName = $"{file.ModFolder}Data.sga";
+                if (file.ArchiveFiles.Length > 0)
+                {
+                    for (int i = 0; i < file.ArchiveFiles.Length; i++)
+                    {
+                        if (!file.ArchiveFiles[i].Contains("%locale%") && !file.ArchiveFiles[i].Contains("-new"))
+                        {
+                            dataSgaName = file.ArchiveFiles[i];
+                            break;
+                        }
+                    }
+                }
+
                 return new ModuleArchiveExtractor(
-                    Path.Combine(folder, $"{file.ModFolder}Data.sga"),
+                    Path.Combine(folder, dataSgaName),
                     cacheFolder
                 );
             }
