@@ -117,7 +117,7 @@ namespace DowUmg.Presentation.ViewModels
 
         public void SetTagAllowed(string tag, bool allowed)
         {
-            if (_allowedTags.GetValueOrDefault(tag, true) == allowed)
+            if (_allowedTags.GetValueOrDefault(tag, tag == "default") == allowed)
             {
                 return;
             }
@@ -147,7 +147,9 @@ namespace DowUmg.Presentation.ViewModels
                     (_isAddonAllowed ? _maps.Concat(_addonMaps) : _maps)
                         .Where(map => _allowedPlayers.GetValueOrDefault(map.Players, true))
                         .Where(map => _allowedSizes.GetValueOrDefault(map.Size, true))
-                        .Where(map => _allowedTags.GetValueOrDefault(map.Tag ?? "default", true))
+                        .Where(map =>
+                            _allowedTags.GetValueOrDefault(map.Tag ?? "default", map.Tag == null)
+                        )
                 );
             });
         }
