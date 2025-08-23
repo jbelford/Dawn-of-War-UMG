@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <IsTrimmable>true</IsTrimmable>
+	  <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugSymbols>False</DebugSymbols>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20191223062657_InitialCreate.cs" />
     <Compile Remove="Migrations\20191223062657_InitialCreate.Designer.cs" />

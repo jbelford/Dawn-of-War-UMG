@@ -1,14 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublisherName>Jack Belford</PublisherName>
-    <PublishSingleFile>false</PublishSingleFile>
-    <PublishTrimmed>false</PublishTrimmed>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <AssemblyName>DawnOfWarUMG</AssemblyName>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\13thcompany.png" />
@@ -54,9 +59,9 @@
     <None Remove="Resources\ynnari.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\icon.ico">
+    <Resource Include="Resources\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Pfim" Version="0.11.2" />

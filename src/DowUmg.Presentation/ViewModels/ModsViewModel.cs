@@ -44,7 +44,7 @@ namespace DowUmg.Presentation.ViewModels
                 {
                     ModItems.Clear();
                     ModItems.AddRange(mods);
-                    UnplayableMods = mods.Any(x => !x.Module.File.Playable);
+                    UnplayableMods = mods.All(x => !x.Module.File.Playable);
                 });
 
             RefreshMods

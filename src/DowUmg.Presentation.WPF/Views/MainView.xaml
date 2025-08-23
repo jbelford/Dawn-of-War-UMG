@@ -31,7 +31,7 @@
             </ui:Button>
             <ui:TitleBar Title="Dawn of War: UMG" Grid.Column="1">
                 <ui:TitleBar.Icon>
-                    <ui:ImageIcon Source="/Resources/icon.ico" />
+                    <ui:ImageIcon Source="pack://application:,,,/Resources/icon.ico" />
                 </ui:TitleBar.Icon>
             </ui:TitleBar>
         </Grid>

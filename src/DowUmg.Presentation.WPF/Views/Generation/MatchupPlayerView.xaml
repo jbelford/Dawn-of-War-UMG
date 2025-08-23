@@ -12,6 +12,7 @@
     x:TypeArguments="vm:MatchupPlayerViewModel"
     mc:Ignorable="d">
     <ui:Card
+        MinWidth="200"
         MaxWidth="250"
         Margin="5"
         Padding="0">

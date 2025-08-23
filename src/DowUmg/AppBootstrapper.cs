@@ -1,4 +1,5 @@
-﻿using DowUmg.Services;
+﻿using DowUmg.Platform;
+using DowUmg.Services;
 using Splat;
 
 namespace DowUmg
@@ -16,6 +17,14 @@ namespace DowUmg
             Locator.CurrentMutable.RegisterLazySingleton<ICampaignService>(
                 () => new CampaignService()
             );
+
+            var filePathProvider = Locator.Current.GetService<IFilePathProvider>();
+            var appSettingsService = Locator.Current.GetService<AppSettingsService>();
+            var settings = appSettingsService.GetSettings();
+            if (settings.InstallLocation != null)
+            {
+                filePathProvider.SoulstormLocation = settings.InstallLocation;
+            }
         }
     }
 }

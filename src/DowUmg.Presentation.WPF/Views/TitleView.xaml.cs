@@ -12,10 +12,9 @@ namespace DowUmg.Presentation.WPF.Views
         {
             InitializeComponent();
 
-            if (!Properties.Settings.Default.EnableCampaign)
-            {
-                CampaignButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
+            #if RELEASE
+            CampaignButton.Visibility = System.Windows.Visibility.Collapsed;
+            #endif
 
             this.WhenActivated(d =>
             {
