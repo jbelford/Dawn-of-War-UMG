@@ -23,10 +23,22 @@ namespace DowUmg.Presentation.WPF.Views
                     {
                         MapTypes.ItemsSource = vm.MapTypes;
                         MapSizes.ItemsSource = vm.MapSizes;
+                        CustomTags.ItemsSource = vm.CustomTags;
                         Maps.ViewModel = vm.MapsViewModel;
                         WinConditions.ViewModel = vm.WinConditionsViewModel;
                     })
                     .Subscribe()
+                    .DisposeWith(d);
+
+                this.OneWayBind(
+                        ViewModel,
+                        vm => vm.CustomTagsCount,
+                        v => v.TagsPanel.Visibility,
+                        count =>
+                            count > 1
+                                ? System.Windows.Visibility.Visible
+                                : System.Windows.Visibility.Collapsed
+                    )
                     .DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.IsAddonAllowed, v => v.AddonMapsToggle.IsChecked)

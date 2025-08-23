@@ -15,52 +15,79 @@
     <DockPanel>
         <ScrollViewer DockPanel.Dock="Left">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <ui:Card
-                    Grid.Row="0"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Top">
-                    <StackPanel>
-                        <ui:TextBlock
-                            Margin="0,0,0,5"
-                            FontTypography="Subtitle"
-                            Text="Addon Maps" />
-                        <ui:ToggleSwitch
-                            x:Name="AddonMapsToggle"
-                            OffContent="Off"
-                            OnContent="On" />
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card
-                    Grid.Row="2"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Top">
-                    <StackPanel>
-                        <ui:TextBlock
-                            Margin="0,0,0,5"
-                            FontTypography="Subtitle"
-                            Text="Map Type" />
-                        <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card
-                    Grid.Row="4"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Top">
-                    <StackPanel>
-                        <ui:TextBlock
-                            Margin="0,0,0,5"
-                            FontTypography="Subtitle"
-                            Text="Map Size" />
-                        <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
-                    </StackPanel>
-                </ui:Card>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:Card
+                        Grid.Row="0"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Top">
+                        <StackPanel>
+                            <ui:TextBlock
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Addon Maps" />
+                            <ui:ToggleSwitch
+                                x:Name="AddonMapsToggle"
+                                OffContent="Off"
+                                OnContent="On" />
+                        </StackPanel>
+                    </ui:Card>
+                    <ui:Card
+                        Grid.Row="2"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Top">
+                        <StackPanel>
+                            <ui:TextBlock
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Map Type" />
+                            <ItemsControl x:Name="MapTypes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
+                        </StackPanel>
+                    </ui:Card>
+                    <ui:Card
+                        Grid.Row="4"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Top">
+                        <StackPanel>
+                            <ui:TextBlock
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Map Size" />
+                            <ItemsControl x:Name="MapSizes" ItemTemplate="{StaticResource ToggleItemTemplate}" />
+                        </StackPanel>
+                    </ui:Card>
+                </Grid>
+                <Grid x:Name="TagsPanel" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ui:Card
+                        Grid.Row="0"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Top">
+                        <StackPanel>
+                            <ui:TextBlock
+                                Margin="0,0,0,5"
+                                FontTypography="Subtitle"
+                                Text="Map Tag" />
+                            <ItemsControl x:Name="CustomTags" ItemTemplate="{StaticResource ToggleItemTemplate}" />
+                        </StackPanel>
+                    </ui:Card>
+                </Grid>
             </Grid>
         </ScrollViewer>
         <c:ToggleItemListView x:Name="WinConditions" DockPanel.Dock="Right" />

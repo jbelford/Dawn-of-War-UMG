@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public string? Tag { get; set; }
         public string Details { get; set; } = null!;
         public virtual DowModData Mod { get; set; } = null!;
         public int Players { get; set; }

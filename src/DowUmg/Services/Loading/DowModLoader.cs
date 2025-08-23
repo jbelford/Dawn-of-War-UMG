@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DowUmg.Data.Entities;
 using DowUmg.FileFormats;
 using DowUmg.Platform;
@@ -51,7 +52,10 @@ namespace DowUmg.Services
                 .Distinct()
                 .ToDictionary(
                     folder => folder,
-                    folder => new LocaleStore(GetLocales(folder).ToArray()) { Dependencies = [baseLocales] }
+                    folder => new LocaleStore(GetLocales(folder).ToArray())
+                    {
+                        Dependencies = [baseLocales]
+                    }
                 );
 
             // Create dictionary of unloaded mods by filename
@@ -184,10 +188,12 @@ namespace DowUmg.Services
                     continue;
                 }
 
+                var mapName = newLocales.Replace(map.Name);
                 maps.Add(
                     new DowMap()
                     {
-                        Name = newLocales.Replace(map.Name),
+                        Name = mapName,
+                        Tag = GetMapTag(mapName),
                         Details = newLocales.Replace(map.Description),
                         Players = map.Players,
                         Size = map.Size,
@@ -219,6 +225,12 @@ namespace DowUmg.Services
             memo.PutData(mod.Data, mod.IsVanilla);
 
             return mod;
+        }
+
+        private string? GetMapTag(string name)
+        {
+            var match = Regex.Match(name, @"^\w*\[(.*?)\]");
+            return match.Success ? match.Groups[1].Value.ToLower().Trim() : null;
         }
 
         private static DowModuleFile CreateAdditionsModule(DowModuleFile mod)

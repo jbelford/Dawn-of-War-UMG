@@ -8,6 +8,7 @@ using DowUmg.Constants;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
 using DynamicData;
+using DynamicData.Aggregation;
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -53,6 +54,23 @@ namespace DowUmg.Presentation.ViewModels
                 "Maps",
                 _maps.Connect().Transform(item => item.ToggleItem)
             );
+
+            modState
+                .ConnectTags()
+                .Transform(tag => new ToggleItemViewModel(tag) { IsToggled = tag == "Default" })
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _customTags)
+                .SubscribeMany(tag =>
+                {
+                    return tag.WhenAnyValue(x => x.IsToggled)
+                        .ObserveOn(RxApp.TaskpoolScheduler)
+                        .Subscribe(toggled =>
+                        {
+                            modState.SetTagAllowed(tag.Label.ToLower(), toggled);
+                        });
+                })
+                .Count()
+                .ToPropertyEx(this, x => x.CustomTagsCount);
 
             modState
                 .ConnectRules()
@@ -121,6 +139,12 @@ namespace DowUmg.Presentation.ViewModels
         public ObservableCollection<ToggleItemViewModel> MapTypes { get; set; }
 
         public ObservableCollection<ToggleItemViewModel> MapSizes { get; set; }
+
+        private readonly ReadOnlyObservableCollection<ToggleItemViewModel> _customTags;
+        public ReadOnlyObservableCollection<ToggleItemViewModel> CustomTags => _customTags;
+
+        [ObservableAsProperty]
+        public int CustomTagsCount { get; }
 
         [Reactive]
         public bool IsAddonAllowed { get; set; }

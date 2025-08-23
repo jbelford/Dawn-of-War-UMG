@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DowUmg.Data.Entities;
 using DowUmg.Services;
@@ -21,10 +23,12 @@ namespace DowUmg.Presentation.ViewModels
         private List<DowMap> _addonMaps = new();
         private List<DowMap> _maps = new();
         private SourceList<DowMap> _allowedMaps = new();
+        private SourceList<string> _tags = new();
         private SourceList<GameRule> _rules = new();
         private SourceList<DowRace> _races = new();
         private Dictionary<int, bool> _allowedPlayers = new();
         private Dictionary<int, bool> _allowedSizes = new();
+        private Dictionary<string, bool> _allowedTags = new();
         private bool _isAddonAllowed = true;
         private bool fetchedAddon = false;
 
@@ -49,6 +53,21 @@ namespace DowUmg.Presentation.ViewModels
 
             _maps = await modDataService.GetModMaps(modId);
 
+            _tags.Edit(inner =>
+            {
+                TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+                inner.Clear();
+                inner.AddRange(
+                    _maps
+                        .Select(m => m.Tag)
+                        .Where(tag => !string.IsNullOrEmpty(tag))
+                        .ToHashSet()
+                        .Select(tag => textInfo.ToTitleCase(tag!))
+                        .Append("Default")
+                );
+            });
+
             var rules = await modDataService.GetModRules(modId);
             _rules.Edit(inner =>
             {
@@ -72,6 +91,8 @@ namespace DowUmg.Presentation.ViewModels
 
         public IObservable<IChangeSet<DowRace>> ConnectRaces() => _races.Connect();
 
+        public IObservable<IChangeSet<string>> ConnectTags() => _tags.Connect();
+
         public bool SetPlayersAllowed(int players, bool allowed)
         {
             if (_allowedPlayers.GetValueOrDefault(players, true) == allowed)
@@ -91,6 +112,16 @@ namespace DowUmg.Presentation.ViewModels
             }
 
             _allowedSizes[size] = allowed;
+            RefreshFilters();
+        }
+
+        public void SetTagAllowed(string tag, bool allowed)
+        {
+            if (_allowedTags.GetValueOrDefault(tag, true) == allowed)
+            {
+                return;
+            }
+            _allowedTags[tag] = allowed;
             RefreshFilters();
         }
 
@@ -116,6 +147,7 @@ namespace DowUmg.Presentation.ViewModels
                     (_isAddonAllowed ? _maps.Concat(_addonMaps) : _maps)
                         .Where(map => _allowedPlayers.GetValueOrDefault(map.Players, true))
                         .Where(map => _allowedSizes.GetValueOrDefault(map.Size, true))
+                        .Where(map => _allowedTags.GetValueOrDefault(map.Tag ?? "default", true))
                 );
             });
         }
