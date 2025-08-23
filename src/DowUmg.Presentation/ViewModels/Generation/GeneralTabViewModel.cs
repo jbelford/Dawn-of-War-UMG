@@ -58,17 +58,16 @@ namespace DowUmg.Presentation.ViewModels
             modState
                 .ConnectTags()
                 .Transform(tag => new ToggleItemViewModel(tag) { IsToggled = tag == "Default" })
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out _customTags)
                 .SubscribeMany(tag =>
-                {
-                    return tag.WhenAnyValue(x => x.IsToggled)
+                    tag.WhenAnyValue(x => x.IsToggled)
                         .ObserveOn(RxApp.TaskpoolScheduler)
                         .Subscribe(toggled =>
                         {
                             modState.SetTagAllowed(tag.Label.ToLower(), toggled);
-                        });
-                })
+                        })
+                )
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _customTags)
                 .Count()
                 .ToPropertyEx(this, x => x.CustomTagsCount);
 
